@@ -431,7 +431,7 @@
             padding: 10px;
         }
 
-        @keyframes fadeIn {
+        @pragma fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
@@ -687,7 +687,7 @@
 ⚙️ 核心遊戲系統與限制：
 1. 社交輿論載體「HeraLink」：包含爆料貼文、評論風向。
 2. 名聲與標籤系統：如「完美繼承人」、「危險人物」、「神秘的局外人」、「待宰羔羊」。
-3. 「利益與情感」雙軌 NPC 邏輯：NPC行事遵循「家族利益 ≧ 個人情感」。讚美通常是捧殺，退讓通常是陷阱。
+3. 「利益與情感」雙軌 NPC 邏輯：NPC行事遵循「家族利益 ≧ 個人情感」。讚美通常是捧殺，退讓通常是陷阱.
 4. 【解密與三次限制機制】：玩家會發起對特定論壇 ID（例：0x7F9B）的「身份確認/解密」行動。針對每一個匿名代碼，玩家在整場遊戲中最多僅有 3 次嘗試機會。AI 必須在狀態欄中動態追蹤並顯示該代碼的剩餘機會（例如：\`0x7F9B\` 剩餘解密機會： 2/3）。若 3 次皆猜錯，該代碼永久鎖定，玩家輿論威脅指數直接飆升 30%，且該未知 ID 將在後續貼文中瘋狂抹黑玩家。
 
 🤖 AI 敘事與操作規則：
@@ -840,7 +840,7 @@
 ### 🎒 背包與關鍵籌碼
 * 資金/可動用資源： 充裕 (源自 ${familyName} 產業：${familyIndustry.substring(0,20)}...)
 * 持有秘密/把柄： 1. *[ 家族秘辛：${secret || '無'} ]*
-* 關鍵道具/物品： 權力准考證 (期望加入：${club || '未定'})
+* 關鍵道具/物品： 2. 權力准考證 (期望加入：${club || '未定'})
 `;
             document.getElementById('profile-container').innerHTML = marked.parse(initialLocalProfile);
 
@@ -866,7 +866,7 @@
 * 與家族成員的關係簡述：${familyRel || '未註明'}
 
 ## 三、 角色設定
-*外貌特徵與自帶氣質：${vibe || '未註明'}
+* 外貌特徵與自帶氣質：${vibe || '未註明'}
 * 隱密設定：${secret || '無'}
 
 ## 四、 校園相關
@@ -946,7 +946,7 @@
                 console.error(error);
                 alert(`⚠️ 權力網絡鏈接斷開: ${error.message}`);
                 chatHistory.pop();
-            } finally { setLoading(false); } // 【已修正】由原本的 final 改回正確的 finally
+            } finally { setLoading(false); }
         }
 
         // 正則表達式精準錨點隔離引擎
