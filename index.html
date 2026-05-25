@@ -74,7 +74,7 @@
             width: 100%;
         }
 
-        /* 左側欄：動態雙檔案與論壇區（整合一體化） */
+        /* 左側欄：動態雙檔案與論壇區 */
         .sidebar {
             width: 400px;
             background-color: var(--bg-panel);
@@ -103,7 +103,7 @@
             overflow: hidden;
         }
 
-        /* 故事流動區域（保持滾動在最下方） */
+        /* 故事流動區域 */
         .story-stream {
             flex: 1;
             overflow-y: auto;
@@ -121,7 +121,7 @@
             border-radius: 3px;
         }
 
-        /* 控制台區塊（選項固定在底部） */
+        /* 控制台區塊 */
         .control-panel {
             background-color: var(--bg-panel);
             border-top: 1px solid var(--border-color);
@@ -149,7 +149,7 @@
             line-height: 1.6;
         }
 
-        /* 讓 Marked.js 生成的表格與 Markdown 符合豪門風格 */
+        /* 表格與 Markdown 精裝化 */
         .profile-box table, .forum-box table {
             width: 100%;
             border-collapse: collapse;
@@ -266,7 +266,7 @@
             background-color: var(--accent-gold-hover);
         }
 
-        /* 彈窗／遮罩層（金鑰輸入與角色創建） */
+        /* 彈窗／遮罩層 */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -389,28 +389,29 @@
             <div>
                 <div class="section-title">📊 學生即時動態檔案</div>
                 <div id="profile-container" class="profile-box">
-                    </div>
+                    <p style="color: var(--text-muted);">等待填寫角色卡初始化...</p>
+                </div>
             </div>
 
             <div id="forum-section" class="forum-section-container">
                 <div class="section-title">📱 HeraLink 匿名論壇 • 即時熱搜看板</div>
                 <div id="forum-container" class="forum-box">
-                    </div>
+                    <p style="color: var(--text-muted);">數據端口靜態等候中...</p>
+                </div>
             </div>
         </aside>
 
         <main class="main-content">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>【系統提示】</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所。請先在右側或彈窗中填寫完整的繼承者角色卡以解鎖封閉式校門...</p>
+                    <p><strong>【系統提示】</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所。請先填寫繼承者檔案以解鎖校門...</p>
                 </div>
             </div>
 
             <div class="control-panel">
                 <div id="choices-section">
                     <div class="section-title">🎯 命運博弈抉擇</div>
-                    <div id="options-container" class="options-container">
-                        </div>
+                    <div id="options-container" class="options-container"></div>
                     
                     <div class="custom-input-wrapper" id="custom-wrapper" style="margin-top: 12px;">
                         <input type="text" id="custom-choice-input" placeholder="【D】自由輸入您的反擊、心理博弈或解密追蹤手段...">
@@ -435,9 +436,6 @@
                 <label>請輸入您的 Gemini API Key：</label>
                 <input type="password" id="api-key-input" placeholder="AIzaSy...">
             </div>
-            <p style="font-size: 0.8rem; color: var(--accent-gold); margin-bottom: 12px;">
-                💡 提示：您可以前往 Google AI Studio 免費申請此金鑰。
-            </p>
             <button class="modal-btn" onclick="saveApiKey()">儲存並繼續</button>
         </div>
     </div>
@@ -487,10 +485,10 @@
                 <div class="form-group">
                     <label>家族階級：</label>
                     <select id="char-class">
-                        <option value="Crown (皇冠)">Crown (皇冠) — 頂級財閥、掌權政要核心繼承人</option>
-                        <option value="Noble (貴族)">Noble (貴族) — 大型企業、頂尖法律/醫療世家</option>
-                        <option value="Prestige (名望)">Prestige (名望) — 新興資本、知名經紀公司高層</option>
-                        <option value="General (平民)">General (平民) — 特招生或特殊關係戶</option>
+                        <option value="Crown">Crown</option>
+                        <option value="Noble">Noble</option>
+                        <option value="Prestige">Prestige</option>
+                        <option value="General">General</option>
                     </select>
                 </div>
             </div>
@@ -500,23 +498,23 @@
             </div>
             <div class="form-group">
                 <label>與家族成員的關係簡述：</label>
-                <textarea id="char-family-rel" placeholder="例如：受寵的獨生女、被邊緣化的私生子、承載長子高壓..."></textarea>
+                <textarea id="char-family-rel" placeholder="例如：受寵的獨生女、被邊緣化的私生子..."></textarea>
             </div>
 
             <div class="modal-subsection-title">三、 角色設定</div>
             <div class="form-group">
                 <label>外貌特徵與自帶氣質：</label>
-                <textarea id="char-vibe" placeholder="例如：高冷貓系、清澈無辜的眼神、財閥少爺的漫不經心..."></textarea>
+                <textarea id="char-vibe" placeholder="例如：高冷貓系、清澈無辜的眼神..."></textarea>
             </div>
             <div class="form-group">
                 <label>隱密設定 (選填)：</label>
-                <textarea id="char-secret" placeholder="例如：已有家族商業婚約、不為人知的假身分..."></textarea>
+                <textarea id="char-secret" placeholder="例如：已有家族商業婚約、冒牌身分..."></textarea>
             </div>
 
             <div class="modal-subsection-title">四、 校園相關</div>
             <div class="form-row">
                 <div class="form-group">
-                    <label>期望加入的社團/學生會職務：</label>
+                    <label>期望加入的社團／學生會職務：</label>
                     <input type="text" id="char-club" placeholder="例如：學生會企劃部、馬術社">
                 </div>
                 <div class="form-group">
@@ -533,15 +531,15 @@
             <div class="modal-subsection-title">五、 玩家偏好設定 (選填)</div>
             <div class="form-group">
                 <label>期望的劇情風格：</label>
-                <input type="text" id="char-style" placeholder="例如：極權政商博弈、暗黑復仇、虐心拉鋸">
+                <input type="text" id="char-style" placeholder="例如：極權政商博弈、暗黑復仇">
             </div>
             <div class="form-group">
                 <label>期望遇見的明星/角色：</label>
-                <input type="text" id="char-prefer" placeholder="例如：韓韶禧(同班死敵)、車銀優(高冷會長)">
+                <input type="text" id="char-prefer" placeholder="例如：韓韶禧(同班死敵)"></textarea>
             </div>
             <div class="form-group">
                 <label>絕對不希望出現的雷點內容：</label>
-                <input type="text" id="char-tw" placeholder="例如：強行降智、降維純言情套路">
+                <input type="text" id="char-tw" placeholder="例如：強行降智、戀愛腦套路">
             </div>
 
             <button class="modal-btn" onclick="startStoryGame()">踏入權力交界處</button>
@@ -549,38 +547,7 @@
     </div>
 
     <script>
-        // 設定 Marked.js 全域換行相容性
-        marked.setOptions({
-            breaks: true,
-            gfm: true
-        });
-
-        // 初始動態生成 placeholders
-        const DEFAULT_PROFILE_MD = `
-### 👤 基本檔案
-| 姓名 | 載入中... |
-| 階級 | \`未定\` |
-| 陣營/派系 | \`尚未加入\` |
-| 家族當前狀態 | 觀望中 |
-| 論壇匿名代碼 | \`0x????\` |
-
-### 📱 HeraLink 匿名論壇動態
-* 社交名聲標籤： \`神秘局外人\`
-* 本週論壇熱搜： #新學期繼承者名冊 #誰是特招生
-* 輿論威脅指數： \`30%\`
-* 🕵️ 當前解密追蹤紀錄： 1. \`[ 未發起代碼解密行動 ]\`
-`;
-
-        const DEFAULT_FORUM_MD = `
-> ## 🔥 今日即時熱門貼文
-> 📌 文章標題： [公告] HeraLink 實名與匿名數據端口已加密重啟
-> 👤 發文者暱稱： 匿名 \`(ID: 0x0000)\` ｜ 🕒 發布時間： \`08:00\` 
-> 📈 瀏覽次數： -- ｜ 💬 回覆數： --
-> 
-> ## 📄 【貼文內文】
-> 「 歡迎來到新學期。在這裡，請守好妳/你的匿名代碼。
-> 任何逾矩的發言，後果由背後的家族利益自行承擔。 」
-`;
+        marked.setOptions({ breaks: true, gfm: true });
 
         // 系統核心提示詞 Ver.2.5
         const SYSTEM_INSTRUCTION = `
@@ -596,7 +563,7 @@
 📌 世界觀規則：
 1. 原創角色規則：本模擬器禁止直接使用現實世界既有角色，除非角色卡中有提及。所有人物皆為獨立生成的個體。
 2. 正統韓國社會語境：劇情中的所有日常用語、對話風格、以及職位稱呼（如：理事、本部長、代表、室長、檢察官、議員、常務等）必須完全符合現代大韓民國的政商與上流社會習慣。
-3. 代名詞性別嚴格區分：男性必須使用「你 / 他」、女性必須使用「妳 / 她」。絕對嚴禁男女代名詞串用、混用。
+3. 代名詞性別嚴格區分：難性必須使用「你 / 他」、女性必須使用「妳 / 她」。絕對嚴禁男女代名詞串用、混用。
 
 ⚙️ 核心遊戲系統：
 1. 社交輿論載體「HeraLink」：玩家行為會引發論壇熱烈討論（爆料貼文、評論風向）。
@@ -611,7 +578,7 @@
 
 📌 【輸出順序與隔離規範】：為了確保敘事與面板界線清晰，AI 的每次回覆必須嚴格遵循以下順序輸出，並使用分隔線 --- 進行物理隔離：
 [ 📋 學生即時動態檔案 ]
-(這裡使用 Markdown 表格與條列方式，嚴格遵守你在指令中的格式，包含基本檔案、HeraLink動態、核心NPC關係權力圖、背包與關鍵籌碼)
+(這裡使用 Markdown 表格與條列方式，嚴格意照你在指令中的格式更新，包含基本檔案、HeraLink動態、核心NPC關係權力圖、背包與關鍵籌碼)
 ---
 [ 🎬 劇情 ]
 (這裡提供高密度、充滿細節的電影片段式劇情敘事。字數務必充沛，充滿韓劇博弈潛台詞)
@@ -620,17 +587,13 @@
 (當產生校園輿論或爆料事件時在此生成發文、實時熱門評論及風向數據。若沒發生則此區段留空，但結構仍要用 --- 隔開)
 ---
 [ 🎯 分歧選項 ]
-(在這裡固定提供 A、B、C 三個具備長線利害影響力的選項。不要寫出好壞影響，讓玩家自行承擔政治或情感代價。最後提示玩家可以自由輸入 D)
+(在這裡固定提供 A、B、C 三個選項。最後提示玩家可以自由輸入 D)
 `;
 
         let chatHistory = [];
         let isWaitingForAI = false;
 
         window.onload = function() {
-            // 一開始直接在左側動態欄位生成初始面板
-            document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
-            document.getElementById('forum-container').innerHTML = marked.parse(DEFAULT_FORUM_MD);
-
             const savedKey = localStorage.getItem('gemini_api_key');
             if (!savedKey) {
                 document.getElementById('api-modal').classList.remove('hidden');
@@ -642,9 +605,8 @@
         function toggleApiKeyModal() {
             const modal = document.getElementById('api-modal');
             modal.classList.toggle('hidden');
-            const savedKey = localStorage.getItem('gemini_api_key');
-            if (savedKey) {
-                document.getElementById('api-key-input').value = savedKey;
+            if (!modal.classList.contains('hidden')) {
+                document.getElementById('api-key-input').value = localStorage.getItem('gemini_api_key') || '';
             }
         }
 
@@ -672,14 +634,14 @@
                     <div class="story-block">
                         <p><strong>【系統提示】</strong> 歷史線已重置。請重新填寫檔案踏入學院...</p>
                     </div>`;
-                document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
-                document.getElementById('forum-container').innerHTML = marked.parse(DEFAULT_FORUM_MD);
+                document.getElementById('profile-container').innerHTML = '<p style="color: var(--text-muted);">等待填寫角色卡初始化...</p>';
+                document.getElementById('forum-container').innerHTML = '<p style="color: var(--text-muted);">數據端口靜態等候中...</p>';
                 document.getElementById('options-container').innerHTML = '';
                 document.getElementById('character-modal').classList.remove('hidden');
             }
         }
 
-        // 開始遊戲：將系統提示詞與完整創角卡直接注入對話歷史
+        // 開始遊戲：將系統提示詞與完整創角卡直接注入對話歷史，並「在第一時間在左側生成玩家檔案」
         function startStoryGame() {
             const name = document.getElementById('char-name').value.trim();
             const gender = document.getElementById('char-gender').value;
@@ -702,6 +664,60 @@
                 return;
             }
 
+            // 【功能實做：在開局即時匯入並生成玩家動態檔案與論壇】
+            const randomID = '0x' + Math.floor(Math.random() * 65536).toString(16).toUpperCase().padStart(4, '0');
+            
+            const initialProfileMD = `
+### 👤 基本檔案
+| 項目 | 詳細數據 |
+| :--- | :--- |
+| **姓名** | ${name} |
+| **階級** | \`${charClass}\` |
+| **陣營/派系** | \`獨立派 (尚未加入)\` |
+| **家族當前狀態** | 穩定 (背景：${familyName}) |
+| **論壇匿名代碼** | \`${randomID}\` |
+
+### 📱 HeraLink 匿名論壇動態
+* **社交名聲標籤：** \`神秘局外人\`
+* **本週論壇熱搜：** #新學期名冊 #${familyName}繼承人
+* **輿論威脅指數：** \`30%\`
+* **🕵️ 當前解密追蹤紀錄：** 1. \`[ 未發起代碼解密行動 ]\`
+
+### 🤝 核心 NPC 關係權力圖
+> ❤️好感度/🖤戒備度 | 💎利益綁定度
+> *(等待校園主線NPC登場交互中...)*
+
+### 🎒 背包與關鍵籌碼
+* **資金/可動用資源：** ［充裕］
+* **持有秘密/把柄：** 1. *［未掌握任何祕密］*
+* **關鍵道具/物品：** 無
+`;
+
+            const initialForumMD = `
+> ## 🔥 今日即時熱門貼文
+> **📌 文章標題：** [爆料] 聽說 ${familyName} 的下一代今天正式轉入學院了？
+> **👤 發文者暱稱：** 匿名 \`(ID: 0x8F2C)\` ｜ **🕒 發布時間：** \`08:15\` 
+> **📈 瀏覽次數：** 3,420 ｜ **💬 回覆數：** 42
+> 
+> ## 📄 【貼文內文】
+> 「 剛剛看見教務處辦公桌上的名冊了，確定是 ${familyName} 家族的 ${name}。
+> 背景等同於 \`${charClass}\` 級別。看來開學第一天，學生會跟舊財閥派那幾位少爺小姐就要有動作了吧？ 」
+
+### 💬 實時熱門評論 (Real-time Comments)
+* **匿名** \`(Prestige 階級 - ID: 0x94B1)\`：
+  > 「 哇，這任新轉學生氣質聽說是 ${vibe || '很高冷'} 類型的？有好看的了。 」
+* **匿名** \`(Noble 階級 - ID: 0x114D)\`：
+  > 「 哼，${charClass === 'General' ? '一個平民特招生而已，能掀起什麼風浪。' : '又來一個搶佔股權分額的人嗎。'} 」
+
+### 📊 HeraLink 風向數據統計
+* **當前討論熱度：** \`55%\`
+* **輿論走向偏向：** \`［觀望中］\`
+`;
+
+            // 即時匯入前端左側欄位
+            document.getElementById('profile-container').innerHTML = marked.parse(initialProfileMD);
+            document.getElementById('forum-container').innerHTML = marked.parse(initialForumMD);
+
             chatHistory = [
                 {
                     role: "user",
@@ -715,7 +731,7 @@
 
             const characterCardPrompt = `
 【玩家角色卡提交 - 遊戲正式開啟】
-這是我的完整角色設定，請根據此設定開啟第一章首發劇情，並初始化狀態欄與論壇：
+這是我的完整角色設定，請根據此設定開啟第一章首發劇情，並初始化狀態欄與論壇（請承接剛才前端生成的匿名代碼 \`${randomID}\`）：
 
 ## 一、 基本資料
 * 姓名：${name}
@@ -748,7 +764,7 @@
             sendPromptToGemini(characterCardPrompt);
         }
 
-        // 核心 API 請求函數 (Gemini-1.5-Flash 高速相容版)
+        // 核心 API 請求函數
         async function sendPromptToGemini(userPrompt) {
             if (isWaitingForAI) return;
             
@@ -787,18 +803,19 @@
                     parts: [{ text: aiResponseText }]
                 });
 
+                // 【功能實做：對話結束後即時動態更新左側與右側面板】
                 parseAndPopulateUI(aiResponseText);
 
             } catch (error) {
                 console.error(error);
-                alert(`⚠️ 系統與上流社交界斷開聯絡: ${error.message}\n請確認您的金鑰是否正確，或嘗試重新送出。`);
+                alert(`⚠️ 系統與上流社交界斷開聯絡: ${error.message}\n請嘗試重新送出。`);
                 chatHistory.pop();
             } finally {
                 setLoading(false);
             }
         }
 
-        // 結構解析器
+        // 結構解析器：確保每次對話都能精確解構並更新雙面板
         function parseAndPopulateUI(rawText) {
             const rawSections = rawText.split(/\n---\n|\n---\s*\n|\s*---\s*/);
             
@@ -820,6 +837,7 @@
                 }
             });
 
+            // 備用防錯分段
             if (!storyMarkdown && rawSections.length >= 3) {
                 profileMarkdown = rawSections[0];
                 storyMarkdown = rawSections[1];
@@ -831,13 +849,13 @@
                 }
             }
 
-            // 1. 更新左側即時檔案
+            // 1. 每回合【動態更新】左側學生即時檔案
             if (profileMarkdown) {
                 const cleanProfile = profileMarkdown.replace(/#+.*貴族學院.*/g, "").replace(/\[.*學生即時動態檔案.*\]/g, "").trim();
                 document.getElementById('profile-container').innerHTML = marked.parse(cleanProfile);
             }
 
-            // 2. 追加渲染右側劇情
+            // 2. 追加渲染右側核心主劇情
             if (storyMarkdown) {
                 const cleanStory = storyMarkdown.replace(/\[.*🎬 劇情.*\]/g, "").replace(/#+.*當前劇情.*/g, "").trim();
                 const stream = document.getElementById('story-stream');
@@ -850,7 +868,7 @@
                 setTimeout(() => { stream.scrollTop = stream.scrollHeight; }, 100);
             }
 
-            // 3. 更新左側論壇看板 (若 AI 留空則維持上一次或預設顯示)
+            // 3. 每回合【動態更新】左側 HeraLink 論壇看板
             if (forumMarkdown && forumMarkdown.length > 30) {
                 const cleanForum = forumMarkdown.replace(/\[.*📱 HeraLink.*\]/g, "").trim();
                 document.getElementById('forum-container').innerHTML = marked.parse(cleanForum);
