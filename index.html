@@ -574,10 +574,10 @@
                 <div class="form-group">
                     <label>家族階級：</label>
                     <select id="char-class">
-                        <option value="Crown">Crown (皇冠)</option>
-                        <option value="Noble">Noble (貴族)</option>
-                        <option value="Prestige">Prestige (名望)</option>
-                        <option value="General">General (平民)</option>
+                        <option value="Crown">Crown (皇冠)：頂級財閥、掌權政要核心繼承人。掌控學生會，一言定生死</option>
+                        <option value="Noble">Noble (貴族)：大型企業、頂尖法律/醫療世家。地位高，內部派系鬥爭激烈</option>
+                        <option value="Prestige">Prestige (名望)：新興資本、知名經紀公司高層。有錢但缺乏底蘊，最易嫉妒與站隊</option>
+                        <option value="General">General (平民)：特招生或特殊關係戶。缺乏背景，常被當作棋子，卻也是最大變數</option>
                     </select>
                 </div>
             </div>
@@ -813,10 +813,8 @@
                 return;
             }
 
-            // 本地生成精裝明體檔案
-            const localCode = "0x" + Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
-            const initialLocalProfile = `
-# 🏛️ 赫拉學院 • 學生即時動態檔案
+
+## 🏛️ 赫拉學院 • 學生即時動態檔案
 
 ### 👤 基本檔案
 | 姓名 | ${name} |
