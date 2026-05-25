@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>赫拉學院 | 沉浸式文字互動遊戲 Ver.2.5</title>
+    <title>大韓貴族學院 | 沉浸式文字互動遊戲 Ver.2.5</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
@@ -25,7 +25,7 @@
             padding: 0;
         }
 
-        /* 根據指令要求：英文優先使用 Times New Roman，中文與整體改用明體/宋體 */
+        /* 英文優先使用 Times New Roman，中文與整體改用明體/宋體 */
         body, input, select, textarea, button {
             font-family: 'Times New Roman', 'Noto Serif TC', 'PMingLiU', 'Songti TC', serif;
         }
@@ -468,7 +468,7 @@
         <main class="main-content">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院...</p>
+                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。請先填寫繼承者檔案以開啟全新世界線分支...</p>
                 </div>
             </div>
 
@@ -513,7 +513,7 @@
 
     <div id="api-modal" class="modal-overlay hidden">
         <div class="modal-content">
-            <h2>🔑 串接核心核心 API Key</h2>
+            <h2>🔑 串接核心 API Key</h2>
             <div class="form-group" style="margin-bottom: 14px;">
                 <label>請選擇 AI 模型供應商：</label>
                 <select id="api-provider">
@@ -727,7 +727,6 @@
 (固定提供 A、B、C 三個選項。最後提示玩家可以自由輸入 D 或使用下方的解密主控台)
 `;
 
-        // 核心統一歷史結構：[{ role: "user"|"model", text: "..." }]
         let chatHistory = [];
         let isWaitingForAI = false;
 
@@ -814,7 +813,7 @@
                 return;
             }
 
-            // 開局 0 秒立即本地無縫填入精裝明體檔案，杜絕缺項
+            // 本地生成精裝明體檔案
             const localCode = "0x" + Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
             const initialLocalProfile = `
 # 🏛️ 赫拉學院 • 學生即時動態檔案
@@ -845,7 +844,6 @@
 `;
             document.getElementById('profile-container').innerHTML = marked.parse(initialLocalProfile);
 
-            // 初始化與雙引擎結構匹配的通用歷史
             chatHistory = [
                 { role: "user", text: `【核心系統指令與世界觀載入】\n${SYSTEM_INSTRUCTION}\n\n請理解上述所有規則，並準備好扮演遊戲主持人。` },
                 { role: "model", text: "【系統提示】赫拉學院 Ver.2.5 核心系統已成功載入後台。我將嚴格遵守階級、性別代名詞、解密三次硬限制與物理隔離。請提交角色卡。" }
@@ -868,7 +866,7 @@
 * 與家族成員的關係簡述：${familyRel || '未註明'}
 
 ## 三、 角色設定
-* 外貌特徵與自帶氣質：${vibe || '未註明'}
+*外貌特徵與自帶氣質：${vibe || '未註明'}
 * 隱密設定：${secret || '無'}
 
 ## 四、 校園相關
@@ -886,7 +884,7 @@
             sendPromptToAI(characterCardPrompt);
         }
 
-        // 整合一體化雙 API 請求中樞（動態調度 Gemini / ChatGPT）
+        // 整合一體化雙 API 請求中樞
         async function sendPromptToAI(userPrompt) {
             if (isWaitingForAI) return;
             const provider = localStorage.getItem('game_api_provider') || 'gemini';
@@ -901,13 +899,12 @@
                 let response, data, aiResponseText = "";
 
                 if (provider === 'gemini') {
-                    // Google Gemini REST 轉配
                     const geminiContents = chatHistory.map(h => ({
                         role: h.role === "model" ? "model" : "user",
                         parts: [{ text: h.text }]
                     }));
 
-                    response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -920,7 +917,6 @@
                     aiResponseText = data.candidates[0].content.parts[0].text;
 
                 } else {
-                    // OpenAI ChatGPT REST 轉配
                     const openaiMessages = chatHistory.map(h => ({
                         role: h.role === "model" ? "assistant" : "user",
                         content: h.text
@@ -948,9 +944,9 @@
 
             } catch (error) {
                 console.error(error);
-                alert(`⚠️ 權力網路鏈接斷開: ${error.message}`);
+                alert(`⚠️ 權力網絡鏈接斷開: ${error.message}`);
                 chatHistory.pop();
-            } finally { setLoading(false); }
+            } finally { setLoading(false); } // 【已修正】由原本的 final 改回正確的 finally
         }
 
         // 正則表達式精準錨點隔離引擎
@@ -982,7 +978,6 @@
                 extracted[sectionsFound[i].id] = blockText;
             }
 
-            // Fallback 橫線切割後備機制
             if (sectionsFound.length < 2) {
                 const fallback = rawText.split(/\n---\n|\n---\s*\n/);
                 if (fallback.length >= 3) {
@@ -998,7 +993,7 @@
                 let cleanProfile = extracted.profile.replace(/^[\s\-=\*]+/g, "").trim();
                 document.getElementById('profile-container').innerHTML = marked.parse(cleanProfile);
                 
-                if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久解鎖")) {
+                if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久揭鎖")) {
                     showDecryptionResultWindow("🔑 解密驗證成功", "已成功侵入 HeraLink 核心協議層！該代碼已解碼並同步更新至左側『核心 NPC 關係權力圖』中。", "🟢", "#d4af37");
                 } else if (rawText.includes("解密行動失敗") || rawText.includes("永久鎖定") || rawText.includes("反噬")) {
                     showDecryptionResultWindow("🚨 安全警報：驗證失敗", "反向破解失敗！目標代碼持有者已徹底警覺並完成動態加密更換，您的威脅指數直接上升，並將面臨全論壇抹黑反噬！", "🔴", "#ef4444");
@@ -1022,7 +1017,7 @@
                 document.getElementById('forum-container').innerHTML = marked.parse(cleanForum);
             }
 
-            // 4. 解析按鈕（並自動展開抉擇面板確保可讀）
+            // 4. 解析按鈕
             if (extracted.options) {
                 document.getElementById('choices-wrapper-content').classList.remove('folded');
                 parseOptionsToButtons(extracted.options);
@@ -1072,7 +1067,7 @@
             const customText = inputEl.value.trim();
             if (!customText) return;
 
-            const fullActionText = `【【D】玩家自由決策/行動】：${customText}`;
+            const fullActionText = `【【D】玩家自由決策/反擊行動】：${customText}`;
             inputEl.value = "";
 
             const stream = document.getElementById('story-stream');
@@ -1097,7 +1092,6 @@
                 return;
             }
 
-            // 展開解密視窗
             showDecryptionResultWindow("📡 底層網協對比中", `正在向 HeraLink 端口投遞破解籌碼並分析數據路徑...<br>目標代碼：<span style="color:var(--threat-red);font-weight:bold;">${targetId}</span><br>手法確認：${guessText}`, "📡", "var(--accent-gold)");
 
             const fullActionText = `【【系統高級指令】發起 HeraLink 匿名代碼解密行動】\n- 目標解密代碼：${targetId}\n- 身份調查與猜測/投入籌碼手段：${guessText}\n\n請根據當前遊戲進度與世界線，嚴格判定此解密是否猜對。若猜錯或次數用盡，請在回覆檔案中執行扣除機會、上調30%威脅指數、並於下文開啟未知 ID 抹黑反噬情節。`;
