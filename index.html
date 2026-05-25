@@ -950,7 +950,7 @@
                 console.error(error);
                 alert(`⚠️ 權力網路鏈接斷開: ${error.message}`);
                 chatHistory.pop();
-            } final { setLoading(false); }
+            } finally { setLoading(false); }
         }
 
         // 正則表達式精準錨點隔離引擎
@@ -1072,7 +1072,7 @@
             const customText = inputEl.value.trim();
             if (!customText) return;
 
-            const fullActionText = `【【D】玩家自由決策/反擊行動】：${customText}`;
+            const fullActionText = `【【D】玩家自由決策/行動】：${customText}`;
             inputEl.value = "";
 
             const stream = document.getElementById('story-stream');
