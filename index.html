@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>大韓貴族學院 | 沉浸式文字互動遊戲 Ver.2.5</title>
-    <!-- 引入 Marked.js 用於解析 AI 產出的 Markdown 語法（表格、粗體等） -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
@@ -368,7 +367,6 @@
 </head>
 <body>
 
-    <!-- 頂部功能列 -->
     <header>
         <h1>🏛️ 大韓貴族學院 <span style="font-size: 0.75rem; color: var(--text-muted);">Ver.2.5</span></h1>
         <div class="header-actions">
@@ -377,9 +375,7 @@
         </div>
     </header>
 
-    <!-- 主遊戲介面 -->
     <div class="game-container">
-        <!-- 左側面板：即時檔案狀態欄 -->
         <aside class="sidebar">
             <div>
                 <div class="section-title">📊 學生即時動態檔案</div>
@@ -389,39 +385,30 @@
             </div>
         </aside>
 
-        <!-- 右側面板：故事、論壇、操作 -->
         <main class="main-content">
-            <!-- 故事滾動軸區 -->
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
                     <p><strong>【系統提示】</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所。請先填寫角色卡以解鎖封閉式校門...</p>
                 </div>
-                <!-- 動態載入點 -->
-            </div>
+                </div>
 
-            <!-- 下方操作主控台 -->
             <div class="control-panel">
-                <!-- 論壇看版區 -->
                 <div id="forum-section" class="forum-section-container hidden">
                     <div class="section-title">📱 HeraLink 匿名論壇 • 即時熱搜看板</div>
                     <div id="forum-container" class="forum-box"></div>
                 </div>
 
-                <!-- 抉擇選項區 -->
                 <div id="choices-section">
                     <div class="section-title">🎯 命運博弈抉擇</div>
                     <div id="options-container" class="options-container">
-                        <!-- 動態選項按鈕 -->
-                    </div>
+                        </div>
                     
-                    <!-- 自由輸入輸入欄 (D 選項) -->
-                    <div class="custom-input-wrapper id="custom-wrapper" style="margin-top: 12px;">
+                    <div class="custom-input-wrapper" id="custom-wrapper" style="margin-top: 12px;">
                         <input type="text" id="custom-choice-input" placeholder="【D】自由輸入您的反擊、心理博弈或解密追蹤手段...">
                         <button onclick="submitCustomChoice()">送出反擊</button>
                     </div>
                 </div>
 
-                <!-- API 請求等候狀態 -->
                 <div id="loading-indicator" class="loading-spinner hidden">
                     <span>⚡ 正在計算家族利益與社交輿論風向...</span>
                 </div>
@@ -429,7 +416,6 @@
         </main>
     </div>
 
-    <!-- 彈窗 1：API 金鑰輸入 -->
     <div id="api-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <h2>🔑 串接 Gemini 核心 API Key</h2>
@@ -447,7 +433,6 @@
         </div>
     </div>
 
-    <!-- 彈窗 2：角色創建卡 -->
     <div id="character-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <h2>🎭 建立您的繼承者檔案</h2>
@@ -491,8 +476,13 @@
         </div>
     </div>
 
-    <!-- 核心遊戲邏輯 JavaScript -->
     <script>
+        // 設定 Marked.js 全域換行相容性
+        marked.setOptions({
+            breaks: true,
+            gfm: true
+        });
+
         // 系統核心提示詞 Ver.2.5 (完美對接後台)
         const SYSTEM_INSTRUCTION = `
 《韓國貴族學院》沉浸式文字遊戲模板 Ver.2.5 (完整詳細版)
@@ -588,7 +578,7 @@
             }
         }
 
-// 開始遊戲：將系統提示詞與創角卡直接注入對話歷史
+        // 開始遊戲：將系統提示詞與創角卡直接注入對話歷史
         function startStoryGame() {
             const name = document.getElementById('char-name').value.trim();
             const gender = document.getElementById('char-gender').value;
@@ -603,7 +593,7 @@
                 return;
             }
 
-            // 【核心修正】直接把系統提示詞當作歷史第一步餵給 AI，確保相容性
+            // 直接把系統提示詞當作歷史第一步餵給 AI，確保相容性
             chatHistory = [
                 {
                     role: "user",
@@ -632,7 +622,7 @@
             sendPromptToGemini(characterCardPrompt);
         }
 
-// 核心 API 請求函數
+        // 核心 API 請求函數
         async function sendPromptToGemini(userPrompt) {
             if (isWaitingForAI) return;
             
@@ -658,7 +648,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         contents: chatHistory,
-                        // 【已修正】移除了會引發 Unknown name 的 systemInstruction 欄位
                         generationConfig: {
                             temperature: 0.75,
                             maxOutputTokens: 8192
@@ -730,7 +719,6 @@
 
             // 1. 更新左側即時檔案
             if (profileMarkdown) {
-                // 移除標題，只保留核心表格與狀態
                 const cleanProfile = profileMarkdown.replace(/#+.*貴族學院.*/g, "").replace(/\[.*學生即時動態檔案.*\]/g, "").trim();
                 document.getElementById('profile-container').innerHTML = marked.parse(cleanProfile);
             }
@@ -740,13 +728,11 @@
                 const cleanStory = storyMarkdown.replace(/\[.*🎬 劇情.*\]/g, "").replace(/#+.*當前劇情.*/g, "").trim();
                 const stream = document.getElementById('story-stream');
                 
-                // 創建新的故事卡片節點
                 const block = document.createElement('div');
                 block.className = 'story-block';
                 block.innerHTML = marked.parse(cleanStory);
                 stream.appendChild(block);
                 
-                // 平滑滾動到最下方
                 setTimeout(() => { stream.scrollTop = stream.scrollHeight; }, 100);
             }
 
@@ -774,8 +760,11 @@
             let btnCount = 0;
 
             lines.forEach(line => {
-                // 尋找包含 【A】、【B】、【C】格式的行
-                const match = line.match(/(【A】|【B】|【C】|A\.|B\.|C\.)\s*(.+)/);
+                // 先過濾掉 Markdown 粗體符號，防止 AI 輸出 **【A】** 導致比對失敗
+                const cleanLine = line.replace(/\*\*/g, '').trim();
+                
+                // 尋找包含 【A】、【B】、【C】或 A., B., C. 格式的行
+                const match = cleanLine.match(/^(【A】|【B】|【C】|A\.|B\.|C\.)\s*(.+)/);
                 if (match) {
                     btnCount++;
                     const label = match[1];
@@ -801,7 +790,6 @@
         function selectChoice(label, text) {
             const fullActionText = `【我選擇了 ${label}：${text}】`;
             
-            // 在故事流中即時追加玩家的選擇，強化互動感
             const stream = document.getElementById('story-stream');
             const choiceBlock = document.createElement('div');
             choiceBlock.className = 'story-block';
@@ -811,7 +799,6 @@
             stream.appendChild(choiceBlock);
             stream.scrollTop = stream.scrollHeight;
 
-            // 送出給 AI 計算下一個世界線分支
             sendPromptToGemini(fullActionText);
         }
 
