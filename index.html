@@ -528,11 +528,11 @@
             </div>
             <div class="form-group">
                 <label>期望遇見的明星/角色：</label>
-                <input type="text" id="char-prefer" placeholder="例如：韓韶禧(同班死敵)"></textarea>
+                <input type="text" id="char-prefer" placeholder="例如：韓韶禧(同班死敵)">
             </div>
             <div class="form-group">
                 <label>絕對不希望出現的雷點內容：</label>
-                <input type="text" id="char-tw" placeholder="例如：強行降智套路"></textarea>
+                <input type="text" id="char-tw" placeholder="例如：強行降智套路">
             </div>
 
             <button class="modal-btn" onclick="startStoryGame()">踏入權力交界處</button>
@@ -641,7 +641,7 @@
             }
         }
 
-        // 開始遊戲：即時本地匯入 + 後台注入提示詞
+        // 開始遊戲：即時本地匯入
         function startStoryGame() {
             const name = document.getElementById('char-name').value.trim();
             const gender = document.getElementById('char-gender').value;
@@ -664,7 +664,7 @@
                 return;
             }
 
-            // 【功能實現】點擊瞬間立刻動態本地填入檔案，杜絕空白狀態
+            // 本地立即生成首發檔案，防止網路延遲留白
             const localCode = "0x" + Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
             const initialLocalProfile = `
 # 🏛️ 貴族學院 • 學生即時動態檔案
@@ -685,7 +685,7 @@
 ### 🤝 核心 NPC 關係權力圖
 > ❤️好感度/🖤戒備度 | 💎利益綁定度
 
-1. 正在黑箱建立校內情報圖... ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+1. 正在建立校內情報網... ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
 
 ### 🎒 背包與關鍵籌碼
 * 資金/可動用資源： 充裕 (基於家族背景)
@@ -762,66 +762,162 @@
 
             } catch (error) {
                 console.error(error);
-                alert(`⚠️ 社交網路斷開: ${error.message}`);
+                alert(`⚠️ 社交網絡斷開: ${error.message}`);
                 chatHistory.pop();
             } finally { setLoading(false); }
         }
 
-        // 【重大修正】精準座標錨點解析引擎，完全阻絕「空白洗白」臭蟲
+        // 【重大升級】正則表達式精準錨點隔離引擎，徹底消滅論壇/檔案不更新的 Bug
         function parseAndPopulateUI(rawText) {
-            const markers = [
-                { id: 'profile', keys: ['📋 學生即時動態檔案', '學生即時動態檔案', '👤 基本檔案'] },
-                { id: 'story', keys: ['🎬 劇情', '當前劇情演進', '當前劇情'] },
-                { id: 'forum', keys: ['📱 HeraLink 即時熱搜看板', 'HeraLink 匿名論壇', '🔥 今日即時熱門貼文'] },
-                { id: 'options', keys: ['🎯 分歧選項', '分歧選項', '🎯 命運博弈抉擇'] }
-            ];
+            // 利用高精準度、具備容錯（防 Markdown 加粗、井號變形）的正則公式定位各大主區塊
+            const regexProfile = /(?:\[\s*📋\s*學生即時動態檔案\s*\]|#+\s*📋\s*學生即時動態檔案|#+\s*學生即時動態檔案)/i;
+            const regexStory = /(?:\[\s*🎬\s*劇情\s*\]|#+\s*🎬\s*劇情|#+\s*當前劇情)/i;
+            const regexForum = /(?:\[\s*📱\s*HeraLink\s*即時熱搜看板\s*\]|#+\s*📱\s*HeraLink\s*即時熱搜看板|#+\s*📱\s*HeraLink\s*匿名論壇\s*•\s*即時熱搜看板|#+\s*🔥\s*今日即時熱門貼文)/i;
+            const regexOptions = /(?:\[\s*🎯\s*分歧選項\s*\]|#+\s*🎯\s*分歧選項|#+\s*🎯\s*命運博弈抉擇|#+\s*分歧選項)/i;
 
-            let positions = [];
+            let posProfile = rawText.search(regexProfile);
+            let posStory = rawText.search(regexStory);
+            let posForum = rawText.search(regexForum);
+            let posOptions = rawText.search(regexOptions);
 
-            // 抓取每個核心區塊在全文字中出現的最初始座標
-            markers.forEach(m => {
-                let earliestPos = -1;
-                m.keys.forEach(key => {
-                    let pos = rawText.indexOf(key);
-                    if (pos !== -1 && (earliestPos === -1 || pos < earliestPos)) earliestPos = pos;
-                });
-                if (earliestPos !== -1) positions.push({ id: m.id, pos: earliestPos });
-            });
+            let sectionsFound = [];
+            if (posProfile !== -1) sectionsFound.push({ id: 'profile', pos: posProfile, regex: regexProfile });
+            if (posStory !== -1) sectionsFound.push({ id: 'story', pos: posStory, regex: regexStory });
+            if (posForum !== -1) sectionsFound.push({ id: 'forum', pos: posForum, regex: regexForum });
+            if (posOptions !== -1) sectionsFound.push({ id: 'options', pos: posOptions, regex: regexOptions });
 
-            // 依據文本出現順序由上至下重新排列
-            positions.sort((a, b) => a.pos - b.pos);
+            // 按照在文章中出現的先後順序排序（避免被前後段交叉干擾）
+            sectionsFound.sort((a, b) => a.pos - b.pos);
 
-            let sections = { profile: "", story: "", forum: "", options: "" };
+            let extracted = { profile: "", story: "", forum: "", options: "" };
 
-            // 進行智能切片
-            for (let i = 0; i < positions.length; i++) {
-                let start = positions[i].pos;
-                let end = (i + 1 < positions.length) ? positions[i+1].pos : rawText.length;
-                sections[positions[i].id] = rawText.substring(start, end).trim();
+            // 進行智能跨區段切片
+            for (let i = 0; i < sectionsFound.length; i++) {
+                let start = sectionsFound[i].pos;
+                let end = (i + 1 < sectionsFound.length) ? sectionsFound[i+1].pos : rawText.length;
+                let blockText = rawText.substring(start, end).trim();
+                
+                // 剝離掉標題本身，只留下內容
+                blockText = blockText.replace(sectionsFound[i].regex, "").trim();
+                extracted[sectionsFound[i].id] = blockText;
             }
 
-            // 後備安全機制（防範 AI 未輸出標準欄位）
-            if (!sections.story && !sections.options) {
+            // 超強後備安全機制：如果 AI 突然拒絕輸出標準標籤，啟用橫線 fallback
+            if (sectionsFound.length < 2) {
                 const fallback = rawText.split(/\n---\n|\n---\s*\n/);
                 if (fallback.length >= 3) {
-                    sections.profile = fallback[0];
-                    sections.story = fallback[1];
-                    if (fallback.length >= 4) { sections.forum = fallback[2]; sections.options = fallback[3]; }
-                    else sections.options = fallback[2];
+                    extracted.profile = fallback[0];
+                    extracted.story = fallback[1];
+                    if (fallback.length >= 4) { extracted.forum = fallback[2]; extracted.options = fallback[3]; }
+                    else extracted.options = fallback[2];
+                } else {
+                    extracted.story = rawText; // 終極防護：全丟給故事區顯示
                 }
             }
 
-            // 1. 動態更新左側「學生即時動態檔案」
-            if (sections.profile) {
-                let cleanProfile = sections.profile
-                    .replace(/\[\s*📋\s*學生即時動態檔案\s*\]/g, "")
-                    .replace(/#+\s*🏛️\s*貴族學院\s*•\s*學生即時動態檔案/g, "")
-                    .trim();
-                cleanProfile = cleanProfile.replace(/^[\s\-=\*]+/g, ""); // 移除前端碎餘雜訊
+            // 1. 強制即時刷新左側「學生即時動態檔案」
+            if (extracted.profile) {
+                let cleanProfile = extracted.profile.replace(/^[\s\-=\*]+/g, "").trim();
                 document.getElementById('profile-container').innerHTML = marked.parse(cleanProfile);
             }
 
-            // 2. 追加渲染右側主劇情流
-            if (sections.story) {
-                let cleanStory = sections.story
-                    .replace(/\
+            // 2. 追加渲染右側劇情主軸流
+            if (extracted.story) {
+                let cleanStory = extracted.story.replace(/^[\s\-=\*]+/g, "").trim();
+                const stream = document.getElementById('story-stream');
+                const block = document.createElement('div');
+                block.className = 'story-block';
+                block.innerHTML = marked.parse(cleanStory);
+                stream.appendChild(block);
+                
+                setTimeout(() => { stream.scrollTop = stream.scrollHeight; }, 100);
+            }
+
+            // 3. 強制即時刷新左側「HeraLink 匿名論壇看板」
+            if (extracted.forum) {
+                let cleanForum = extracted.forum.replace(/^[\s\-=\*]+/g, "").trim();
+                document.getElementById('forum-container').innerHTML = marked.parse(cleanForum);
+            }
+
+            // 4. 解析生成下方互動按鈕
+            if (extracted.options) {
+                parseOptionsToButtons(extracted.options);
+            }
+        }
+
+        function parseOptionsToButtons(optionsText) {
+            const container = document.getElementById('options-container');
+            container.innerHTML = "";
+            const lines = optionsText.split('\n');
+            let btnCount = 0;
+
+            lines.forEach(line => {
+                const cleanLine = line.replace(/\*\*/g, '').trim();
+                const match = cleanLine.match(/^(【A】|【B】|【C】|A\.|B\.|C\.)\s*(.+)/);
+                if (match) {
+                    btnCount++;
+                    const label = match[1];
+                    const text = match[2];
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerHTML = `<strong>${label}</strong> ${text}`;
+                    btn.onclick = () => selectChoice(label, text);
+                    container.appendChild(btn);
+                }
+            });
+
+            if (btnCount === 0) container.innerHTML = marked.parse(optionsText);
+        }
+
+        function selectChoice(label, text) {
+            const fullActionText = `【我選擇了 ${label}：${text}】`;
+            const stream = document.getElementById('story-stream');
+            const choiceBlock = document.createElement('div');
+            choiceBlock.className = 'story-block';
+            choiceBlock.style.borderLeft = '4px solid var(--accent-gold)';
+            choiceBlock.style.background = 'rgba(212,175,55,0.02)';
+            choiceBlock.innerHTML = `<p style="color: var(--accent-gold); font-weight: bold;">${fullActionText}</p>`;
+            stream.appendChild(choiceBlock);
+            stream.scrollTop = stream.scrollHeight;
+
+            sendPromptToGemini(fullActionText);
+        }
+
+        function submitCustomChoice() {
+            const inputEl = document.getElementById('custom-choice-input');
+            const customText = inputEl.value.trim();
+            if (!customText) return;
+
+            const fullActionText = `【【D】玩家自由決策/反擊行動】：${customText}`;
+            inputEl.value = "";
+
+            const stream = document.getElementById('story-stream');
+            const choiceBlock = document.createElement('div');
+            choiceBlock.className = 'story-block';
+            choiceBlock.style.borderLeft = '4px solid #fff';
+            choiceBlock.innerHTML = `<p style="color: #fff; font-weight: bold;">${fullActionText}</p>`;
+            stream.appendChild(choiceBlock);
+            stream.scrollTop = stream.scrollHeight;
+
+            sendPromptToGemini(fullActionText);
+        }
+
+        function setLoading(loading) {
+            isWaitingForAI = loading;
+            const indicator = document.getElementById('loading-indicator');
+            const optionBtns = document.querySelectorAll('.option-btn');
+            const customBtn = document.querySelector('.custom-input-wrapper button');
+            
+            if (loading) {
+                indicator.classList.remove('hidden');
+                optionBtns.forEach(b => b.disabled = true);
+                if(customBtn) customBtn.disabled = true;
+            } else {
+                indicator.classList.add('hidden');
+                optionBtns.forEach(b => b.disabled = false);
+                if(customBtn) customBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
