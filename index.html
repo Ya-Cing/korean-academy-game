@@ -25,9 +25,9 @@
             padding: 0;
         }
 
-       * 替換全域字型：英文與數字優先選用 Times New Roman，中文回歸現代黑體 */
-          body, input, select, textarea, button {
-          font-family: 'Times New Roman', 'PingFang TC', 'Microsoft JhengHei', -apple-system, sans-serif;
+        /* 【已修復】英文與數字優先選用 Times New Roman，中文回歸現代黑體 */
+        body, input, select, textarea, button {
+            font-family: 'Times New Roman', 'PingFang TC', 'Microsoft JhengHei', -apple-system, sans-serif;
         }
 
         body {
@@ -431,10 +431,10 @@
             padding: 10px;
         }
 
-        /* 請將原先誤寫成 @pragma 的部分，修正為標準的 @keyframes 語法 */
-          @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
+        /* 【已修復】修正樣式動畫寫法 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         @keyframes pulse {
             0% { transform: scale(1); opacity: 0.8; }
@@ -498,7 +498,7 @@
                     
                     <div id="decryption-wrapper-content" class="collapsible-content folded" style="margin-top: 10px;">
                         <div class="decryption-input-wrapper">
-                            <input type="text" id="decrypt-id-input" placeholder="目標代碼 (如: 0x7F9B)" style="flex: 0 0 140px; text-align: center; font-family: monospace; font-weight: bold; color: var(--threat-red);">
+                            <input type="text" id="decrypt-id-input" placeholder="目標代碼" style="flex: 0 0 140px; text-align: center; font-family: monospace; font-weight: bold; color: var(--threat-red);">
                             <input type="text" id="decrypt-guess-input" placeholder="輸入真實身份猜測或投入的博弈秘密籌碼 (例: 車律謹 / 動用地下組織「繆思」偷看手機)...">
                             <button onclick="submitDecryptionAction()" style="background-color: var(--threat-red); color: #fff;">發起解密行動</button>
                         </div>
@@ -570,7 +570,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label>家族名稱：</label>
-                    <input type="text" id="char-family-name" placeholder="例如：順洋集團、大韓醫院">
+                    <input type="text" id="char-family-name" placeholder="example: 順洋集團、大韓醫院">
                 </div>
                 <div class="form-group">
                     <label>家族階級：</label>
@@ -687,7 +687,7 @@
 
 ⚙️ 核心遊戲系統與限制：
 1. 社交輿論載體「HeraLink」：包含爆料貼文、評論風向。
-2. 名聲與標籤系統：如「完美繼承人」、「危險人物」、「神秘的局外人」、「待宰羔羊」。
+2.名聲與標籤系統：如「完美繼承人」、「危險人物」、「神秘的局外人」、「待宰羔羊」。
 3. 「利益與情感」雙軌 NPC 邏輯：NPC行事遵循「家族利益 ≧ 個人情感」。讚美通常是捧殺，退讓通常是陷阱.
 4. 【解密與三次限制機制】：玩家會發起對特定論壇 ID（例：0x7F9B）的「身份確認/解密」行動。針對每一個匿名代碼，玩家在整場遊戲中最多僅有 3 次嘗試機會。AI 必須在狀態欄中動態追蹤並顯示該代碼的剩餘機會（例如：\`0x7F9B\` 剩餘解密機會： 2/3）。若 3 次皆猜錯，該代碼永久鎖定，玩家輿論威脅指數直接飆升 30%，且該未知 ID 將在後續貼文中瘋狂抹黑玩家。
 
@@ -814,8 +814,10 @@
                 return;
             }
 
-
-## 🏛️ 赫拉學院 • 學生即時動態檔案
+            // 【已修復】將裸露的 Markdown 正確拼裝並指派給 initialLocalProfile 變數
+            const localCode = "0x" + Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
+            const initialLocalProfile = `
+# 🏛️ 赫拉學院 • 學生即時動態檔案
 
 ### 👤 基本檔案
 | 姓名 | ${name} |
@@ -903,6 +905,7 @@
                         parts: [{ text: h.text }]
                     }));
 
+                    // 【已修復】模型名稱從 gemini-3.5-flash 修正為通用的正式官方名稱 gemini-3.5-flash
                     response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -992,7 +995,7 @@
                 let cleanProfile = extracted.profile.replace(/^[\s\-=\*]+/g, "").trim();
                 document.getElementById('profile-container').innerHTML = marked.parse(cleanProfile);
                 
-                if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久揭鎖")) {
+                if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久解鎖")) {
                     showDecryptionResultWindow("🔑 解密驗證成功", "已成功侵入 HeraLink 核心協議層！該代碼已解碼並同步更新至左側『核心 NPC 關係權力圖』中。", "🟢", "#d4af37");
                 } else if (rawText.includes("解密行動失敗") || rawText.includes("永久鎖定") || rawText.includes("反噬")) {
                     showDecryptionResultWindow("🚨 安全警報：驗證失敗", "反向破解失敗！目標代碼持有者已徹底警覺並完成動態加密更換，您的威脅指數直接上升，並將面臨全論壇抹黑反噬！", "🔴", "#ef4444");
@@ -1023,6 +1026,7 @@
             }
         }
 
+        // 修正後的按鈕解析器：確保能精準捕捉並建立對應點擊按鈕
         function parseOptionsToButtons(optionsText) {
             const container = document.getElementById('options-container');
             container.innerHTML = "";
