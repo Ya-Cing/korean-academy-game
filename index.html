@@ -74,9 +74,9 @@
             width: 100%;
         }
 
-        /* 左側欄：動態雙檔案與論壇區（整合一體化） */
+        /* 左側欄：動態雙檔案與論壇區（整合一體化監控儀表板） */
         .sidebar {
-            width: 400px;
+            width: 420px;
             background-color: var(--bg-panel);
             border-right: 1px solid var(--border-color);
             display: flex;
@@ -229,14 +229,14 @@
             margin-right: 8px;
         }
 
-        /* 自由輸入框 */
-        .custom-input-wrapper {
+        /* 輸入框通用樣式 */
+        .custom-input-wrapper, .decryption-input-wrapper {
             display: flex;
             gap: 10px;
             width: 100%;
         }
 
-        .custom-input-wrapper input {
+        .custom-input-wrapper input, .decryption-input-wrapper input {
             flex: 1;
             background-color: var(--bg-deep);
             border: 1px dashed var(--border-color);
@@ -246,12 +246,12 @@
             font-size: 0.95rem;
         }
 
-        .custom-input-wrapper input:focus {
+        .custom-input-wrapper input:focus, .decryption-input-wrapper input:focus {
             outline: none;
             border-color: var(--accent-gold);
         }
 
-        .custom-input-wrapper button {
+        .custom-input-wrapper button, .decryption-input-wrapper button {
             background-color: var(--accent-gold);
             color: var(--bg-deep);
             border: none;
@@ -266,7 +266,16 @@
             background-color: var(--accent-gold-hover);
         }
 
-        /* 彈窗／遮罩層（金鑰輸入與角色創建） */
+        /* 解密專屬紅光風格輸入框 */
+        .decryption-input-wrapper input {
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        .decryption-input-wrapper input:focus {
+            border-color: var(--threat-red);
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
+        }
+
+        /* 彈窗／遮罩層 */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -400,7 +409,7 @@
         <main class="main-content">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>【系統提示】</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所。請先填寫繼承者檔案以開啟這場權力局...</p>
+                    <p><strong>【系統提示】</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所。請先填寫繼承者檔案以開啟這場權力生存局...</p>
                 </div>
             </div>
 
@@ -410,8 +419,17 @@
                     <div id="options-container" class="options-container"></div>
                     
                     <div class="custom-input-wrapper" id="custom-wrapper" style="margin-top: 12px;">
-                        <input type="text" id="custom-choice-input" placeholder="【D】自由輸入您的反擊、心理博弈或解密追蹤手段...">
-                        <button onclick="submitCustomChoice()">送出反擊</button>
+                        <input type="text" id="custom-choice-input" placeholder="【D】自由輸入您的常規社交應對、利益抉擇、或秘密拉攏手段...">
+                        <button onclick="submitCustomChoice()">送出決策</button>
+                    </div>
+
+                    <div class="decryption-box-wrapper" style="margin-top: 16px; border-top: 1px dashed var(--border-color); padding-top: 14px;">
+                        <div class="section-title" style="color: var(--threat-red); border-left-color: var(--threat-red); font-size: 0.8rem; margin-bottom: 8px;">🕵️ 【系統高級指令】HeraLink 匿名代碼解密主控台</div>
+                        <div class="decryption-input-wrapper">
+                            <input type="text" id="decrypt-id-input" placeholder="目標代碼 (如: 0x7F9B)" style="flex: 0 0 140px; text-align: center; font-family: monospace; font-weight: bold; color: var(--threat-red);">
+                            <input type="text" id="decrypt-guess-input" placeholder="輸入真實身份猜測或投入的博弈秘密籌碼 (例: 車律謹 / 動用地下組織「繆思」偷看手機)...">
+                            <button onclick="submitDecryptionAction()" style="background-color: var(--threat-red); color: #fff;">發起解密行動</button>
+                        </div>
                     </div>
                 </div>
 
@@ -576,28 +594,36 @@
 2. 正統韓國社會語境：職位稱呼（如：理事、本部長、代表、室長、檢察官、議員、常務等）必須完全符合現代大韓民國的政商習慣。
 3. 代名詞性別嚴格區分：男性使用「你 / 他」、女性使用「妳 / 她」。絕對嚴禁串用。
 
-⚙️ 核心遊戲系統：
+⚙️ 核心遊戲系統與限制：
 1. 社交輿論載體「HeraLink」：包含爆料貼文、評論風向。
 2. 名聲與標籤系統：如「完美繼承人」、「危險人物」、「神秘的局外人」、「待宰羔羊」。
 3. 「利益與情感」雙軌 NPC 邏輯：NPC行事遵循「家族利益 ≧ 個人情感」。讚美通常是捧殺，退讓通常是陷阱。
+4. 【解密與三次限制機制】：玩家會發起對特定論壇 ID（例：0x7F9B）的「身份確認/解密」行動。針對每一個匿名代碼，玩家在整場遊戲中最多僅有 3 次嘗試機會。AI 必須在狀態欄中動態追蹤並顯示該代碼的剩餘機會（例如：\`0x7F9B 剩餘解密機會： 3/3\`）。若 3 次皆猜錯，該代碼永久鎖定，玩家輿論威脅指數直接飆升 30%，且該未知 ID 將在後續貼文中瘋狂抹黑玩家。
 
 🤖 AI 敘事與操作規則：
 1. 每次回覆劇情不可低於 1000 字，具備極強的電影畫面場景感與微表情刻畫。
 2. 親密感與信任度必須通過利益交換緩慢累積。
 3. 嚴禁在任何看板透露任何人的匿名 ID 的持有者。
 
-📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵循以下順序輸出，並使用分隔線 --- 進行物理隔離：
+📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵循以下順序輸出，並使用分隔線 --- 進行物理隔離。所有欄位和子項目必須完整渲染，嚴禁精簡：
 [ 📋 學生即時動態檔案 ]
-(使用 Markdown 表格與條列方式，包含基本檔案、HeraLink動態、核心NPC關係權力圖、背包與關鍵籌碼)
+### 👤 基本檔案
+(呈現基本檔案表格，包含姓名、階級、陣營/派系、家族當前狀態、論壇匿名代碼)
+### 📱 HeraLink 匿名論壇動態
+(呈現名聲標籤、本週熱搜、輿論威脅指數、🕵️ 當前解密追蹤紀錄與剩餘機會)
+### 🤝 核心 NPC 關係權力圖
+(條列核心 NPC 關係，包含好感/戒備度、利益綁定度、以及💬 態度潛台詞)
+### 🎒 背包與關鍵籌碼
+(呈現資金資源狀態、持有秘密/把柄、關鍵道具物品)
 ---
 [ 🎬 劇情 ]
 (提供高密度、充滿細節的電影片段式劇情敘事)
 ---
 [ 📱 HeraLink 即時熱搜看板 ]
-(生成論壇熱搜貼文、實時熱門評論及風向數據。若沒發生則此區段留空，但結構仍要用 --- 隔開)
+(生成論壇熱搜貼文、內文、實時熱門評論及風向數據。若沒發生則此區段留空，但結構仍要用 --- 隔開)
 ---
 [ 🎯 分歧選項 ]
-(固定提供 A、B、C 三個選項。最後提示玩家可以自由輸入 D)
+(固定提供 A、B、C 三個選項。最後提示玩家可以自由輸入 D 或使用下方的解密主控台)
 `;
 
         let chatHistory = [];
@@ -641,7 +667,7 @@
             }
         }
 
-        // 開始遊戲：即時本地匯入
+        // 開始遊戲：即時本地全量匯入
         function startStoryGame() {
             const name = document.getElementById('char-name').value.trim();
             const gender = document.getElementById('char-gender').value;
@@ -664,7 +690,7 @@
                 return;
             }
 
-            // 本地立即生成首發檔案，防止網路延遲留白
+            // 【完全渲染】開局 0 秒立即本地無縫填入精裝檔案，杜絕空白或缺項
             const localCode = "0x" + Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
             const initialLocalProfile = `
 # 🏛️ 貴族學院 • 學生即時動態檔案
@@ -673,11 +699,11 @@
 | 姓名 | ${name} |
 | 階級 | \`${charClass}\` |
 | 陣營/派系 | \`尚未加入\` |
-| 家族當前狀態 | \`穩定 (初始化)\` |
+| 家族當前狀態 | \`穩定 (開局初始化)\` |
 | 論壇匿名代碼 | \`${localCode}\` |
 
 ### 📱 HeraLink 匿名論壇動態
-* 社交名聲標籤： \`神秘局外人\`
+* 社交名聲標籤： \`神秘局外人 (基於 ${status})\`
 * 本週論壇熱搜： #新學期繼承者名冊 #誰是特招生
 * 輿論威脅指數： \`30%\`
 * 🕵️ 當前解密追蹤紀錄： 1. \`[ 未發起代碼解密行動 ]\`
@@ -685,18 +711,19 @@
 ### 🤝 核心 NPC 關係權力圖
 > ❤️好感度/🖤戒備度 | 💎利益綁定度
 
-1. 正在建立校內情報網... ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+1. 正在黑箱校準內閣成員情報... ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+   * 💬 態度潛台詞： 「觀察中。」
 
 ### 🎒 背包與關鍵籌碼
-* 資金/可動用資源： 充裕 (基於家族背景)
-* 持有秘密/把柄： 1. *[ 家族設定：${secret || '無'} ]*
-* 關鍵道具/物品： 無
+* 資金/可動用資源： 充裕 (源自 ${familyName})
+* 持有秘密/把柄： 1. *[ 家族秘辛：${secret || '無'} ]*
+* 關鍵道具/物品： 權力准考證
 `;
             document.getElementById('profile-container').innerHTML = marked.parse(initialLocalProfile);
 
             chatHistory = [
                 { role: "user", parts: [{ text: `【核心系統指令與世界觀載入】\n${SYSTEM_INSTRUCTION}\n\n請理解上述所有規則，並準備好扮演遊戲主持人。` }] },
-                { role: "model", parts: [{ text: "【系統提示】《韓國貴族學院》Ver.2.5 核心系統已成功載入後台。我將嚴格遵守階級制度、代名詞區分、利益與情感雙軌邏輯、以及物理隔離輸出規範。請提交您的繼承者角色卡。" }] }
+                { role: "model", parts: [{ text: "【系統提示】核心系統已成功載入。我將嚴格遵守階級、性別代名詞、解密三次硬限制與物理隔離。請提交角色卡。" }] }
             ];
 
             const characterCardPrompt = `
@@ -767,9 +794,8 @@
             } finally { setLoading(false); }
         }
 
-        // 【重大升級】正則表達式精準錨點隔離引擎，徹底消滅論壇/檔案不更新的 Bug
+        // 正則表達式精準錨點隔離引擎
         function parseAndPopulateUI(rawText) {
-            // 利用高精準度、具備容錯（防 Markdown 加粗、井號變形）的正則公式定位各大主區塊
             const regexProfile = /(?:\[\s*📋\s*學生即時動態檔案\s*\]|#+\s*📋\s*學生即時動態檔案|#+\s*學生即時動態檔案)/i;
             const regexStory = /(?:\[\s*🎬\s*劇情\s*\]|#+\s*🎬\s*劇情|#+\s*當前劇情)/i;
             const regexForum = /(?:\[\s*📱\s*HeraLink\s*即時熱搜看板\s*\]|#+\s*📱\s*HeraLink\s*即時熱搜看板|#+\s*📱\s*HeraLink\s*匿名論壇\s*•\s*即時熱搜看板|#+\s*🔥\s*今日即時熱門貼文)/i;
@@ -786,23 +812,18 @@
             if (posForum !== -1) sectionsFound.push({ id: 'forum', pos: posForum, regex: regexForum });
             if (posOptions !== -1) sectionsFound.push({ id: 'options', pos: posOptions, regex: regexOptions });
 
-            // 按照在文章中出現的先後順序排序（避免被前後段交叉干擾）
             sectionsFound.sort((a, b) => a.pos - b.pos);
-
             let extracted = { profile: "", story: "", forum: "", options: "" };
 
-            // 進行智能跨區段切片
             for (let i = 0; i < sectionsFound.length; i++) {
                 let start = sectionsFound[i].pos;
                 let end = (i + 1 < sectionsFound.length) ? sectionsFound[i+1].pos : rawText.length;
                 let blockText = rawText.substring(start, end).trim();
-                
-                // 剝離掉標題本身，只留下內容
                 blockText = blockText.replace(sectionsFound[i].regex, "").trim();
                 extracted[sectionsFound[i].id] = blockText;
             }
 
-            // 超強後備安全機制：如果 AI 突然拒絕輸出標準標籤，啟用橫線 fallback
+            // Fallback 後備
             if (sectionsFound.length < 2) {
                 const fallback = rawText.split(/\n---\n|\n---\s*\n/);
                 if (fallback.length >= 3) {
@@ -810,18 +831,16 @@
                     extracted.story = fallback[1];
                     if (fallback.length >= 4) { extracted.forum = fallback[2]; extracted.options = fallback[3]; }
                     else extracted.options = fallback[2];
-                } else {
-                    extracted.story = rawText; // 終極防護：全丟給故事區顯示
-                }
+                } else { extracted.story = rawText; }
             }
 
-            // 1. 強制即時刷新左側「學生即時動態檔案」
+            // 1. 即時刷新左側檔案
             if (extracted.profile) {
                 let cleanProfile = extracted.profile.replace(/^[\s\-=\*]+/g, "").trim();
                 document.getElementById('profile-container').innerHTML = marked.parse(cleanProfile);
             }
 
-            // 2. 追加渲染右側劇情主軸流
+            // 2. 追加右側劇情流
             if (extracted.story) {
                 let cleanStory = extracted.story.replace(/^[\s\-=\*]+/g, "").trim();
                 const stream = document.getElementById('story-stream');
@@ -829,17 +848,16 @@
                 block.className = 'story-block';
                 block.innerHTML = marked.parse(cleanStory);
                 stream.appendChild(block);
-                
                 setTimeout(() => { stream.scrollTop = stream.scrollHeight; }, 100);
             }
 
-            // 3. 強制即時刷新左側「HeraLink 匿名論壇看板」
+            // 3. 即時刷新左側論壇看板
             if (extracted.forum) {
                 let cleanForum = extracted.forum.replace(/^[\s\-=\*]+/g, "").trim();
                 document.getElementById('forum-container').innerHTML = marked.parse(cleanForum);
             }
 
-            // 4. 解析生成下方互動按鈕
+            // 4. 生成按鈕
             if (extracted.options) {
                 parseOptionsToButtons(extracted.options);
             }
@@ -902,20 +920,53 @@
             sendPromptToGemini(fullActionText);
         }
 
+        // 【新增功能】分離提交：解密追蹤專用發送鏈
+        function submitDecryptionAction() {
+            const idEl = document.getElementById('decrypt-id-input');
+            const guessEl = document.getElementById('decrypt-guess-input');
+            const targetId = idEl.value.trim();
+            const guessText = guessEl.value.trim();
+
+            if (!targetId || !guessText) {
+                alert('請同時輸入欲破解的目標代碼 (如: 0x7F9B) 以及投入的猜測身份/秘密籌碼！');
+                return;
+            }
+
+            const fullActionText = `【【系統高級指令】發起 HeraLink 匿名代碼解密行動】\n- 目標解密代碼：${targetId}\n- 身份調查與猜測/投入籌碼手段：${guessText}`;
+            idEl.value = "";
+            guessEl.value = "";
+
+            // 追加紅色高警示區塊至劇情流
+            const stream = document.getElementById('story-stream');
+            const choiceBlock = document.createElement('div');
+            choiceBlock.className = 'story-block';
+            choiceBlock.style.borderLeft = '4px solid var(--threat-red)';
+            choiceBlock.style.background = 'rgba(239, 68, 68, 0.02)';
+            choiceBlock.innerHTML = `<p style="color: var(--threat-red); font-weight: bold; font-family: monospace;">${fullActionText.replace(/\n/g, '<br>')}</p>`;
+            stream.appendChild(choiceBlock);
+            stream.scrollTop = stream.scrollHeight;
+
+            // 送出指令讓 AI 判定成功或硬限制懲罰反噬
+            sendPromptToGemini(fullActionText);
+        }
+
         function setLoading(loading) {
             isWaitingForAI = loading;
             const indicator = document.getElementById('loading-indicator');
             const optionBtns = document.querySelectorAll('.option-btn');
             const customBtn = document.querySelector('.custom-input-wrapper button');
+            const decryptBtn = document.querySelector('.decryption-input-wrapper button');
             
             if (loading) {
                 indicator.classList.remove('hidden');
                 optionBtns.forEach(b => b.disabled = true);
                 if(customBtn) customBtn.disabled = true;
+                if(decryptBtn) decryptBtn.disabled = true;
             } else {
                 indicator.classList.add('hidden');
                 optionBtns.forEach(b => b.disabled = false);
                 if(customBtn) customBtn.disabled = false;
+                if(decryptBtn) decryptBtn.disabled = false;
             }
         }
     </script>
