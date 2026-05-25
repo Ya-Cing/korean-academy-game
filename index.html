@@ -468,7 +468,7 @@
         <main class="main-content">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。請先填寫繼承者檔案以開啟全新世界線分支...</p>
+                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院...</p>
                 </div>
             </div>
 
@@ -483,7 +483,7 @@
                     <div id="choices-wrapper-content" class="collapsible-content">
                         <div id="options-container" class="options-container"></div>
                         <div class="custom-input-wrapper" id="custom-wrapper" style="margin-top: 12px;">
-                            <input type="text" id="custom-choice-input" placeholder="【D】自由輸入您的常規社交應對、利益抉擇、或秘密拉攏手段...">
+                            <input type="text" id="custom-choice-input" placeholder="輸入您的選擇或自由應對、利益抉擇、拉攏手段...">
                             <button onclick="submitCustomChoice()">送出決策</button>
                         </div>
                     </div>
@@ -998,7 +998,7 @@
                 let cleanProfile = extracted.profile.replace(/^[\s\-=\*]+/g, "").trim();
                 document.getElementById('profile-container').innerHTML = marked.parse(cleanProfile);
                 
-                if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久揭鎖")) {
+                if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久解鎖")) {
                     showDecryptionResultWindow("🔑 解密驗證成功", "已成功侵入 HeraLink 核心協議層！該代碼已解碼並同步更新至左側『核心 NPC 關係權力圖』中。", "🟢", "#d4af37");
                 } else if (rawText.includes("解密行動失敗") || rawText.includes("永久鎖定") || rawText.includes("反噬")) {
                     showDecryptionResultWindow("🚨 安全警報：驗證失敗", "反向破解失敗！目標代碼持有者已徹底警覺並完成動態加密更換，您的威脅指數直接上升，並將面臨全論壇抹黑反噬！", "🔴", "#ef4444");
