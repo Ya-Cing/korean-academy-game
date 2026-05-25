@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大韓貴族學院 | 沉浸式文字互動遊戲 Ver.2.5</title>
+    <title>赫拉學院 | 沉浸式文字互動遊戲 Ver.2.5</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
@@ -25,10 +25,14 @@
             padding: 0;
         }
 
+        /* 根據指令要求：英文優先使用 Times New Roman，中文與整體改用明體/宋體 */
+        body, input, select, textarea, button {
+            font-family: 'Times New Roman', 'Noto Serif TC', 'PMingLiU', 'Songti TC', serif;
+        }
+
         body {
             background-color: var(--bg-deep);
             color: var(--text-main);
-            font-family: 'PingFang TC', 'Microsoft JhengHei', -apple-system, sans-serif;
             overflow: hidden;
             height: 100vh;
         }
@@ -74,7 +78,7 @@
             width: 100%;
         }
 
-        /* 左側欄：動態雙檔案與論壇區（整合一體化監控儀表板） */
+        /* 左側欄：整合一體化儀表板 */
         .sidebar {
             width: 420px;
             background-color: var(--bg-panel);
@@ -82,8 +86,8 @@
             display: flex;
             flex-direction: column;
             overflow-y: auto;
-            padding: 20px;
-            gap: 24px;
+            padding: 25px;
+            gap: 26px;
         }
 
         .sidebar::-webkit-scrollbar {
@@ -94,7 +98,7 @@
             border-radius: 3px;
         }
 
-        /* 右側欄：主核心劇情演進區 */
+        /* 右側欄：劇情演進區 */
         .main-content {
             flex: 1;
             display: flex;
@@ -103,7 +107,7 @@
             overflow: hidden;
         }
 
-        /* 故事流動區域（保持滾動在最下方） */
+        /* 故事流動區域 */
         .story-stream {
             flex: 1;
             overflow-y: auto;
@@ -121,17 +125,42 @@
             border-radius: 3px;
         }
 
-        /* 控制台區塊（選項固定在底部） */
+        /* 控制台區塊 */
         .control-panel {
             background-color: var(--bg-panel);
             border-top: 1px solid var(--border-color);
             padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
-        /* 樣式與組件 */
+        /* 可摺疊式區塊樣式 */
+        .collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 6px 0;
+            user-select: none;
+        }
+        .collapsible-header:hover .section-title {
+            color: var(--accent-gold-hover);
+        }
+        .toggle-icon {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+        .collapsible-content {
+            transition: all 0.3s ease-in-out;
+            overflow: hidden;
+        }
+        .folded {
+            display: none !important;
+        }
+
+        /* 標題樣式 */
         .section-title {
             color: var(--accent-gold);
             font-size: 0.9rem;
@@ -139,41 +168,56 @@
             letter-spacing: 1.5px;
             border-left: 3px solid var(--accent-gold);
             padding-left: 8px;
-            margin-bottom: 14px;
             font-weight: 600;
         }
 
-        /* 檔案與論壇渲染樣式 */
+        /* 左側 Markdown 面板優化美化介面 */
         .profile-box, .forum-box {
-            font-size: 0.85rem;
-            line-height: 1.6;
+            font-size: 0.9rem;
+            line-height: 1.7;
         }
-
-        /* 讓 Marked.js 生成的表格與 Markdown 符合豪門風格 */
+        .profile-box h3, .forum-box h2, .forum-box h3 {
+            color: var(--accent-gold);
+            font-size: 0.95rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            padding-bottom: 6px;
+            letter-spacing: 1px;
+        }
         .profile-box table, .forum-box table {
             width: 100%;
             border-collapse: collapse;
-            margin: 10px 0;
+            margin: 12px 0;
+            background-color: rgba(255, 255, 255, 0.01);
         }
         .profile-box th, .profile-box td, .forum-box th, .forum-box td {
             border: 1px solid var(--border-color);
-            padding: 8px;
+            padding: 10px;
             text-align: left;
         }
         .profile-box th, .forum-box th {
-            background-color: rgba(212, 175, 55, 0.1);
+            background-color: rgba(212, 175, 55, 0.08);
             color: var(--accent-gold);
+            font-weight: 600;
+        }
+        .profile-box ul, .forum-box ul {
+            padding-left: 18px;
+            margin: 10px 0;
+        }
+        .profile-box li, .forum-box li {
+            margin-bottom: 6px;
         }
         .profile-box blockquote, .forum-box blockquote {
             border-left: 3px solid var(--accent-gold);
-            background: rgba(255,255,255,0.03);
-            padding: 10px;
-            margin: 10px 0;
+            background: rgba(255,255,255,0.02);
+            padding: 12px;
+            margin: 12px 0;
             font-style: italic;
         }
         .forum-section-container {
             background: rgba(239, 68, 68, 0.01);
-            border: 1px dashed rgba(239, 68, 68, 0.2);
+            border: 1px dashed rgba(239, 68, 68, 0.15);
             padding: 14px;
             border-radius: 6px;
         }
@@ -183,15 +227,15 @@
             background-color: var(--bg-panel);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 24px;
-            line-height: 1.8;
+            padding: 26px;
+            line-height: 1.9;
             font-size: 1.05rem;
             letter-spacing: 0.5px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             animation: fadeIn 0.5s ease-out;
         }
         .story-block p {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
         .story-block strong {
             color: var(--accent-gold);
@@ -202,6 +246,7 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 10px;
+            margin-top: 8px;
         }
 
         .option-btn {
@@ -229,7 +274,7 @@
             margin-right: 8px;
         }
 
-        /* 輸入框通用樣式 */
+        /* 輸入框組合 */
         .custom-input-wrapper, .decryption-input-wrapper {
             display: flex;
             gap: 10px;
@@ -266,7 +311,6 @@
             background-color: var(--accent-gold-hover);
         }
 
-        /* 解密專屬紅光風格輸入框 */
         .decryption-input-wrapper input {
             border: 1px solid rgba(239, 68, 68, 0.2);
         }
@@ -275,7 +319,7 @@
             box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
         }
 
-        /* 彈窗／遮罩層公用樣式 */
+        /* 彈窗／遮罩層 */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -365,7 +409,6 @@
             background-color: var(--accent-gold-hover);
         }
 
-        /* 解密驗證專屬視窗樣式 */
         .decrypt-modal-content {
             border: 1px solid var(--threat-red) !important;
             text-align: center;
@@ -402,7 +445,7 @@
 <body>
 
     <header>
-        <h1>🏛️ 大韓貴族學院 <span style="font-size: 0.75rem; color: var(--text-muted);">Ver.2.5</span></h1>
+        <h1>🏛️ 赫拉學院 <span style="font-size: 0.75rem; color: var(--text-muted);">Ver.2.5</span></h1>
         <div class="header-actions">
             <button onclick="toggleApiKeyModal()">⚙️ 重設 API Key</button>
             <button onclick="restartGame()" style="margin-left: 8px; border-color: var(--threat-red); color: var(--threat-red);">🔄 重啟遊戲</button>
@@ -425,22 +468,34 @@
         <main class="main-content">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所。請先填寫右側繼承者檔案以開啟全新世界線分支...</p>
+                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。請先填寫繼承者檔案以開啟全新世界線分支...</p>
                 </div>
             </div>
 
             <div class="control-panel">
+                
                 <div id="choices-section">
-                    <div class="section-title">🎯 命運博弈抉擇</div>
-                    <div id="options-container" class="options-container"></div>
-                    
-                    <div class="custom-input-wrapper" id="custom-wrapper" style="margin-top: 12px;">
-                        <input type="text" id="custom-choice-input" placeholder="輸入您的選擇獲自由應對、利益抉擇或拉攏手段...">
-                        <button onclick="submitCustomChoice()">送出決策</button>
+                    <div class="collapsible-header" onclick="toggleSection('choices-wrapper-content')">
+                        <div class="section-title">🎯 命運博弈抉擇</div>
+                        <span class="toggle-icon" id="choices-wrapper-content-icon">▼ 展開/摺疊</span>
                     </div>
+                    
+                    <div id="choices-wrapper-content" class="collapsible-content">
+                        <div id="options-container" class="options-container"></div>
+                        <div class="custom-input-wrapper" id="custom-wrapper" style="margin-top: 12px;">
+                            <input type="text" id="custom-choice-input" placeholder="【D】自由輸入您的常規社交應對、利益抉擇、或秘密拉攏手段...">
+                            <button onclick="submitCustomChoice()">送出決策</button>
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="decryption-box-wrapper" style="margin-top: 16px; border-top: 1px dashed var(--border-color); padding-top: 14px;">
-                        <div class="section-title" style="color: var(--threat-red); border-left-color: var(--threat-red); font-size: 0.8rem; margin-bottom: 8px;">HeraLink 匿名代碼解密主控台</div>
+                <div class="decryption-box-wrapper" style="border-top: 1px dashed var(--border-color); padding-top: 8px;">
+                    <div class="collapsible-header" onclick="toggleSection('decryption-wrapper-content')">
+                        <div class="section-title" style="color: var(--threat-red); border-left-color: var(--threat-red); font-size: 0.8rem;">🕵️ 【系統高級指令】HeraLink 匿名代碼解密主控台</div>
+                        <span class="toggle-icon" id="decryption-wrapper-content-icon" style="color: var(--threat-red);">▼ 展開/摺疊</span>
+                    </div>
+                    
+                    <div id="decryption-wrapper-content" class="collapsible-content folded" style="margin-top: 10px;">
                         <div class="decryption-input-wrapper">
                             <input type="text" id="decrypt-id-input" placeholder="目標代碼 (如: 0x7F9B)" style="flex: 0 0 140px; text-align: center; font-family: monospace; font-weight: bold; color: var(--threat-red);">
                             <input type="text" id="decrypt-guess-input" placeholder="輸入真實身份猜測或投入的博弈秘密籌碼 (例: 車律謹 / 動用地下組織「繆思」偷看手機)...">
@@ -458,10 +513,17 @@
 
     <div id="api-modal" class="modal-overlay hidden">
         <div class="modal-content">
-            <h2>🔑 串接 Gemini 核心 API Key</h2>
+            <h2>🔑 串接核心核心 API Key</h2>
+            <div class="form-group" style="margin-bottom: 14px;">
+                <label>請選擇 AI 模型供應商：</label>
+                <select id="api-provider">
+                    <option value="gemini">Google Gemini (預設型號: gemini-3.5-flash)</option>
+                    <option value="openai">OpenAI ChatGPT (預設型號: gpt-4o-mini)</option>
+                </select>
+            </div>
             <div class="form-group">
-                <label>請輸入您的 Gemini API Key：</label>
-                <input type="password" id="api-key-input" placeholder="AIzaSy...">
+                <label>請輸入對應的 API 密鑰 (Key)：</label>
+                <input type="password" id="api-key-input" placeholder="AIzaSy... 或 sk-proj-...">
             </div>
             <button class="modal-btn" onclick="saveApiKey()">儲存並繼續</button>
         </div>
@@ -480,8 +542,8 @@
                 <div class="form-group">
                     <label>性別：</label>
                     <select id="char-gender">
-                        <option value="女">女 (嚴格使用「妳/她」)</option>
-                        <option value="男">男 (嚴格使用「你/他」)</option>
+                        <option value="女">女 (對白敘事嚴格使用「妳/她」)</option>
+                        <option value="男">男 (對白敘事嚴格使用「你/他」)</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -530,7 +592,7 @@
 
             <div class="modal-subsection-title">三、 角色設定</div>
             <div class="form-group">
-                <label>外貌特針與自帶氣質：</label>
+                <label>外貌特徵與自帶氣質：</label>
                 <textarea id="char-vibe" placeholder="例如：高冷貓系、清澈無辜的眼神..."></textarea>
             </div>
             <div class="form-group">
@@ -578,7 +640,7 @@
             <div id="decrypt-icon" class="decrypt-status-icon" style="color: var(--accent-gold);">📡</div>
             <h2 id="decrypt-result-title" style="color: #fff; letter-spacing: 2px;">底層網協破解中</h2>
             <p id="decrypt-result-message" style="font-size: 0.95rem; line-height: 1.6; margin: 15px 0; color: var(--text-main);">
-                正在向系統發起端口確認對比，這將消耗該匿名代碼的一次破解機會...
+                正在向系統發起端口確認對比...
             </p>
             <button class="modal-btn" id="decrypt-close-btn" onclick="closeDecryptResultModal()" style="background-color: #252c38; color: #fff; border: 1px solid var(--border-color);">關閉驗證視窗</button>
         </div>
@@ -603,15 +665,16 @@
 > 👤 發文者暱稱： 匿名 \`(ID: 0x0000)\` ｜ 🕒 發布時間： \`08:00\` 
 > 
 > ## 📄 【貼文內文】
-> 「 歡迎來到權力中心。在這裡，守好妳/你的匿名代碼。後果自負。 」
+> 「 歡迎來到權力中心：赫拉學院。在這裡，守好妳/你的匿名代碼。後果自負。 」
 `;
 
         const SYSTEM_INSTRUCTION = `
-《韓國貴族學院》沉浸式文字遊戲模板 Ver.2.5 (完整詳細版)
+《赫拉學院》沉浸式文字遊戲模板 Ver.2.5 (完整詳細版)
 這是一個沉浸式文字互動遊戲，請嚴格扮演遊戲主持人，每次遊戲皆為全新世界線。 
 
 📌 世界觀核心：大韓民國 0.01% 的權力交界處
 學生的地位、待遇、人際關係、話語權，甚至戀愛與未來，幾乎都與背後家族勢力緊密相連。
+學校名稱固定為「赫拉學院」。
 「在這裡，分數只是裝飾，背後的家世才是你唯一的准考證。」
 
 📊 隱性階級制度：Crown (皇冠)、Noble (貴族)、Prestige (名望)、General (平民)
@@ -632,7 +695,7 @@
 2. 親密感與信任度必須通過利益交換緩慢累積。
 3. 嚴禁在任何看板透露任何人的匿名 ID 的持有者。
 
-📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵守以下順序輸出，包含側欄所需的全量細項看板，並使用分隔線 --- 進行物理隔離，絕對不准省略任何一個次級標題欄位：
+📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵循以下順序輸出，包含側欄所需的全量細項看板，並使用分隔線 --- 進行物理隔離，絕對不准省略任何一個次級標題欄位：
 [ 📋 學生即時動態檔案 ]
 ### 👤 基本檔案
 (呈現基本檔案表格，包含姓名、階級、陣營/派系、家族當前狀態、論壇匿名代碼)
@@ -664,27 +727,50 @@
 (固定提供 A、B、C 三個選項。最後提示玩家可以自由輸入 D 或使用下方的解密主控台)
 `;
 
+        // 核心統一歷史結構：[{ role: "user"|"model", text: "..." }]
         let chatHistory = [];
         let isWaitingForAI = false;
 
         window.onload = function() {
             document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
             document.getElementById('forum-container').innerHTML = marked.parse(DEFAULT_FORUM_MD);
-            const savedKey = localStorage.getItem('gemini_api_key');
-            if (!savedKey) document.getElementById('api-modal').classList.remove('hidden');
-            else checkCharacterState();
+            
+            const savedKey = localStorage.getItem('game_api_key');
+            if (!savedKey) {
+                document.getElementById('api-modal').classList.remove('hidden');
+            } else {
+                checkCharacterState();
+            }
         };
+
+        // 摺疊/展開切換函數
+        function toggleSection(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById(id + '-icon');
+            if (content.classList.contains('folded')) {
+                content.classList.remove('folded');
+                icon.innerText = '▼ 展開/摺疊';
+            } else {
+                content.classList.add('folded');
+                icon.innerText = '▲ 展開/摺疊';
+            }
+        }
 
         function toggleApiKeyModal() {
             const modal = document.getElementById('api-modal');
             modal.classList.toggle('hidden');
-            if (localStorage.getItem('gemini_api_key')) document.getElementById('api-key-input').value = localStorage.getItem('gemini_api_key');
+            if (localStorage.getItem('game_api_key')) {
+                document.getElementById('api-key-input').value = localStorage.getItem('game_api_key');
+                document.getElementById('api-provider').value = localStorage.getItem('game_api_provider') || 'gemini';
+            }
         }
 
         function saveApiKey() {
+            const provider = document.getElementById('api-provider').value;
             const key = document.getElementById('api-key-input').value.trim();
             if (key) {
-                localStorage.setItem('gemini_api_key', key);
+                localStorage.setItem('game_api_provider', provider);
+                localStorage.setItem('game_api_key', key);
                 document.getElementById('api-modal').classList.add('hidden');
                 checkCharacterState();
             } else alert('請輸入有效的 API Key');
@@ -695,7 +781,7 @@
         }
 
         function restartGame() {
-            if (confirm('確定要重啟一場全新的世界線嗎？')) {
+            if (confirm('確定要清除進度，重啟一場全新赫拉學院的世界線嗎？')) {
                 chatHistory = [];
                 document.getElementById('story-stream').innerHTML = `<div class="story-block"><p><strong>【系統提示】</strong> 歷史線已重置。請重新填寫檔案...</p></div>`;
                 document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
@@ -705,7 +791,7 @@
             }
         }
 
-        // 開始遊戲：全量本地匯入渲染，絕不殘缺
+        // 開始遊戲：全量本地匯入渲染
         function startStoryGame() {
             const name = document.getElementById('char-name').value.trim();
             const gender = document.getElementById('char-gender').value;
@@ -728,10 +814,10 @@
                 return;
             }
 
-            // 【完全渲染功能】確保所有項目與次級標題在開局 0 秒完全填入左側，杜絕不完整狀態
+            // 開局 0 秒立即本地無縫填入精裝明體檔案，杜絕缺項
             const localCode = "0x" + Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
             const initialLocalProfile = `
-# 🏛️ 貴族學院 • 學生即時動態檔案
+# 🏛️ 赫拉學院 • 學生即時動態檔案
 
 ### 👤 基本檔案
 | 姓名 | ${name} |
@@ -742,14 +828,14 @@
 
 ### 📱 HeraLink 匿名論壇動態
 * 社交名聲標籤： \`神秘局外人 (基於 ${status})\`
-* 本週論壇熱搜： #新學期繼承者名冊 #誰是特招生
+* 本週論壇熱搜： #新學期繼承者名冊 #赫拉學院特招生
 * 輿論威脅指數： \`30%\`
 * 🕵️ 當前解密追蹤紀錄： 1. \`[ 未發起代碼解密行動 ]\`
 
 ### 🤝 核心 NPC 關係權力圖
 > ❤️好感度/🖤戒備度 | 💎利益綁定度
 
-1. 正在黑箱校準內閣成員情報... ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+1. 正在黑箱校準赫拉內閣成員情報... ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
    * 💬 態度潛台詞： 「觀察中。」
 
 ### 🎒 背包與關鍵籌碼
@@ -759,9 +845,10 @@
 `;
             document.getElementById('profile-container').innerHTML = marked.parse(initialLocalProfile);
 
+            // 初始化與雙引擎結構匹配的通用歷史
             chatHistory = [
-                { role: "user", parts: [{ text: `【核心系統指令與世界觀載入】\n${SYSTEM_INSTRUCTION}\n\n請理解上述所有規則，並準備好扮演遊戲主持人。` }] },
-                { role: "model", parts: [{ text: "【系統提示】核心系統已成功載入。我將嚴格遵守階級、性別代名詞、解密三次硬限制與物理隔離。請提交角色卡。" }] }
+                { role: "user", text: `【核心系統指令與世界觀載入】\n${SYSTEM_INSTRUCTION}\n\n請理解上述所有規則，並準備好扮演遊戲主持人。` },
+                { role: "model", text: "【系統提示】赫拉學院 Ver.2.5 核心系統已成功載入後台。我將嚴格遵守階級、性別代名詞、解密三次硬限制與物理隔離。請提交角色卡。" }
             ];
 
             const characterCardPrompt = `
@@ -796,41 +883,74 @@
 請直接開始第一幕，嚴格按照 1.動態檔案表格 2.劇情 3.HeraLink看板 4.選項 的物理隔離順序輸出。`;
 
             document.getElementById('character-modal').classList.add('hidden');
-            sendPromptToGemini(characterCardPrompt);
+            sendPromptToAI(characterCardPrompt);
         }
 
-        // 核心 API 請求函數 (已修正為通用正式端點主流模型 gemini-1.5-flash)
-        async function sendPromptToGemini(userPrompt) {
+        // 整合一體化雙 API 請求中樞（動態調度 Gemini / ChatGPT）
+        async function sendPromptToAI(userPrompt) {
             if (isWaitingForAI) return;
-            const apiKey = localStorage.getItem('gemini_api_key');
+            const provider = localStorage.getItem('game_api_provider') || 'gemini';
+            const apiKey = localStorage.getItem('game_api_key');
+            
             if (!apiKey) { toggleApiKeyModal(); return; }
 
             setLoading(true);
-            chatHistory.push({ role: "user", parts: [{ text: userPrompt }] });
+            chatHistory.push({ role: "user", text: userPrompt });
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: chatHistory,
-                        generationConfig: { temperature: 0.75, maxOutputTokens: 8192 }
-                    })
-                });
+                let response, data, aiResponseText = "";
 
-                const data = await response.json();
-                if (data.error) throw new Error(data.error.message || "API 呼叫失敗");
+                if (provider === 'gemini') {
+                    // Google Gemini REST 轉配
+                    const geminiContents = chatHistory.map(h => ({
+                        role: h.role === "model" ? "model" : "user",
+                        parts: [{ text: h.text }]
+                    }));
 
-                const aiResponseText = data.candidates[0].content.parts[0].text;
-                chatHistory.push({ role: "model", parts: [{ text: aiResponseText }] });
+                    response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: geminiContents,
+                            generationConfig: { temperature: 0.75, maxOutputTokens: 8192 }
+                        })
+                    });
+                    data = await response.json();
+                    if (data.error) throw new Error(data.error.message || "Gemini 拒絕連線");
+                    aiResponseText = data.candidates[0].content.parts[0].text;
 
+                } else {
+                    // OpenAI ChatGPT REST 轉配
+                    const openaiMessages = chatHistory.map(h => ({
+                        role: h.role === "model" ? "assistant" : "user",
+                        content: h.text
+                    }));
+
+                    response = await fetch(`https://api.openai.com/v1/chat/completions`, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: "gpt-4o-mini",
+                            messages: openaiMessages,
+                            temperature: 0.75
+                        })
+                    });
+                    data = await response.json();
+                    if (data.error) throw new Error(data.error.message || "ChatGPT 拒絕連線");
+                    aiResponseText = data.choices[0].message.content;
+                }
+
+                chatHistory.push({ role: "model", text: aiResponseText });
                 parseAndPopulateUI(aiResponseText);
 
             } catch (error) {
                 console.error(error);
-                alert(`⚠️ 社交網絡斷開: ${error.message}`);
+                alert(`⚠️ 權力網路鏈接斷開: ${error.message}`);
                 chatHistory.pop();
-            } finally { setLoading(false); }
+            } final { setLoading(false); }
         }
 
         // 正則表達式精準錨點隔離引擎
@@ -858,12 +978,11 @@
                 let start = sectionsFound[i].pos;
                 let end = (i + 1 < sectionsFound.length) ? sectionsFound[i+1].pos : rawText.length;
                 let blockText = rawText.substring(start, end).trim();
-                
                 blockText = blockText.replace(sectionsFound[i].regex, "").trim();
                 extracted[sectionsFound[i].id] = blockText;
             }
 
-            // Fallback 後備
+            // Fallback 橫線切割後備機制
             if (sectionsFound.length < 2) {
                 const fallback = rawText.split(/\n---\n|\n---\s*\n/);
                 if (fallback.length >= 3) {
@@ -874,20 +993,19 @@
                 } else { extracted.story = rawText; }
             }
 
-            // 1. 即時刷新左側檔案
+            // 1. 刷新左側檔案
             if (extracted.profile) {
                 let cleanProfile = extracted.profile.replace(/^[\s\-=\*]+/g, "").trim();
                 document.getElementById('profile-container').innerHTML = marked.parse(cleanProfile);
                 
-                // 解密動作回傳時，如果已從後台處理完，在此處關閉或轉換彈窗狀態
                 if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久揭鎖")) {
-                    showDecryptionResultWindow("🔑 解密驗證成功", "已成功侵入 HeraLink 底層核心端口！該代碼的真實持有者身分已永久同步解鎖至左側『核心 NPC 關係權力圖』中。", "🟢", "#d4af37");
+                    showDecryptionResultWindow("🔑 解密驗證成功", "已成功侵入 HeraLink 核心協議層！該代碼已解碼並同步更新至左側『核心 NPC 關係權力圖』中。", "🟢", "#d4af37");
                 } else if (rawText.includes("解密行動失敗") || rawText.includes("永久鎖定") || rawText.includes("反噬")) {
-                    showDecryptionResultWindow("🚨 安全警報：驗證失敗", "反向追蹤失敗！目標代碼持有者已更換加密路徑，並對您的端口實施防火牆反噬，輿論威脅指數大幅飙升！", "🔴", "#ef4444");
+                    showDecryptionResultWindow("🚨 安全警報：驗證失敗", "反向破解失敗！目標代碼持有者已徹底警覺並完成動態加密更換，您的威脅指數直接上升，並將面臨全論壇抹黑反噬！", "🔴", "#ef4444");
                 }
             }
 
-            // 2. 追加右側劇情流
+            // 2. 追加右側劇情
             if (extracted.story) {
                 let cleanStory = extracted.story.replace(/^[\s\-=\*]+/g, "").trim();
                 const stream = document.getElementById('story-stream');
@@ -895,18 +1013,18 @@
                 block.className = 'story-block';
                 block.innerHTML = marked.parse(cleanStory);
                 stream.appendChild(block);
-                
                 setTimeout(() => { stream.scrollTop = stream.scrollHeight; }, 100);
             }
 
-            // 3. 即時刷新左側論壇看板
+            // 3. 刷新左側論壇
             if (extracted.forum) {
                 let cleanForum = extracted.forum.replace(/^[\s\-=\*]+/g, "").trim();
                 document.getElementById('forum-container').innerHTML = marked.parse(cleanForum);
             }
 
-            // 4. 生成按鈕
+            // 4. 解析按鈕（並自動展開抉擇面板確保可讀）
             if (extracted.options) {
+                document.getElementById('choices-wrapper-content').classList.remove('folded');
                 parseOptionsToButtons(extracted.options);
             }
         }
@@ -946,7 +1064,7 @@
             stream.appendChild(choiceBlock);
             stream.scrollTop = stream.scrollHeight;
 
-            sendPromptToGemini(fullActionText);
+            sendPromptToAI(fullActionText);
         }
 
         function submitCustomChoice() {
@@ -965,10 +1083,9 @@
             stream.appendChild(choiceBlock);
             stream.scrollTop = stream.scrollHeight;
 
-            sendPromptToGemini(fullActionText);
+            sendPromptToAI(fullActionText);
         }
 
-        // 【新增驗證功能】彈出實體破解視窗與發送鏈
         function submitDecryptionAction() {
             const idEl = document.getElementById('decrypt-id-input');
             const guessEl = document.getElementById('decrypt-guess-input');
@@ -980,14 +1097,13 @@
                 return;
             }
 
-            // 先拉起實體數據驗證連線中視窗
-            showDecryptionResultWindow("📡 底層協議比對中", `正在向 HeraLink 端口投遞破解籌碼並分析數據路徑...<br>目標代碼：<span style="color:var(--threat-red);font-weight:bold;">${targetId}</span><br>手法確認：${guessText}`, "📡", "var(--accent-gold)");
+            // 展開解密視窗
+            showDecryptionResultWindow("📡 底層網協對比中", `正在向 HeraLink 端口投遞破解籌碼並分析數據路徑...<br>目標代碼：<span style="color:var(--threat-red);font-weight:bold;">${targetId}</span><br>手法確認：${guessText}`, "📡", "var(--accent-gold)");
 
             const fullActionText = `【【系統高級指令】發起 HeraLink 匿名代碼解密行動】\n- 目標解密代碼：${targetId}\n- 身份調查與猜測/投入籌碼手段：${guessText}\n\n請根據當前遊戲進度與世界線，嚴格判定此解密是否猜對。若猜錯或次數用盡，請在回覆檔案中執行扣除機會、上調30%威脅指數、並於下文開啟未知 ID 抹黑反噬情節。`;
             idEl.value = "";
             guessEl.value = "";
 
-            // 追加警告區塊至右側劇情
             const stream = document.getElementById('story-stream');
             const choiceBlock = document.createElement('div');
             choiceBlock.className = 'story-block';
@@ -997,11 +1113,9 @@
             stream.appendChild(choiceBlock);
             stream.scrollTop = stream.scrollHeight;
 
-            // 送出指令給 AI
-            sendPromptToGemini(fullActionText);
+            sendPromptToAI(fullActionText);
         }
 
-        // 控制解密視窗的函數
         function showDecryptionResultWindow(title, message, icon, color) {
             document.getElementById('decrypt-result-title').innerText = title;
             document.getElementById('decrypt-result-message').innerHTML = message;
