@@ -275,7 +275,7 @@
             box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
         }
 
-        /* 彈窗／遮罩層 */
+        /* 彈窗／遮罩層公用樣式 */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -365,6 +365,17 @@
             background-color: var(--accent-gold-hover);
         }
 
+        /* 解密驗證專屬視窗樣式 */
+        .decrypt-modal-content {
+            border: 1px solid var(--threat-red) !important;
+            text-align: center;
+        }
+        .decrypt-status-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            animation: pulse 1.5s infinite;
+        }
+
         .hidden { display: none !important; }
 
         .loading-spinner {
@@ -380,6 +391,11 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
         }
     </style>
 </head>
@@ -409,7 +425,7 @@
         <main class="main-content">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>【系統提示】</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所。請先填寫繼承者檔案以開啟這場權力生存局...</p>
+                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所。請先填寫右側繼承者檔案以開啟全新世界線分支...</p>
                 </div>
             </div>
 
@@ -514,7 +530,7 @@
 
             <div class="modal-subsection-title">三、 角色設定</div>
             <div class="form-group">
-                <label>外貌特徵與自帶氣質：</label>
+                <label>外貌特針與自帶氣質：</label>
                 <textarea id="char-vibe" placeholder="例如：高冷貓系、清澈無辜的眼神..."></textarea>
             </div>
             <div class="form-group">
@@ -554,6 +570,17 @@
             </div>
 
             <button class="modal-btn" onclick="startStoryGame()">踏入權力交界處</button>
+        </div>
+    </div>
+
+    <div id="decrypt-result-modal" class="modal-overlay hidden">
+        <div class="modal-content decrypt-modal-content">
+            <div id="decrypt-icon" class="decrypt-status-icon" style="color: var(--accent-gold);">📡</div>
+            <h2 id="decrypt-result-title" style="color: #fff; letter-spacing: 2px;">底層網協破解中</h2>
+            <p id="decrypt-result-message" style="font-size: 0.95rem; line-height: 1.6; margin: 15px 0; color: var(--text-main);">
+                正在向系統發起端口確認對比，這將消耗該匿名代碼的一次破解機會...
+            </p>
+            <button class="modal-btn" id="decrypt-close-btn" onclick="closeDecryptResultModal()" style="background-color: #252c38; color: #fff; border: 1px solid var(--border-color);">關閉驗證視窗</button>
         </div>
     </div>
 
@@ -598,14 +625,14 @@
 1. 社交輿論載體「HeraLink」：包含爆料貼文、評論風向。
 2. 名聲與標籤系統：如「完美繼承人」、「危險人物」、「神秘的局外人」、「待宰羔羊」。
 3. 「利益與情感」雙軌 NPC 邏輯：NPC行事遵循「家族利益 ≧ 個人情感」。讚美通常是捧殺，退讓通常是陷阱。
-4. 【解密與三次限制機制】：玩家會發起對特定論壇 ID（例：0x7F9B）的「身份確認/解密」行動。針對每一個匿名代碼，玩家在整場遊戲中最多僅有 3 次嘗試機會。AI 必須在狀態欄中動態追蹤並顯示該代碼的剩餘機會（例如：\`0x7F9B 剩餘解密機會： 3/3\`）。若 3 次皆猜錯，該代碼永久鎖定，玩家輿論威脅指數直接飆升 30%，且該未知 ID 將在後續貼文中瘋狂抹黑玩家。
+4. 【解密與三次限制機制】：玩家會發起對特定論壇 ID（例：0x7F9B）的「身份確認/解密」行動。針對每一個匿名代碼，玩家在整場遊戲中最多僅有 3 次嘗試機會。AI 必須在狀態欄中動態追蹤並顯示該代碼的剩餘機會（例如：\`0x7F9B\` 剩餘解密機會： 2/3）。若 3 次皆猜錯，該代碼永久鎖定，玩家輿論威脅指數直接飆升 30%，且該未知 ID 將在後續貼文中瘋狂抹黑玩家。
 
 🤖 AI 敘事與操作規則：
 1. 每次回覆劇情不可低於 1000 字，具備極強的電影畫面場景感與微表情刻畫。
 2. 親密感與信任度必須通過利益交換緩慢累積。
 3. 嚴禁在任何看板透露任何人的匿名 ID 的持有者。
 
-📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵循以下順序輸出，並使用分隔線 --- 進行物理隔離。所有欄位和子項目必須完整渲染，嚴禁精簡：
+📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵守以下順序輸出，包含側欄所需的全量細項看板，並使用分隔線 --- 進行物理隔離，絕對不准省略任何一個次級標題欄位：
 [ 📋 學生即時動態檔案 ]
 ### 👤 基本檔案
 (呈現基本檔案表格，包含姓名、階級、陣營/派系、家族當前狀態、論壇匿名代碼)
@@ -620,7 +647,18 @@
 (提供高密度、充滿細節的電影片段式劇情敘事)
 ---
 [ 📱 HeraLink 即時熱搜看板 ]
-(生成論壇熱搜貼文、內文、實時熱門評論及風向數據。若沒發生則此區段留空，但結構仍要用 --- 隔開)
+# 📱 HeraLink 匿名論壇 • 即時熱搜看板
+> ## 🔥 今日即時熱門貼文
+> 📌 文章標題： [爆料] ...
+> 👤 發文者暱稱： 匿名 \`(ID: 0xXXXX)\` ｜ 🕒 發布時間： \`17:00\` 
+> 📈 瀏覽次數： 14,205 ｜ 💬 回覆數： 342
+> ## 📄 【貼文內文】
+> 「 ... 」
+### 💬 實時熱門評論 (Real-time Comments)
+* 匿名 ...
+### 📊 HeraLink 風向數據統計
+* 當前討論熱度： \`70%\`
+* 輿論走向偏向： \`觀望中\`
 ---
 [ 🎯 分歧選項 ]
 (固定提供 A、B、C 三個選項。最後提示玩家可以自由輸入 D 或使用下方的解密主控台)
@@ -667,7 +705,7 @@
             }
         }
 
-        // 開始遊戲：即時本地全量匯入
+        // 開始遊戲：全量本地匯入渲染，絕不殘缺
         function startStoryGame() {
             const name = document.getElementById('char-name').value.trim();
             const gender = document.getElementById('char-gender').value;
@@ -690,7 +728,7 @@
                 return;
             }
 
-            // 【完全渲染】開局 0 秒立即本地無縫填入精裝檔案，杜絕空白或缺項
+            // 【完全渲染功能】確保所有項目與次級標題在開局 0 秒完全填入左側，杜絕不完整狀態
             const localCode = "0x" + Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
             const initialLocalProfile = `
 # 🏛️ 貴族學院 • 學生即時動態檔案
@@ -715,9 +753,9 @@
    * 💬 態度潛台詞： 「觀察中。」
 
 ### 🎒 背包與關鍵籌碼
-* 資金/可動用資源： 充裕 (源自 ${familyName})
+* 資金/可動用資源： 充裕 (源自 ${familyName} 產業：${familyIndustry.substring(0,20)}...)
 * 持有秘密/把柄： 1. *[ 家族秘辛：${secret || '無'} ]*
-* 關鍵道具/物品： 權力准考證
+* 關鍵道具/物品： 權力准考證 (期望加入：${club || '未定'})
 `;
             document.getElementById('profile-container').innerHTML = marked.parse(initialLocalProfile);
 
@@ -761,6 +799,7 @@
             sendPromptToGemini(characterCardPrompt);
         }
 
+        // 核心 API 請求函數 (已修正為通用正式端點主流模型 gemini-1.5-flash)
         async function sendPromptToGemini(userPrompt) {
             if (isWaitingForAI) return;
             const apiKey = localStorage.getItem('gemini_api_key');
@@ -819,6 +858,7 @@
                 let start = sectionsFound[i].pos;
                 let end = (i + 1 < sectionsFound.length) ? sectionsFound[i+1].pos : rawText.length;
                 let blockText = rawText.substring(start, end).trim();
+                
                 blockText = blockText.replace(sectionsFound[i].regex, "").trim();
                 extracted[sectionsFound[i].id] = blockText;
             }
@@ -838,6 +878,13 @@
             if (extracted.profile) {
                 let cleanProfile = extracted.profile.replace(/^[\s\-=\*]+/g, "").trim();
                 document.getElementById('profile-container').innerHTML = marked.parse(cleanProfile);
+                
+                // 解密動作回傳時，如果已從後台處理完，在此處關閉或轉換彈窗狀態
+                if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久揭鎖")) {
+                    showDecryptionResultWindow("🔑 解密驗證成功", "已成功侵入 HeraLink 底層核心端口！該代碼的真實持有者身分已永久同步解鎖至左側『核心 NPC 關係權力圖』中。", "🟢", "#d4af37");
+                } else if (rawText.includes("解密行動失敗") || rawText.includes("永久鎖定") || rawText.includes("反噬")) {
+                    showDecryptionResultWindow("🚨 安全警報：驗證失敗", "反向追蹤失敗！目標代碼持有者已更換加密路徑，並對您的端口實施防火牆反噬，輿論威脅指數大幅飙升！", "🔴", "#ef4444");
+                }
             }
 
             // 2. 追加右側劇情流
@@ -848,6 +895,7 @@
                 block.className = 'story-block';
                 block.innerHTML = marked.parse(cleanStory);
                 stream.appendChild(block);
+                
                 setTimeout(() => { stream.scrollTop = stream.scrollHeight; }, 100);
             }
 
@@ -920,7 +968,7 @@
             sendPromptToGemini(fullActionText);
         }
 
-        // 【新增功能】分離提交：解密追蹤專用發送鏈
+        // 【新增驗證功能】彈出實體破解視窗與發送鏈
         function submitDecryptionAction() {
             const idEl = document.getElementById('decrypt-id-input');
             const guessEl = document.getElementById('decrypt-guess-input');
@@ -932,11 +980,14 @@
                 return;
             }
 
-            const fullActionText = `【【系統高級指令】發起 HeraLink 匿名代碼解密行動】\n- 目標解密代碼：${targetId}\n- 身份調查與猜測/投入籌碼手段：${guessText}`;
+            // 先拉起實體數據驗證連線中視窗
+            showDecryptionResultWindow("📡 底層協議比對中", `正在向 HeraLink 端口投遞破解籌碼並分析數據路徑...<br>目標代碼：<span style="color:var(--threat-red);font-weight:bold;">${targetId}</span><br>手法確認：${guessText}`, "📡", "var(--accent-gold)");
+
+            const fullActionText = `【【系統高級指令】發起 HeraLink 匿名代碼解密行動】\n- 目標解密代碼：${targetId}\n- 身份調查與猜測/投入籌碼手段：${guessText}\n\n請根據當前遊戲進度與世界線，嚴格判定此解密是否猜對。若猜錯或次數用盡，請在回覆檔案中執行扣除機會、上調30%威脅指數、並於下文開啟未知 ID 抹黑反噬情節。`;
             idEl.value = "";
             guessEl.value = "";
 
-            // 追加紅色高警示區塊至劇情流
+            // 追加警告區塊至右側劇情
             const stream = document.getElementById('story-stream');
             const choiceBlock = document.createElement('div');
             choiceBlock.className = 'story-block';
@@ -946,8 +997,22 @@
             stream.appendChild(choiceBlock);
             stream.scrollTop = stream.scrollHeight;
 
-            // 送出指令讓 AI 判定成功或硬限制懲罰反噬
+            // 送出指令給 AI
             sendPromptToGemini(fullActionText);
+        }
+
+        // 控制解密視窗的函數
+        function showDecryptionResultWindow(title, message, icon, color) {
+            document.getElementById('decrypt-result-title').innerText = title;
+            document.getElementById('decrypt-result-message').innerHTML = message;
+            const iconEl = document.getElementById('decrypt-icon');
+            iconEl.innerText = icon;
+            iconEl.style.color = color;
+            document.getElementById('decrypt-result-modal').classList.remove('hidden');
+        }
+
+        function closeDecryptResultModal() {
+            document.getElementById('decrypt-result-modal').classList.add('hidden');
         }
 
         function setLoading(loading) {
