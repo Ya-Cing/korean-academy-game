@@ -286,7 +286,28 @@
             border-radius: 6px;
         }
 
-        /* 【分歧選項】選項按鈕與自訂輸入框保持完美的 20px 垂直空行排版 */
+        /* 劇情對白框氣氛 */
+        .story-block {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 26px;
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* 【功能修正】劇情部分文字 1.5 倍行高，並依據劇情完美分行 */
+        .story-block p {
+            line-height: 1.5 !important;
+            margin-bottom: 14px;
+        }
+        .story-block strong {
+            color: var(--accent-gold);
+        }
+
+        /* 選項按鈕佈局：保持 20px 完美空行排版 */
         .options-container {
             display: grid;
             grid-template-columns: 1fr;
@@ -327,7 +348,7 @@
             width: 100%;
         }
 
-        .custom-input-wrapper input, .decryption-input-wrapper input {
+        .custom-input-wrapper input {
             flex: 1;
             background-color: var(--bg-deep);
             border: 1px dashed var(--border-color);
@@ -358,12 +379,11 @@
             background-color: var(--accent-gold-hover);
         }
 
+        /* 【功能修正】解密主控台輸入框文字格式：目標代碼與猜測欄位統一死守紅色、粗體 */
         .decryption-input-wrapper input {
             border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-        .decryption-input-wrapper input:focus {
-            border-color: var(--threat-red);
-            box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
+            color: var(--threat-red) !important;
+            font-weight: 700 !important;
         }
 
         /* 彈窗／遮罩層 */
@@ -473,7 +493,7 @@
             transition: border-color 0.25s;
         }
 
-        /* 優化軌道 B 專用輸入框：背景融洽，大小深邃，絕不突兀 */
+        /* 融合面板的深邃進度條輸入框，絕不突兀 */
         #import-token-input {
             background-color: var(--bg-deep) !important;
             border: 1px dashed rgba(212, 175, 55, 0.3) !important;
@@ -685,8 +705,8 @@
                     
                     <div id="decryption-wrapper-content" class="collapsible-content folded" style="margin-top: 10px;">
                         <div class="decryption-input-wrapper">
-                            <input type="text" id="decrypt-id-input" placeholder="目標代碼" style="flex: 0 0 140px; text-align: center; font-family: monospace; font-weight: bold; color: var(--threat-red);">
-                            <input type="text" id="decrypt-guess-input" placeholder="輸入真實身份猜測或投入的博弈秘密籌碼 (例: 車律謹 / 動用地下組織「繆思」偷看手機)...">
+                            <input type="text" id="decrypt-id-input" placeholder="目標代碼" style="flex: 0 0 140px; text-align: center; font-family: monospace;">
+                            <input type="text" id="decrypt-guess-input" placeholder="【可填入真實身份猜測或投入的博弈秘密籌碼...】">
                             <button onclick="submitDecryptionAction()" style="background-color: var(--threat-red); color: #fff;">發起解密行動</button>
                         </div>
                     </div>
@@ -797,7 +817,7 @@
                             <option value="新生">新生</option>
                             <option value="低調的旁觀者">低調的旁觀者</option>
                             <option value="風雲人物">風雲人物</option>
-                            <option value="眾矢之目的">眾矢之的</option>
+                            <option value="眾矢之的">眾矢之的</option>
                         </select>
                     </div>
                 </div>
@@ -911,6 +931,7 @@
 > 「 歡迎來到權力中心：赫拉學院。在這裡，守好妳/你的匿名代碼。後果自負。 」
 `;
 
+        // 【功能修正】高密度指令強化：每次回覆劇情必須嚴格高於 1000 字，且严格限制四大隱性階級
         const SYSTEM_INSTRUCTION = `
 《赫拉學院》沉浸式文字遊戲模板 Ver.2.5 (完整詳細版)
 學校名稱固定為「赫拉學院」。
@@ -1020,7 +1041,7 @@
             return false;
         }
 
-        // 【終極解決方案】三級安全備份導航防線，在 file:// 協議、本地離線、非 HTTPS 下 100% 成功導出代碼
+        // 【安全移轉解決方案】三級相容備份防線，在 file:// 協議與無網域憑證環境下也能 100% 成功導出代碼
         function exportSaveToken() {
             if (chatHistory.length === 0) { alert("目前沒有全量進度代碼可子供複製。"); return; }
             try {
@@ -1048,7 +1069,7 @@
             textArea.select();
             try {
                 document.execCommand('copy');
-                alert("📋 [端口相容備用方案] 全量移轉存檔代碼已成功複製至剪貼簿！");
+                alert("📋 [相容端口配對] 全量移轉存檔代碼已成功複製至剪貼簿！");
             } catch (err) {
                 prompt("📋 自動複製受限，請全選手動複製下方框內的進度代碼：", text);
             }
@@ -1297,7 +1318,7 @@
                 console.error(error);
                 alert(`⚠️ 連線中斷: ${error.message}`);
                 chatHistory.pop();
-            } finally { setLoading(false); } // 【語法修復】將先前失誤留下的 final 改回正確的 finally 語法結尾
+            } finally { setLoading(false); } // 語法修復：不再使用危險字眼
         }
 
         function parseAndPopulateUI(rawText) {
@@ -1377,7 +1398,7 @@
             let btnCount = 0;
             
             lines.forEach(line => {
-                const cleanLine = line.replace(/\*\*/g, '').trim(); // 修正了原本混入的 \微 雜訊字元
+                const cleanLine = line.replace(/\*\*/g, '').trim(); 
                 const match = cleanLine.match(/^(【A】|【B】|【C】|A\.|B\.|C\.)\s*(.+)/);
                 if (match) {
                     btnCount++;
@@ -1395,11 +1416,11 @@
                 container.innerHTML = marked.parse(optionsText);
             }
 
-            // 無條件在 A、B、C 底部動態橫向拉出 【D】 級別自訂反擊行動，並由外層網格維持 20px 垂直空行
+            // 【功能修正】保留 D 選項在命運抉擇處，字數上限200， placeholder 僅顯示安全字眼
             const dBlock = document.createElement('div');
             dBlock.className = 'custom-input-wrapper';
             dBlock.innerHTML = `
-                <input type="text" id="custom-choice-input" placeholder="【D】自由輸入您的反擊、心理博弈或自訂手段...">
+                <input type="text" id="custom-choice-input" placeholder="【D】可填入自訂反擊行動、心理博弈手段..." maxlength="200">
                 <button onclick="submitCustomChoice()">送出決策</button>
             `;
             container.appendChild(dBlock);
@@ -1435,6 +1456,7 @@
             sendPromptToAI(fullActionText);
         }
 
+        // 【功能修正】解密提交後直接執行 sendPromptToAI 推進命運劇情主軸
         function submitDecryptionAction() {
             const idEl = document.getElementById('decrypt-id-input');
             const guessEl = document.getElementById('decrypt-guess-input');
