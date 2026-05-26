@@ -298,7 +298,7 @@
             animation: fadeIn 0.5s ease-out;
         }
         
-        /* 【功能修正】劇情部分文字 1.5 倍行高，並依據劇情完美分行 */
+        /* 劇情部分文字 1.5 倍行高，並依據劇情完美分行 */
         .story-block p {
             line-height: 1.5 !important;
             margin-bottom: 14px;
@@ -348,7 +348,7 @@
             width: 100%;
         }
 
-        .custom-input-wrapper input {
+        .custom-input-wrapper input, .decryption-input-wrapper input {
             flex: 1;
             background-color: var(--bg-deep);
             border: 1px dashed var(--border-color);
@@ -379,11 +379,9 @@
             background-color: var(--accent-gold-hover);
         }
 
-        /* 【功能修正】解密主控台輸入框文字格式：目標代碼與猜測欄位統一死守紅色、粗體 */
+        /* 【功能修正】解密主控台：完全恢復原本的外觀與描邊樣式，防溢出與Conspicuous */
         .decryption-input-wrapper input {
             border: 1px solid rgba(239, 68, 68, 0.2);
-            color: var(--threat-red) !important;
-            font-weight: 700 !important;
         }
 
         /* 彈窗／遮罩層 */
@@ -705,8 +703,8 @@
                     
                     <div id="decryption-wrapper-content" class="collapsible-content folded" style="margin-top: 10px;">
                         <div class="decryption-input-wrapper">
-                            <input type="text" id="decrypt-id-input" placeholder="目標代碼" style="flex: 0 0 140px; text-align: center; font-family: monospace;">
-                            <input type="text" id="decrypt-guess-input" placeholder="【可填入真實身份猜測或投入的博弈秘密籌碼...】">
+                            <input type="text" id="decrypt-id-input" placeholder="目標代碼 (如: 0x7F9B)" style="flex: 0 0 140px; text-align: center; font-family: monospace; font-weight: bold; color: var(--threat-red);">
+                            <input type="text" id="decrypt-guess-input" placeholder="輸入真實身份猜測或投入的博弈秘密籌碼 (例: 車律謹 / 動用地下組織「繆思」偷看手機)...">
                             <button onclick="submitDecryptionAction()" style="background-color: var(--threat-red); color: #fff;">發起解密行動</button>
                         </div>
                     </div>
@@ -889,7 +887,7 @@
     <script>
         marked.setOptions({ breaks: true, gfm: true });
 
-        // 初始精裝版全量欄位佔位面板，主要NPC排除明文ID
+        // 初始精裝版全量欄位看板，主要NPC排除明文ID
         const DEFAULT_PROFILE_MD = `
 # 🏛️ 貴族學院 • 學生即時動態檔案
 
@@ -931,7 +929,7 @@
 > 「 歡迎來到權力中心：赫拉學院。在這裡，守好妳/你的匿名代碼。後果自負。 」
 `;
 
-        // 【功能修正】高密度指令強化：每次回覆劇情必須嚴格高於 1000 字，且严格限制四大隱性階級
+        // 【功能修正】命運分歧選項防線強化：A、B、C 三個選項字數必須嚴格「超過 200 字」高密度推演
         const SYSTEM_INSTRUCTION = `
 《赫拉學院》沉浸式文字遊戲模板 Ver.2.5 (完整詳細版)
 學校名稱固定為「赫拉學院」。
@@ -950,11 +948,12 @@
 4. 【解密與三次限制機制】：針對每一個匿名代碼，玩家最多僅有 3 次嘗試機會。你必須在狀態欄中動態追蹤並顯示該代碼的剩餘機會（例如：\`0x7F9B\` 剩餘解密機會：3/3）。若 3 次皆猜錯，該代碼永久鎖定，玩家輿論威脅指數直接飆升 30%，且該未知 ID 將在後續貼文中瘋狂抹黑玩家。
 5. 【⚠️ 核心隱蔽與玩家匿名代碼知情權限】：
    - 玩家自身的「論壇匿名代碼」（即開局生成的代碼）在個人基本檔案中是「完全公開且可得知」的。
-   - 嚴禁在任何看板、回覆、貼文中主動透露或配對任何主要NPC真實姓名所對應的匿名 ID！在玩家對特定 ID 發起解密成功之前，關係權力圖中「絕對只顯示NPC姓名與常規好感資訊」，對應代碼必須隱藏。只有當玩家在解密主控台提交了正確的猜測，且前台判定成功後，你才允許在接下來的[ 📋 學生即時動態檔案 ]中將該 NPC 身分揭鎖更新（例如：\`1. 車律謹 (ID: 0x0001) ｜ ...\`）。
+   - 嚴禁在任何看板、回覆、貼文中主動透露或配對任何主要NPC真實姓名所對應的匿名 ID！在玩家對特定 ID 發起解密成功之前，關係權力圖中「絕對只顯示NPC姓名與常規好感資訊」，對應代碼必須隱藏。只有當玩家在解密主控台提交了正確的猜測，前台判定成功後，你才允許在接下來的[ 📋 學生即時動態檔案 ]中將該 NPC 身分揭鎖更新（例如：\`1. 車律謹 (ID: 0x0001) ｜ ...\`）。
 
 🤖 AI 敘事與操作規則：
 1. 每次回覆劇情「必須嚴格高於 1000 字」，具備極強的電影畫面場景感與微表情刻畫。
 2. 親密感與信任度必須通過利益交換緩慢累積。
+3. 【⚠️ 命運抉擇生成規範】：每段劇情結尾提供的 【A】、【B】、【C】 三個分歧選項，其選項內的文字敘述長度「每一項都必須嚴格超過 200 字」，提供玩家極高密度的派系角力、代價估算與長線影響力情節。而最後供玩家自行輸入的 【D】 選項則豁免此 200 字限制。
 
 📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵循以下順序輸出，包含側欄所需的全量細項看板，並使用分隔線 --- 進行物理隔離，絕對不准省略任何一個次級標題欄位：
 [ 📋 學生即時動態檔案 ]
@@ -1041,7 +1040,7 @@
             return false;
         }
 
-        // 【安全移轉解決方案】三級相容備份防線，在 file:// 協議與無網域憑證環境下也能 100% 成功導出代碼
+        // 三級相容備份防線，在 file:// 協議與無網域憑證環境下也能 100% 成功導出代碼
         function exportSaveToken() {
             if (chatHistory.length === 0) { alert("目前沒有全量進度代碼可子供複製。"); return; }
             try {
@@ -1318,7 +1317,7 @@
                 console.error(error);
                 alert(`⚠️ 連線中斷: ${error.message}`);
                 chatHistory.pop();
-            } finally { setLoading(false); } // 語法修復：不再使用危險字眼
+            } finally { setLoading(false); } // 高安全閉合
         }
 
         function parseAndPopulateUI(rawText) {
@@ -1390,7 +1389,7 @@
             }
         }
 
-        // 【功能修正】動態拼裝 A, B, C 與常規自訂 D 輸入欄位，保持完美的 20px 垂直空行間距
+        // 動態拼裝 A, B, C 與常規自訂 D 輸入欄位，保持完美的 20px 垂直空行間距
         function parseOptionsToButtons(optionsText) {
             const container = document.getElementById('options-container');
             container.innerHTML = "";
@@ -1416,7 +1415,7 @@
                 container.innerHTML = marked.parse(optionsText);
             }
 
-            // 【功能修正】保留 D 選項在命運抉擇處，字數上限200， placeholder 僅顯示安全字眼
+            // 【功能修正】保留 D 選項在命運抉擇底部，欄位字數嚴格物理上修 200 字限制，Placeholder 僅呈現安全可填入字眼
             const dBlock = document.createElement('div');
             dBlock.className = 'custom-input-wrapper';
             dBlock.innerHTML = `
@@ -1456,7 +1455,6 @@
             sendPromptToAI(fullActionText);
         }
 
-        // 【功能修正】解密提交後直接執行 sendPromptToAI 推進命運劇情主軸
         function submitDecryptionAction() {
             const idEl = document.getElementById('decrypt-id-input');
             const guessEl = document.getElementById('decrypt-guess-input');
