@@ -1252,7 +1252,7 @@
                 console.error(error);
                 alert(`⚠️ 連線中斷: ${error.message}`);
                 chatHistory.pop();
-            } final { setLoading(false); }
+            } finally { setLoading(false); }
         }
 
         function parseAndPopulateUI(rawText) {
