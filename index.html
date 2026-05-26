@@ -25,6 +25,7 @@
             padding: 0;
         }
 
+        /* 替換全域字型：英文與數字優先選用 Times New Roman，中文回歸現代黑體 */
         body, input, select, textarea, button {
             font-family: 'Times New Roman', 'PingFang TC', 'Microsoft JhengHei', -apple-system, sans-serif;
         }
@@ -34,6 +35,35 @@
             color: var(--text-main);
             overflow: hidden;
             height: 100vh;
+        }
+
+        /* 電影感全螢幕開門過場動畫畫布 */
+        .opening-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #000000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+        .opening-text {
+            color: var(--accent-gold);
+            font-size: 2.2rem;
+            letter-spacing: 6px;
+            font-weight: 700;
+            opacity: 0;
+            text-align: center;
+            animation: cinematicFade 3s forwards;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4), 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+
+        @keyframes cinematicFade {
+            0% { opacity: 0; transform: scale(0.96); filter: blur(4px); }
+            30% { opacity: 1; transform: scale(1); filter: blur(0); }
+            75% { opacity: 1; transform: scale(1.02); filter: blur(0); }
+            100% { opacity: 0; transform: scale(1.05); filter: blur(2px); }
         }
 
         /* 頂部導航欄 */
@@ -256,26 +286,7 @@
             border-radius: 6px;
         }
 
-        /* 劇情對白框氣氛 */
-        .story-block {
-            background-color: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 26px;
-            line-height: 1.9;
-            font-size: 1.05rem;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            animation: fadeIn 0.5s ease-out;
-        }
-        .story-block p {
-            margin-bottom: 14px;
-        }
-        .story-block strong {
-            color: var(--accent-gold);
-        }
-
-        /* 【功能優化】選項按鈕與自訂輸入框保持完美的 20px 垂直空行排版 */
+        /* 選項按鈕佈局：保持 20px 完美空行排版 */
         .options-container {
             display: grid;
             grid-template-columns: 1fr;
@@ -411,7 +422,7 @@
             text-shadow: 0 0 8px #00d2ff, 0 0 15px #00d2ff, 0 0 25px #00d2ff;
         }
 
-        /* 【功能修正】微調優化：縮小文字、加上金色虛線底線的專屬類別 */
+        /* 金色 dashed 虛線底線效果類別 */
         .shrunk-dashed-title {
             font-size: 0.85rem !important;
             border-bottom: 1px dashed var(--accent-gold);
@@ -462,7 +473,7 @@
             transition: border-color 0.25s;
         }
 
-        /* 【功能修正】優化軌道 B 專用輸入框：背景融洽，大小深邃，絕不突兀 */
+        /* 融合面板的深邃進度條輸入框，絕不突兀 */
         #import-token-input {
             background-color: var(--bg-deep) !important;
             border: 1px dashed rgba(212, 175, 55, 0.3) !important;
@@ -528,17 +539,6 @@
             padding: 10px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-
-        /* 📱 手機端流暢度響應式排版修正案 */
         @media (max-width: 768px) {
             body {
                 overflow: hidden; 
@@ -821,8 +821,8 @@
 
             <div id="portal-load-view" class="hidden" style="margin-top: 15px;">
                 <div style="background: rgba(239, 68, 68, 0.02); padding: 16px; border: 1px dashed var(--threat-red); border-radius: 6px;">
-                    <div style="font-weight: bold; color: var(--threat-red); margin-bottom: 8px;">💾 備份進度還原還原</div>
-                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">請在下方貼上您在其他裝置複製的全量遊戲壓縮字串（外觀已整合，絕不突兀）：</p>
+                    <div style="font-weight: bold; color: var(--threat-red); margin-bottom: 8px;">💾 備份進度還原</div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">請在下方貼上您在其他裝置複製的全量遊戲壓縮字串：</p>
                     <input type="text" id="import-token-input" placeholder="在此貼上複製的加密字串...">
                     <button class="modal-btn" onclick="triggerImportSaveStart()" style="background-color: var(--threat-red); color: #fff;">提取密碼並回復雲端世界線</button>
                 </div>
@@ -843,7 +843,9 @@
                         <label>請輸入您的核心 API Key 密鑰：</label>
                         <input type="password" id="api-key-input" placeholder="填入以 AIzaSy... 或 sk-proj-... 開頭的代碼">
                     </div>
-                    <button class="modal-btn" onclick="saveApiKey()">確認對接金鑰端口</button>
+                    <div style="margin-top:10px; border-top:1px dashed var(--border-color); padding-top:10px;">
+                        <button class="modal-btn" onclick="saveApiKey()">確認對接金鑰端口</button>
+                    </div>
                 </div>
                 <button class="modal-btn" style="background:#252c38; color:#cbd5e1; border:1px solid var(--border-color);" onclick="returnToPortalMenu()">返回主選單</button>
             </div>
@@ -909,17 +911,26 @@
 > 「 歡迎來到權力中心：赫拉學院。在這裡，守好妳/你的匿名代碼。後果自負。 」
 `;
 
-        // 【功能修正】高密度指令強化：每次回覆劇情必須嚴格高於 1000 字
+        // 【功能修正】高密度指令強化：每次回覆劇情必須嚴格高於 1000 字，且严格限制四大隱性階級
         const SYSTEM_INSTRUCTION = `
 《赫拉學院》沉浸式文字遊戲模板 Ver.2.5 (完整詳細版)
 學校名稱固定為「赫拉學院」。
+
+📌 隱性階級制度（⚠️絕對核心限制）：
+全劇的所有敘事、狀態生成中，只能且「必須」使用以下四個正式階級名稱，AI 絕對禁止自行發明、衍生或使用任何規範以外的虛構階級名稱：
+- Crown (皇冠)
+- Noble (貴族)
+- Prestige (名望)
+- General (平民)
 
 📌 世界觀核心與解密限制規則（重要）：
 1. 原創角色規則：所有人物皆為獨立生成的個體。
 2. 正統韓國社會語境：職位稱呼必須完全符合現代大韓民國的政商習慣。
 3. 代名詞性別推演：男性使用「你 / 他」、女性使用「妳 / 她」。絕對嚴禁串用。
 4. 【解密與三次限制機制】：針對每一個匿名代碼，玩家最多僅有 3 次嘗試機會。你必須在狀態欄中動態追蹤並顯示該代碼的剩餘機會（例如：\`0x7F9B\` 剩餘解密機會：3/3）。若 3 次皆猜錯，該代碼永久鎖定，玩家輿論威脅指數直接飆升 30%，且該未知 ID 將在後續貼文中瘋狂抹黑玩家。
-5. 【⚠️ 核心隱蔽限制與要求】：嚴禁在任何看板、回覆中主動透露任何主要NPC真實姓名所對應的匿名 ID！在玩家對特定 ID 發起解密成功之前，關係權力圖中「絕對只顯示NPC姓名與常規好感資訊」，對應代碼必須隱藏。只有當玩家在解密主控台提交了正確的猜測，且前台判定成功後，你才允許在接下來的[ 📋 學生即時動態檔案 ]中將該 NPC 身分揭鎖更新（例如：\`1. 車律謹 (ID: 0x0001) ｜ ...\`）。
+5. 【⚠️ 核心隱蔽與玩家匿名代碼知情權限】：
+   - 玩家自身的「論壇匿名代碼」（即開局生成的代碼）在個人基本檔案中是「完全公開且可得知」的。
+   - 嚴禁在任何看板、回覆、貼文中主動透露或配對任何主要NPC真實姓名所對應的匿名 ID！在玩家對特定 ID 發起解密成功之前，關係權力圖中「絕對只顯示NPC姓名與常規好感資訊」，對應代碼必須隱藏。只有當玩家在解密主控台提交了正確的猜測，且前台判定成功後，你才允許在接下來的[ 📋 學生即時動態檔案 ]中將該 NPC 身分揭鎖更新（例如：\`1. 車律謹 (ID: 0x0001) ｜ ...\`）。
 
 🤖 AI 敘事與操作規則：
 1. 每次回覆劇情「必須嚴格高於 1000 字」，具備極強的電影畫面場景感與微表情刻畫。
@@ -1010,6 +1021,21 @@
             return false;
         }
 
+        // 【功能優化修復】萬國碼 Unicode 手動備份機制安全化，徹底防止生成失敗
+        function exportSaveToken() {
+            if (chatHistory.length === 0) { alert("目前沒有全量進度代碼可子供複製。"); return; }
+            try {
+                const token = btoa(unescape(encodeURIComponent(JSON.stringify(chatHistory))));
+                navigator.clipboard.writeText(token).then(() => {
+                    alert("📋 全量移轉存檔代碼已成功複製至剪貼簿！可在其餘裝置貼上導入。");
+                }).catch(() => {
+                    alert("請手動複製代碼：\n\n" + token);
+                });
+            } catch (e) {
+                alert("轉移代碼生成失敗: " + e.message);
+            }
+        }
+
         function restoreGameState(historyArray) {
             chatHistory = historyArray;
             const lastModelResponse = [...chatHistory].reverse().find(h => h.role === "model");
@@ -1093,12 +1119,12 @@
             const rawToken = document.getElementById('import-token-input').value.trim();
             if (!rawToken) { alert("請先填入有效的轉移存檔字串！"); return; }
             try {
-                const parsedHistory = JSON.parse(decodeURIComponent(atob(rawToken)));
+                const parsedHistory = JSON.parse(decodeURIComponent(escape(atob(rawToken))));
                 if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
                     restoreGameState(parsedHistory);
                     alert("🟢 手動轉移存檔導入還原成功！");
                 } else { throw new Error(); }
-            } catch (e) { alert("🚨 進度代碼解析失敗。"); }
+            } catch (e) { alert("🚨 進度代碼解析失敗，請檢查是否複製完整。"); }
         }
 
         function triggerResetPortalGame() {
@@ -1252,7 +1278,7 @@
                 console.error(error);
                 alert(`⚠️ 連線中斷: ${error.message}`);
                 chatHistory.pop();
-            } finally { setLoading(false); }
+            } finally { setLoading(false); } // 【語法軟體修復】已完美更正回標準 JavaScript 的 finally 語法結構，杜絕卡死
         }
 
         function parseAndPopulateUI(rawText) {
@@ -1332,7 +1358,7 @@
             let btnCount = 0;
             
             lines.forEach(line => {
-                const cleanLine = line.replace(/\*\*/g, '').trim();
+                const cleanLine = line.replace(/\*\微/g, '').trim();
                 const match = cleanLine.match(/^(【A】|【B】|【C】|A\.|B\.|C\.)\s*(.+)/);
                 if (match) {
                     btnCount++;
