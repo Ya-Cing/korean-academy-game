@@ -221,6 +221,7 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
 
+        /* 手機端 RWD 媒體查詢 */
         @media (max-width: 768px) {
             body { overflow: auto; }
             .mobile-tabs { display: flex; }
@@ -487,21 +488,55 @@
         let isWaitingForAI = false;
         let localCode = "0x" + Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
 
+        // 【全量校準】確保一開始左側動態檔案與論壇看板完美、完整呈現所有要求的項目欄位
         const DEFAULT_PROFILE_MD = `
+# 🏛️ 貴族學院 • 學生即時動態檔案
+
 ### 👤 基本檔案
-| 姓名 | 載入中... |
+| 姓名 | \`載入中...\` |
 | 階級 | \`未定\` |
 | 陣營/派系 | \`尚未加入\` |
 | 家族當前狀態 | 觀望中 |
 | 論壇匿名代碼 | \`0x????\` |
+
+### 📱 HeraLink 匿名論壇動態
+* 社交名聲標籤： \`神秘局外人\`
+* 本週論壇熱搜： #新學期繼承者名冊 #赫拉學院特招生
+* 輿論威脅指數： \`30%\`
+* 🕵️ 當前解密追蹤紀錄： 1. \`[ 未發起代碼解密行動 ]\`
+
+### 🤝 核心 NPC 關係權力圖
+> ❤️好感度/🖤戒備度 | 💎利益綁定度
+
+1. 正在黑箱校準內閣情報... ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+   * 💬 態度潛台詞： 「觀察中。」
+
+### 🎒 背包與關鍵籌碼
+* 資金/可動用資源： ［儲存核心金鑰後解鎖］
+* 持有秘密/把柄： 1. *［未掌握任何祕密］*
+* 關鍵道具/物品： 權力准考證
 `;
 
         const DEFAULT_FORUM_MD = `
+# 📱 HeraLink 匿名論壇 • 即時熱搜看板
+
 > ## 🔥 今日即時熱門貼文
 > 📌 文章標題： [公告] HeraLink 數據端口已加密重啟
 > 👤 發文者暱稱： 匿名 \`(ID: 0x0000)\` ｜ 🕒 發布時間： \`08:00\` 
+> 📈 瀏覽次數： -- ｜ 💬 回覆數： --
+> 
 > ## 📄 【貼文內文】
 > 「 歡迎來到權力中心：赫拉學院。在這裡，守好妳/你的匿名代碼。後果自負。 」
+
+### 💬 實時熱門評論 (Real-time Comments)
+* 匿名 \`(General 階級 - ID: 0x2A9C)\`：
+  > 「聽說新學期有不得了的關係戶要進來...」
+* 匿名 \`(Prestige 階級 - ID: 0x4F8E)\`：
+  > 「哈哈，希望不是個無趣的草包。」
+
+### 📊 HeraLink 風向數據統計
+* 當前討論熱度： \`10%\`
+* 輿論走向偏向： \`觀望中\`
 `;
 
         const SYSTEM_INSTRUCTION = `
@@ -519,6 +554,18 @@
 [ 🎬 劇情 ]
 ---
 [ 📱 HeraLink 即時熱搜看板 ]
+# 📱 HeraLink 匿名論壇 • 即時熱搜看板
+> ## 🔥 今日即時熱門貼文
+> 📌 文章標題： ...
+> 👤 發文者暱稱： 匿名 \`(ID: 0xXXXX)\` ｜ 🕒 發布時間： \`17:00\` 
+> 📈 瀏覽次數： 14,205 ｜ 💬 回覆數： 342
+> ## 📄 【貼文內文】
+> 「 ... 」
+### 💬 實時熱門評論 (Real-time Comments)
+* 匿名 ...
+### 📊 HeraLink 風向數據統計
+* 當前討論熱度： \`70%\`
+* 輿論走向偏向： \`觀望中\`
 ---
 [ 🎯 分歧選項 ]
 `;
@@ -568,7 +615,6 @@
             return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // 雲端快取
         async function saveGameToCloud() {
             const key = localStorage.getItem('game_api_key'); if (!key || chatHistory.length === 0) return;
             try {
@@ -578,7 +624,6 @@
             localStorage.setItem('heralink_game_save', JSON.stringify(chatHistory));
         }
 
-        // 優化讀檔相容性，防堵雲端 404 時阻斷本地快取
         async function loadGameFromCloud() {
             const key = localStorage.getItem('game_api_key'); if (!key) return false;
             try {
@@ -590,7 +635,6 @@
                 }
             } catch (e) { console.log("Cloud server check bypass."); }
 
-            // 雲端無響應或無存檔時，調度本地持久槽
             if (localStorage.getItem('heralink_game_save')) {
                 restoreGameState(JSON.parse(localStorage.getItem('heralink_game_save')));
                 return true;
@@ -638,7 +682,7 @@
             if (!name || !familyName || !familyIndustry) { alert('請完整填寫姓名、家族名稱與家族勢力產業！'); return; }
 
             const initialLocalProfile = `
-# 🏛️ 赫拉學院 • 學生即時動態檔案
+# 🏛️ 貴族學院 • 學生即時動態檔案
 
 ### 👤 基本檔案
 | 姓名 | ${name} |
@@ -648,10 +692,10 @@
 | 論壇匿名代碼 | \`${localCode}\` |
 
 ### 📱 HeraLink 匿名論壇動態
-* 社交名聲標籤 : \`神秘局外人 (基於 ${status})\`
-* 本週論壇熱搜 : #新學期繼承者名冊 #赫拉學院特招生
-* 輿論威脅指數 : \`30%\`
-* 🕵️ 當前解密追蹤紀錄 : 1. \`[ 未發起代碼解密行動 ]\`
+* 社交名聲標籤： \`神秘局外人 (基於 ${status})\`
+* 本週論壇熱搜： #新學期繼承者名冊 #赫拉學院特招生
+* 輿論威脅指數： \`30%\`
+* 🕵️ 當前解密追蹤紀錄： 1. \`[ 未發起代碼解密行動 ]\`
 
 ### 🤝 核心 NPC 關係權力圖
 > ❤️好感度/🖤戒備度 | 💎利益綁定度
@@ -660,9 +704,9 @@
    * 💬 態度潛台詞 : 「觀察中。」
 
 ### 🎒 背包與關鍵籌碼
-* 資金/可動用資源 : 充裕 (源自 ${familyName})
-* 持有秘密/把柄 : 1. *[ 家族秘辛：${secret || '無'} ]*
-* 關鍵道具/物品 : 2. 權力准考證 (期望加入：${club || '未定'})
+* 資金/可動用資源： 充裕 (源自 ${familyName})
+* 持有秘密/把柄： 1. *[ 家族秘辛：${secret || '無'} ]*
+* 關鍵道具/物品： 2. 權力准考證 (期望加入：${club || '未定'})
 `;
             document.getElementById('profile-container').innerHTML = marked.parse(initialLocalProfile);
             chatHistory = [
@@ -687,7 +731,7 @@
                 if (provider === 'gemini') {
                     const geminiContents = chatHistory.map(h => ({ role: h.role === "model" ? "model" : "user", parts: [{ text: h.text }] }));
                     
-                    // 【已徹底矯正模型代號，確保相容官方正式通用 3.5 端點，防止 404 崩潰】
+                    // 【已徹底矯正通訊模型：gemini-3.5-flash，防堵 404 斷線阻斷】
                     response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: geminiContents, generationConfig: { temperature: 0.75, maxOutputTokens: 8192 } })
                     });
@@ -745,8 +789,8 @@
             if (extracted.profile) {
                 let cleanProfile = extracted.profile.replace(/^[\s\-=\*]+/g, "").trim();
                 document.getElementById('profile-container').innerHTML = marked.parse(cleanProfile);
-                if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久揭鎖")) { showDecryptionResultWindow("🔑 解密驗證成功", "已成功侵入端口端口！持有者身分已解鎖。", "🟢", "#d4af37"); } 
-                else if (rawText.includes("解密行動失敗") || rawText.includes("永久鎖定") || rawText.includes("反噬")) { showDecryptionResultWindow("🚨 安全警報：驗證失敗", "反向破解失敗！正面臨全論壇抹黑反噬！", "🔴", "#ef4444"); }
+                if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久揭鎖")) { showDecryptionResultWindow("🔑 解密驗證成功", "已成功侵入核心通訊端口！持有者身分已永久揭鎖並解密。", "🟢", "#d4af37"); } 
+                else if (rawText.includes("解密行動失敗") || rawText.includes("永久鎖定") || rawText.includes("反噬")) { showDecryptionResultWindow("🚨 安全警報：驗證失敗", "反向追蹤失敗！面臨全論壇抹黑情節！", "🔴", "#ef4444"); }
             }
             if (extracted.story) {
                 let cleanStory = extracted.story.replace(/^[\s\-=\*]+/g, "").trim();
@@ -810,6 +854,29 @@
             document.getElementById('decrypt-result-message').innerHTML = message;
             const iconEl = document.getElementById('decrypt-icon'); iconEl.innerText = icon; iconEl.style.color = color;
             document.getElementById('decrypt-result-modal').classList.remove('hidden');
+        }
+
+        function exportSaveToken() {
+            if (chatHistory.length === 0) { alert("您目前沒有進度檔案可備份。"); return; }
+            const token = btoa(encodeURIComponent(JSON.stringify(chatHistory)));
+            navigator.clipboard.writeText(token).then(() => { alert("📋 【進度複製成功】\n已成功將全量存檔壓縮為加密代碼代碼！您可至手機端等貼上還原！"); });
+        }
+
+        function importSaveToken() {
+            const rawToken = document.getElementById('import-token-input').value.trim(); if (!rawToken) return;
+            try {
+                const parsed = JSON.parse(decodeURIComponent(atob(rawToken)));
+                if (Array.isArray(parsed) && parsed.length > 0) { restoreGameState(parsed); document.getElementById('api-modal').classList.add('hidden'); alert("🟢 導入成功！進度已恢復。"); }
+            } catch (e) { alert("🚨 進度代碼解析失敗。"); }
+        }
+
+        function setLoading(loading) {
+            isWaitingForAI = loading; const indicator = document.getElementById('loading-indicator');
+            const optionBtns = document.querySelectorAll('.option-btn');
+            const customBtn = document.querySelector('.custom-input-wrapper button');
+            const decryptBtn = document.querySelector('.decryption-input-wrapper button');
+            if (loading) { indicator.classList.remove('hidden'); optionBtns.forEach(b => b.disabled = true); if(customBtn) customBtn.disabled = true; if(decryptBtn) decryptBtn.disabled = true; } 
+            else { indicator.classList.add('hidden'); optionBtns.forEach(b => b.disabled = false); if(customBtn) customBtn.disabled = false; if(decryptBtn) decryptBtn.disabled = false; }
         }
     </script>
 </body>
