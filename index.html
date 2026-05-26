@@ -9,14 +9,14 @@
         :root {
             --bg-deep: #07080b;
             --bg-panel: #11141c;
-            --bg-card: #181d26;
-            --accent-gold: #d4af37;
-            --accent-gold-hover: #f3e5ab;
+            --bg-card: #161a24;
+            --accent-gold: #c5a059;
+            --accent-gold-hover: #e5c17d;
             --text-main: #cbd5e1;
             --text-bright: #ffffff;
             --text-muted: #4b5563;
             --threat-red: #ef4444;
-            --border-color: #262f3d;
+            --border-color: #222a36;
         }
 
         * {
@@ -25,6 +25,7 @@
             padding: 0;
         }
 
+        /* 全域現代黑體縮排，英文/數字專屬 Times New Roman */
         body, input, select, textarea, button {
             font-family: 'Times New Roman', 'PingFang TC', 'Microsoft JhengHei', -apple-system, sans-serif;
         }
@@ -54,25 +55,27 @@
             font-weight: 700;
         }
 
-        /* 👑 全網頁按鈕美學重構：統一放大點選區，移除所有原生灰色外觀 */
+        /* 👑 網頁按鈕視覺奢華重構：統一放大點選觸控區，移除所有原生灰色外觀 */
         button, .modal-btn {
-            background-color: #1a2230;
+            background-color: #121620;
             border: 1px solid var(--accent-gold);
             color: var(--accent-gold);
-            padding: 12px 24px;
-            font-size: 0.95rem;
+            padding: 14px 24px;
+            font-size: 1rem;
             font-weight: 600;
             border-radius: 6px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
             display: inline-block;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
 
         button:hover, .modal-btn:hover {
             background-color: var(--accent-gold);
             color: #07080b;
-            box-shadow: 0 0 12px rgba(212, 175, 55, 0.35);
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.4);
+            transform: translateY(-1px);
         }
 
         .header-actions button {
@@ -81,6 +84,36 @@
             background: transparent;
         }
 
+        .option-btn {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 16px 24px;
+            text-align: left;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.25s ease;
+            line-height: 1.5;
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .option-btn:hover {
+            border-color: var(--accent-gold);
+            background-color: rgba(197, 160, 89, 0.04);
+            color: var(--text-bright);
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(197, 160, 89, 0.1);
+        }
+
+        .option-btn strong {
+            color: var(--accent-gold);
+            margin-right: 8px;
+        }
+
+        /* RWD 手機版頂部切換頁籤選單 */
         .mobile-tabs {
             display: none;
             background-color: var(--bg-panel);
@@ -184,12 +217,12 @@
             color: var(--accent-gold); font-size: 1.15rem; margin-bottom: 15px; border-bottom: 2px solid var(--accent-gold); padding-bottom: 8px;
         }
         .profile-box h3, .forum-box h2, .forum-box h3 {
-            color: var(--accent-gold); font-size: 0.95rem; margin-top: 20px; margin-bottom: 10px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.15); padding-bottom: 6px; letter-spacing: 1px;
+            color: var(--accent-gold); font-size: 0.95rem; margin-top: 25px; margin-bottom: 10px;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2); padding-bottom: 6px; letter-spacing: 1px;
         }
         .profile-box table, .forum-box table { width: 100%; border-collapse: collapse; margin: 12px 0; background-color: rgba(255, 255, 255, 0.01); }
         .profile-box th, .profile-box td, .forum-box th, .forum-box td { border: 1px solid var(--border-color); padding: 10px; text-align: left; }
-        .profile-box th, .forum-box th { background-color: rgba(212, 175, 55, 0.08); color: var(--accent-gold); font-weight: 600; }
+        .profile-box th, .forum-box th { background-color: rgba(197, 160, 89, 0.08); color: var(--accent-gold); font-weight: 600; }
         .profile-box ul, .forum-box ul { padding-left: 18px; margin: 10px 0; }
         .profile-box li, .forum-box li { margin-bottom: 6px; }
         .profile-box blockquote, .forum-box blockquote { border-left: 3px solid var(--accent-gold); background: rgba(255,255,255,0.02); padding: 12px; margin: 12px 0; font-style: italic; }
@@ -203,13 +236,11 @@
         .story-block p { margin-bottom: 14px; }
         .story-block strong { color: var(--accent-gold); }
 
-        .options-container { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 8px; }
-        
         .custom-input-wrapper, .decryption-input-wrapper { display: flex; gap: 10px; width: 100%; }
-        .custom-input-wrapper input, .decryption-input-wrapper input { flex: 1; background-color: var(--bg-deep); border: 1px dashed var(--border-color); border-radius: 6px; padding: 12px; color: #fff; font-size: 0.95rem; }
+        .custom-input-wrapper input, .decryption-input-wrapper input { flex: 1; background-color: var(--bg-deep); border: 1px solid var(--border-color); border-radius: 6px; padding: 14px; color: #fff; font-size: 0.95rem; }
         .custom-input-wrapper input:focus, .decryption-input-wrapper input:focus { outline: none; border-color: var(--accent-gold); }
 
-        /* 👑 【大重構】開闊大氣、古典和諧的深藍奢華彈窗介面 */
+        /* 👑 寬敞大氣、和諧奢華的古典豪門遮罩彈窗樣式 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { position: relative; background-color: rgba(17, 20, 28, 0.98); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 40px; width: 95%; max-width: 650px; max-height: 88vh; overflow-y: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
 
@@ -217,11 +248,11 @@
         .close-x:hover { color: var(--accent-gold); transform: scale(1.1); }
 
         .modal-content h2 { color: var(--accent-gold); margin-bottom: 20px; font-size: 1.4rem; text-align: center; letter-spacing: 2px; font-weight: 700; }
-        .modal-subsection-title { color: var(--accent-gold); font-size: 1rem; margin: 25px 0 14px 0; padding-bottom: 6px; border-bottom: 1px dashed rgba(212, 175, 55, 0.3); font-weight: 600; letter-spacing: 1px; }
+        .modal-subsection-title { color: var(--accent-gold); font-size: 1rem; margin: 25px 0 14px 0; padding-bottom: 6px; border-bottom: 1px dashed rgba(197, 160, 89, 0.3); font-weight: 600; letter-spacing: 1px; }
 
         .form-group { margin-bottom: 20px; text-align: left; }
         .form-group label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; font-weight: 600; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; background-color: rgba(7, 8, 11, 0.5); border: 1px solid var(--border-color); border-radius: 5px; padding: 12px; color: #fff; font-size: 0.95rem; transition: border-color 0.2s; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; background-color: rgba(7, 8, 11, 0.5); border: 1px solid var(--border-color); border-radius: 5px; padding: 14px; color: #fff; font-size: 0.95rem; transition: border-color 0.2s; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent-gold); }
         .form-group textarea { height: 75px; resize: none; }
 
@@ -229,9 +260,7 @@
         .decrypt-status-icon { font-size: 3rem; margin-bottom: 15px; animation: pulse 1.5s infinite; }
         .hidden { display: none !important; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
-
+        /* 手機端 RWD 媒體查詢 */
         @media (max-width: 768px) {
             body { overflow: auto; }
             .mobile-tabs { display: flex; }
@@ -280,7 +309,7 @@
         <main class="main-content" id="game-main">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。請點擊首頁引導大門的按鈕填寫卡片配置通訊核心...</p>
+                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。分數只是裝飾，家世才是唯一的准考證。請點擊首頁大門的按鈕填寫卡片配置通訊核心...</p>
                 </div>
             </div>
 
@@ -323,16 +352,16 @@
     <div id="start-gate-modal" class="modal-overlay">
         <div class="modal-content" style="text-align: center; max-width: 450px; padding: 40px 30px;">
             <button class="close-x" onclick="closeModal('start-gate-modal')">✕</button>
-            <h2 style="letter-spacing: 2px; margin-bottom: 5px;">🏛️ 歡迎來到赫拉學院</h2>
+            <h2>🏛️ 歡迎來到赫拉學院</h2>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px;">H E R A _ A C A D E M Y _ V E R _ 2 . 5</p>
             
             <div style="display: flex; flex-direction: column; gap: 14px;">
-                <button class="modal-btn" onclick="openCharacterModalFromGate()" style="margin-top: 0; background-color: var(--accent-gold); color: #000; padding: 14px; border: none; border-radius: 4px; width: 100%;">🎭 填寫角色卡 (全新世界線開局)</button>
+                <button type="button" class="modal-btn" onclick="openCharacterModalFromGate()" style="background-color: var(--accent-gold); color: #000; border: none; width: 100%;">🎭 填寫角色卡 (全新世界線開局)</button>
                 <div style="border-top: 1px dashed var(--border-color); margin: 15px 0; padding-top: 15px; text-align: left;">
                     <label style="display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; font-weight: 600;">📂 恢復既有進度 (貼上移轉代碼)：</label>
                     <div class="custom-input-wrapper">
                         <input type="text" id="gate-import-token" placeholder="貼上在其他裝置複製的進度字串...">
-                        <button onclick="importSaveTokenFromGate()" style="padding: 0 18px; font-size: 0.9rem;">載入存檔</button>
+                        <button type="button" onclick="importSaveTokenFromGate()" style="padding: 0 18px; font-size: 0.9rem;">載入存檔</button>
                     </div>
                 </div>
             </div>
@@ -357,17 +386,17 @@
                 <label>請輸入您的 API 密鑰 (Key)：</label>
                 <input type="password" id="api-key-input" placeholder="AIzaSy... 或 sk-proj-...">
             </div>
-            <button class="modal-btn" onclick="saveApiKey()" style="width: 100%;">儲存金鑰並嘗試雲端載入</button>
+            <button type="button" class="modal-btn" onclick="saveApiKey()" style="width: 100%;">儲存金鑰並嘗試雲端載入</button>
 
             <div class="modal-subsection-title">💾 跨裝置備份轉移手動控台</div>
             <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 12px;">手動防護轉移進度控制列：</p>
             <div class="form-group">
-                <button class="modal-btn" onclick="exportSaveToken()" style="background-color: #252c38; color: var(--accent-gold); border: 1px solid var(--border-color); margin-top: 0; width: 100%;">一鍵複製「全量遊戲進度代碼」</button>
+                <button type="button" class="modal-btn" onclick="exportSaveToken()" style="background-color: #252c38; color: var(--accent-gold); border: 1px solid var(--border-color); margin-top: 0; width: 100%;">一鍵複製「全量遊戲進度代碼」</button>
             </div>
             <div class="form-group">
                 <label>手動讀檔轉移（在此貼上複製的進度代碼）：</label>
                 <input type="text" id="import-token-input" placeholder="貼上在其他裝置複製的進度字串...">
-                <button class="modal-btn" onclick="importSaveToken()" style="background-color: var(--accent-gold); color: #000; margin-top: 8px; width: 100%;">強制手動導入此進度檔案</button>
+                <button type="button" class="modal-btn" onclick="importSaveToken()" style="background-color: var(--accent-gold); color: #000; margin-top: 8px; width: 100%;">強制手動導入此進度檔案</button>
             </div>
         </div>
     </div>
@@ -415,10 +444,10 @@
             <div class="form-group">
                 <label>家族階級：</label>
                 <select id="char-class">
-                    <option value="Crown">Crown (皇冠) — 頂級財閥、掌權政要核心繼承人</option>
-                    <option value="Noble">Noble (貴族) — 頂尖法律/醫療世家</option>
-                    <option value="Prestige">Prestige (名望) — 新興資本、知名經紀公司高層</option>
-                    <option value="General">General (平民) — 社會關懷特招生或特殊關係戶</option>
+                    <option value="Crown">Crown (皇冠) — 頂級財閥、掌權政要核心繼承人。掌控學生會，一言定生死</option>
+                    <option value="Noble">Noble (貴族) — 大型企業、頂尖法律/醫療世家。地位高，內部派系鬥爭激烈</option>
+                    <option value="Prestige">Prestige (名望) — 新興資本、知名經紀公司高層。有錢但缺乏底蘊，最易嫉妒與站隊</option>
+                    <option value="General">General (平民) — 特招生或特殊關係戶。缺乏背景，常被當作棋子，卻也是最大變數</option>
                 </select>
             </div>
             <div class="form-group">
@@ -451,7 +480,7 @@
                     <option value="新生">新生</option>
                     <option value="低調的旁觀者">低調的旁觀者</option>
                     <option value="風雲人物">風雲人物</option>
-                    <option value="眾矢之的">眾矢之的</option>
+                    <option value="眾矢之目的">眾矢之的</option>
                 </select>
             </div>
 
@@ -470,8 +499,8 @@
             </div>
 
             <div style="display: flex; gap: 14px; margin-top: 25px; width: 100%;">
-                <button type="button" class="modal-btn" onclick="backToGateFromCharacter()" style="background-color: transparent; border-color: #4b5563; color: #a3a3a3; width: 35%;">← 返回大門</button>
-                <button type="button" class="modal-btn" onclick="startStoryGame()" style="background-color: var(--accent-gold); color: #000; flex: 1;">踏入權力交界處</button>
+                <button type="button" onclick="backToGateFromCharacter()" style="background-color: transparent; border-color: #4b5563; color: #a3a3a3; width: 35%;">← 返回大門</button>
+                <button type="button" onclick="startStoryGame()" style="background-color: var(--accent-gold); color: #000; flex: 1;">踏入權力交界處</button>
             </div>
         </div>
     </div>
@@ -482,7 +511,7 @@
             <div id="decrypt-icon" class="decrypt-status-icon" style="color: var(--accent-gold);">📡</div>
             <h2 id="decrypt-result-title" style="color: #fff; letter-spacing: 2px;">底層網協破解中</h2>
             <p id="decrypt-result-message" style="font-size: 0.95rem; line-height: 1.6; margin: 15px 0; color: var(--text-main);">正在向系統發起端口確認對比...</p>
-            <button class="modal-btn" id="decrypt-close-btn" onclick="closeModal('decrypt-result-modal')" style="background-color: #252c38; color: #fff; border: 1px solid var(--border-color); width: 100%;">關閉驗證視窗</button>
+            <button type="button" class="modal-btn" onclick="closeModal('decrypt-result-modal')" style="background-color: #252c38; color: #fff; border: 1px solid var(--border-color); width: 100%;">關閉驗證視窗</button>
         </div>
     </div>
 
@@ -491,7 +520,7 @@
         let isWaitingForAI = false;
         let localCode = "0x" + Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
 
-        // 完美渲染初始面板
+        // 【全量校準初始化快取】確保一開始左側介面完美、完整呈現所有要求的細項項目欄位
         const DEFAULT_PROFILE_MD = `
 # 🏛️ 貴族學院 • 學生即時動態檔案
 
@@ -511,7 +540,7 @@
 ### 🤝 核心 NPC 關係權力圖
 > ❤️好感度/🖤戒備度 | 💎利益綁定度
 
-1. 车律谨 (Crown) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+1. 車律謹 (Crown) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
    * 💬 態度潛台詞： 「別隨便探聽不屬於妳這階級的秘密。」
 
 ### 🎒 背包與關鍵籌碼
@@ -543,11 +572,20 @@
 `;
 
         const SYSTEM_INSTRUCTION = `
-《赫拉學院》沉浸式文字遊戲模板 Ver.2.5 (完整詳細版)
-請扮演遊戲主持人。學校名稱固定為「赫拉學院」。固定當前年份為2026年。
-代名詞性別嚴格區分：男性使用「你 / 他」、女性使用「妳 / 她」。絕對嚴禁串用。
-【解密與三次限制】：玩家發起解密，每個ID最多3次機會。猜錯上調30%威脅指數且被抹黑反噬。
-每次回覆必須嚴格遵循以下順序輸出，並使用分隔線 --- 進行物理隔離，不可精簡欄位：
+《赫拉學院》沉浸式文字遊戲模板 Ver.2.5 (最高限制版)
+請扮演遊戲主持人(GM)，固定當前年份為2026年。學校名稱固定為「赫拉學院」。
+
+🛑【硬性邊界令：嚴禁越界與降低智商】
+1. 階級鎖定：本世界觀「僅存在」[Crown (皇冠)]、[Noble (貴族)]、[Prestige (名望)]、[General (平民)] 四種階級。絕對禁止主持人自創任何非設定的階級名稱。
+2. 原創角色規則（重要）：本模擬器禁止直接使用任何現實既有角色，所有人物皆為「獨立生成的個體」。
+3. 角色卡最高指導原則：玩家提交的角色卡是本局世界線的「終極不變基石」。AI必須100%繼承玩家填寫的家族主要產業、隱密設定、期望社團與校園狀態，並以此為一切劇情的出發點。絕對禁止推翻、忽視或產生與玩家設定相矛盾的敘事。
+4. 正統韓國社會語境：劇情中的所有日常用語、對話風格、以及職位稱呼（如：理事、本部長、代表、室長、檢察官、議員、常務等）必須完全符合現代大韓民國的政商與上流社會習慣。嚴禁參雜過時、歷史年代感詞彙。
+5. 去言情套路與冷酷計算：全面解構無理由的深情與包容套路。NPC的決策、好感、溫柔甚至瘋狂沉淪，其底層邏輯必須與現實利益（家族股份、專利、法律豁免權、黑帳）或精準的情感心理控制深度綁定，字裡行間必須充滿「與虎謀皮」的高智商利益拉鋸潛台詞。
+6. 代名詞性別嚴格區分：男性一律使用「你 / 他」、女性一律使用「妳 / 她」、非生物客觀概念使用「它」。絕對嚴禁男女代名詞串用。
+7. 【解密與三次限制機制】：玩家會對特定ID發起解密，單一代碼最多僅有3次嘗試調查機會，AI必須在狀態欄中動態追蹤並顯示該代碼的剩餘機會（例：0x7F9B 剩餘機會 3/3）。若3次皆猜錯，該代碼永久鎖定，玩家威脅指數飆升30%，且該未知ID在後續HeraLink貼文中瘋狂抹黑、強烈敵意爆料玩家。解密成功則在關係圖中更換為：「1. NPC姓名 (ID: 0x0001) ｜ ...」格式。
+8. 消除 AI 說教感與全知視角：嚴禁任何總結、客套寒暄、承上啟下與心理機制解說。直接以角色當下的感官、環境變化、眼神特寫做為段落開頭。敘事如冰冷的電影鏡頭，每次劇情敘事回覆不可低於 1000 字，具備極強細節刻畫與微表情博弈。
+
+📌【輸出順序與隔離規範】：每次回覆必須嚴格遵循以下順序輸出，包含側欄所需的全量細項看板，並使用分隔線 --- 進行物理隔離，絕對不准省略任何一個次級標題欄位：
 [ 📋 學生即時動態檔案 ]
 ### 👤 基本檔案
 ### 📱 HeraLink 匿名論壇動態
@@ -555,6 +593,7 @@
 ### 🎒 背包與關鍵籌碼
 ---
 [ 🎬 劇情 ]
+(提供字數高於1000字、具備極強電影微表情刻畫、扣緊玩家創角背景與隱密設定的深度敘事)
 ---
 [ 📱 HeraLink 即時熱搜看板 ]
 # 📱 HeraLink 匿名論壇 • 即時熱搜看板
@@ -571,17 +610,16 @@
 * 輿論走向偏向： \`觀望中\`
 ---
 [ 🎯 分歧選項 ]
+(提供具有資訊紅利與龐大代價的不對稱 A、B、C 選項，並留出 D 項讓玩家自由輸入)
 `;
 
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         
-        // 【新增】角色卡視窗返回上一頁控制邏輯
         function backToGateFromCharacter() {
             document.getElementById('character-modal').classList.add('hidden');
             document.getElementById('start-gate-modal').classList.remove('hidden');
         }
 
-        // 【核心控制修復】高相容按鈕與等候狀態鎖定器（確保重啟與點擊事件100%生效不卡死）
         function setLoading(loading) {
             isWaitingForAI = loading;
             const indicator = document.getElementById('loading-indicator');
@@ -732,7 +770,7 @@
             if (!name || !familyName || !familyIndustry) { alert('請完整填寫姓名、家族名稱與家族勢力產業！'); return; }
 
             const initialLocalProfile = `
-# 🏛️ 赫拉學院 • 學生即時動態檔案
+# 🏛️ 貴族學院 • 學生即時動態檔案
 
 ### 👤 基本檔案
 | 姓名 | ${name} |
@@ -764,7 +802,33 @@
                 { role: "model", text: "【系統提示】赫拉學院 Ver.2.5 核心系統已載入後台。" }
             ];
 
-            const characterCardPrompt = `【玩家角色卡提交】\n姓名：${name}\n性別：${gender}\n年齡：${age}\n年級：${grade}\n家族名稱：${familyName}\n階級：${charClass}\n產業：${familyIndustry}\n關係：${familyRel}\n外貌：${vibe}\n秘密：${secret}\n社團：${club}\n狀態：${status}\n風格：${style}\n遇見：${prefer}\n雷點：${tw}\n\n請直接開始第一幕輸出。`;
+            const characterCardPrompt = `
+【CRITICAL ANCHOR CONSTRAINTS - 玩家角色卡官方提交】
+請主持人(GM)嚴格以此角色卡為第一章首發劇情、側欄動態、論壇風向的唯一Premise發展。敘事必須高於1000字，充滿電影微表情，嚴禁任何總結、說教、或非設定階級。NPC人設與言行需極致符合現代韓國財閥之利益博弈邏輯，不可OOC或無動機盲從：
+
+## 一、 基本資料
+* 姓名：${name} (性別：${gender}，語事代名詞旁白與台詞一律精準限制，男女不可串用)
+* 年齡與年級：${age}，目前就讀於赫拉學院 ${grade}
+
+## 二、 家族權力起點
+* 家族背景：${familyName}
+* 官方階級：${charClass} (屬於設定之四種合法階級，嚴禁主持人杜撰其他名稱)
+* 家族主要產業/勢力：${familyIndustry} (在第一幕劇情中，周遭NPC對妳的立場必須高度與此產業權力連動)
+* 家族內部關係：${familyRel || '未註明'}
+
+## 三、 隱密局勢線
+* 外貌與氣質特徵：${vibe || '未註明'}
+* 核心隱密設定/潛在把柄：${secret || '無'}
+* 期望加入的校園組織：${club || '無'}
+* 初始校園狀態標籤：${status}
+
+## 四、 玩家博弈偏好
+* 期望劇情風格：${style || '無預設'}
+* 期望遇見的現實明星與定位：${prefer || '無預設'} (必須遵循粉絲圈公認人設進行深度豪門延伸演繹，絕不降智)
+* 絕對防禦雷點：${tw || '無'}
+
+請主持人消除說教感，直接以第一幕情境或眼神特寫特寫切入輸出，嚴格按照 1.動態檔案表格 2.劇情 3.HeraLink看板 4.選項 的隔離順序物理渲染。`;
+
             document.getElementById('character-modal').classList.add('hidden');
             sendPromptToAI(characterCardPrompt);
         }
@@ -780,8 +844,6 @@
                 let response, data, aiResponseText = "";
                 if (provider === 'gemini') {
                     const geminiContents = chatHistory.map(h => ({ role: h.role === "model" ? "model" : "user", parts: [{ text: h.text }] }));
-                    
-                    // 修正官方相容端點調度
                     response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: geminiContents, generationConfig: { temperature: 0.75, maxOutputTokens: 8192 } })
                     });
