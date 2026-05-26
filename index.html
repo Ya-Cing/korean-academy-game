@@ -208,11 +208,9 @@
         .decryption-input-wrapper input { border: 1px solid rgba(239, 68, 68, 0.2); }
         .decryption-input-wrapper input:focus { border-color: var(--threat-red); box-shadow: 0 0 8px rgba(239, 68, 68, 0.2); }
 
-        /* 彈窗／遮罩層結構 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { position: relative; background-color: var(--bg-panel); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 30px; width: 95%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
 
-        /* 右上角關閉 X 按鈕 */
         .close-x { position: absolute; top: 15px; right: 20px; font-size: 1.3rem; color: var(--text-muted); cursor: pointer; border: none; background: none; font-family: Arial, sans-serif; transition: color 0.2s, transform 0.2s; line-height: 1; z-index: 11; }
         .close-x:hover { color: var(--accent-gold); transform: scale(1.1); }
 
@@ -223,7 +221,6 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
 
-        /* 📱 手機端 RWD 樣式佈局 */
         @media (max-width: 768px) {
             body { overflow: auto; }
             .mobile-tabs { display: flex; }
@@ -276,7 +273,7 @@
         <main class="main-content" id="game-main">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>// 系統提示 //</strong> 歡迎來到赫拉學院。學校表面是培養菁英的名門學院，實際上卻是上流社會建立的「權力培養場」。學生的地位、人際關係、甚至戀愛與未來，幾乎都與背後家族勢力緊密相連。分數只是裝飾，家世才是唯一的准考證。請點擊首頁大門的按鈕填寫卡片配置通訊核心...</p>
+                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。分數只是裝飾，家世才是唯一的准考證。請點擊首頁大門的按鈕填寫卡片配置通訊核心...</p>
                 </div>
             </div>
 
@@ -325,7 +322,7 @@
             <div style="display: flex; flex-direction: column; gap: 14px;">
                 <button class="modal-btn" onclick="openCharacterModalFromGate()" style="margin-top: 0; background-color: var(--accent-gold); color: #000; padding: 14px; border: none;">🎭 填寫角色卡 (全新世界線開局)</button>
                 <div style="border-top: 1px dashed var(--border-color); margin: 15px 0; padding-top: 15px; text-align: left;">
-                    <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">📂 恢復既有進度 (貼上移移轉代碼)：</label>
+                    <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">📂 恢復既有進度 (貼上移轉代碼)：</label>
                     <div class="custom-input-wrapper">
                         <input type="text" id="gate-import-token" placeholder="貼上在其他裝置複製的進度字串...">
                         <button onclick="importSaveTokenFromGate()" style="padding: 0 15px; font-size: 0.9rem;">載入存檔</button>
@@ -356,7 +353,7 @@
             <button class="modal-btn" onclick="saveApiKey()">儲存金鑰並嘗試雲端載入</button>
 
             <div class="modal-subsection-title">💾 跨裝置備份轉移手動控台</div>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">如果因網路阻擋（CORS限制）導致自動快取受限，可採用手動字串複製防護：</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">手動防護轉移進度控制列：</p>
             <div class="form-group">
                 <button class="modal-btn" onclick="exportSaveToken()" style="background-color: #252c38; color: var(--accent-gold); border: 1px solid var(--border-color); margin-top: 0;">一鍵複製「全量遊戲進度代碼」</button>
             </div>
@@ -372,32 +369,105 @@
         <div class="modal-content">
             <button class="close-x" onclick="closeModal('character-modal')">✕</button>
             <h2>🎭 建立您的繼承者檔案</h2>
+            
             <div class="modal-subsection-title">一、 基本資料</div>
-            <div class="form-group"><label>姓名：</label><input type="text" id="char-name" placeholder="例如：車恩尚、李信"></div>
-            <div class="form-row">
-                <div class="form-group"><label>性別：</label><select id="char-gender"><option value="女">女 (對白敘事嚴格使用「妳/她」)</option><option value="男">男 (對白敘事嚴格使用「你/他」)</option></select></div>
-                <div class="form-group"><label>年級：</label><select id="char-grade"><option value="高一">高一</option><option value="高二">高二</option><option value="高三">高三</option></select></div>
+            <div class="form-group">
+                <label>姓名：</label>
+                <input type="text" id="char-name" placeholder="例如：車恩尚、李信">
             </div>
-            <div class="form-group"><label>年齡：</label><select id="char-age"><option value="16 歲">16 歲</option><option value="17 歲">17 歲</option><option value="18 歲">18 歲</option><option value="19 歲">19 歲</option></select></div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>性別：</label>
+                    <select id="char-gender">
+                        <option value="女">女 (對白敘事嚴格使用「妳/她」)</option>
+                        <option value="男">男 (對白敘事嚴格使用「你/他」)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>年級：</label>
+                    <select id="char-grade">
+                        <option value="高一">高一</option>
+                        <option value="高二">高二</option>
+                        <option value="高三">高三</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>年齡：</label>
+                <select id="char-age">
+                    <option value="16 歲">16 歲</option>
+                    <option value="17 歲">17 歲</option>
+                    <option value="18 歲">18 歲</option>
+                    <option value="19 歲">19 歲</option>
+                </select>
+            </div>
+
             <div class="modal-subsection-title">二、 家族背景</div>
             <div class="form-row">
-                <div class="form-group"><label>家族名稱：</label><input type="text" id="char-family-name" placeholder="example: 順洋集團、大韓醫院"></div>
-                <div class="form-group"><label>家族階級：</label><select id="char-class"><option value="Crown">Crown (皇冠)：頂級財閥、掌權政要核心繼承人。掌控學生會，一言定生死</option><option value="Noble">Noble (貴族)：大型企業、頂尖法律/醫療世家。地位高，內部派系鬥爭激烈</option><option value="Prestige">Prestige (名望)：新興資本、知名經紀公司高層。有錢但缺乏底蘊，最易嫉妒與站隊</option><option value="General">General (平民)：特招生或特殊關係戶。缺乏背景，常被當作棋子，卻也是最大變數</option></select></div>
+                <div class="form-group">
+                    <label>家族名稱：</label>
+                    <input type="text" id="char-family-name" placeholder="例如：順洋集團、大韓醫院">
+                </div>
+                <div class="form-group">
+                    <label>家族階級：</label>
+                    <select id="char-class">
+                        <option value="Crown">Crown (皇冠) — 頂級財閥繼承人</option>
+                        <option value="Noble">Noble (貴族) — 頂尖法律/醫療世家</option>
+                        <option value="Prestige">Prestige (名望) — 新興資本高層</option>
+                        <option value="General">General (平民) — 社會關懷特招生</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group"><label>家族主要勢力或產業：</label><textarea id="char-family-industry" placeholder="例如：掌握全國50%半導體股份..."></textarea></div>
-            <div class="form-group"><label>與家族成員的關係簡述：</label><textarea id="char-family-rel" placeholder="例如：受寵的獨生女..."></textarea></div>
+            <div class="form-group">
+                <label>家族主要勢力或產業：</label>
+                <textarea id="char-family-industry" placeholder="例如：掌握全國50%半導體股份、壟斷首爾核心醫療專利..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>與家族成員的關係簡述：</label>
+                <textarea id="char-family-rel" placeholder="例如：受寵的獨生女、被邊緣化的私生子..."></textarea>
+            </div>
+
             <div class="modal-subsection-title">三、 角色設定</div>
-            <div class="form-group"><label>外貌特徵與自帶氣質：</label><textarea id="char-vibe" placeholder="例如：高冷貓系、清澈無辜的眼神..."></textarea></div>
-            <div class="form-group"><label>隱密設定 (選填)：</label><textarea id="char-secret" placeholder="例如：已有家族商業婚約..."></textarea></div>
+            <div class="form-group">
+                <label>外貌特徵與自帶氣質：</label>
+                <textarea id="char-vibe" placeholder="例如：高冷貓系、清澈無辜的眼神..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>隱密設定 (選填)：</label>
+                <textarea id="char-secret" placeholder="例如：已有家族商業婚約、不為人知的假身分..."></textarea>
+            </div>
+
             <div class="modal-subsection-title">四、 校園相關</div>
             <div class="form-row">
-                <div class="form-group"><label>期望加入的社團/學生會職務：</label><input type="text" id="char-club" placeholder="例如：馬術社"></div>
-                <div class="form-group"><label>初始校園狀態：</label><select id="char-status"><option value="新生">新生</option><option value="低調的旁觀者">低調的旁觀者</option><option value="風雲人物">風雲人物</option><option value="眾矢之的">眾矢之的</option></select></div>
+                <div class="form-group">
+                    <label>期望加入的社團/學生會職務：</label>
+                    <input type="text" id="char-club" placeholder="例如：學生會企劃部、馬術社">
+                </div>
+                <div class="form-group">
+                    <label>初始校園狀態：</label>
+                    <select id="char-status">
+                        <option value="新生">新生</option>
+                        <option value="低調的旁觀者">低調的旁觀者</option>
+                        <option value="風雲人物">風雲人物</option>
+                        <option value="眾矢之的">眾矢之的</option>
+                    </select>
+                </div>
             </div>
-            <div class="modal-subsection-title">五、 玩家偏好設定</div>
-            <div class="form-group"><label>期望的劇情風格：</label><input type="text" id="char-style" placeholder="例如：極權政商博弈"></div>
-            <div class="form-group"><label>期望遇見的明星/角色：</label><input type="text" id="char-prefer" placeholder="example: 韓韶禧"></div>
-            <div class="form-group"><label>絕對不希望出現的雷點：</label><input type="text" id="char-tw" placeholder="例如：強行降智"></div>
+
+            <div class="modal-subsection-title">五、 玩家偏好設定 (選填)</div>
+            <div class="form-group">
+                <label>期望的劇情風格：</label>
+                <input type="text" id="char-style" placeholder="例如：極權政商博弈、暗黑復仇">
+            </div>
+            <div class="form-group">
+                <label>期望遇見的明星/角色：</label>
+                <input type="text" id="char-prefer" placeholder="例如：韓韶禧(同班死敵)">
+            </div>
+            <div class="form-group">
+                <label>絕對不希望出現的雷點內容：</label>
+                <input type="text" id="char-tw" placeholder="例如：強行降智套路">
+            </div>
+
             <button class="modal-btn" onclick="startStoryGame()">踏入權力交界處</button>
         </div>
     </div>
@@ -436,7 +506,7 @@
 
         const SYSTEM_INSTRUCTION = `
 《赫拉學院》沉浸式文字遊戲模板 Ver.2.5 (完整詳細版)
-請扮演遊戲主持人。學校名稱固定為「赫拉學院」。
+請扮演遊戲主持人。學校名稱固定為「赫拉學院」。固定當前年份為2026年。
 代名詞性別嚴格區分：男性使用「你 / 他」、女性使用「妳 / 她」。絕對嚴禁串用。
 【解密與三次限制】：玩家發起解密，每個ID最多3次機會。猜錯上調30%威脅指數且被抹黑反噬。
 每次回覆必須嚴格遵循以下順序輸出，並使用分隔線 --- 進行物理隔離，不可精簡欄位：
@@ -482,6 +552,7 @@
             document.getElementById('start-gate-modal').classList.add('hidden'); document.getElementById('character-modal').classList.remove('hidden');
         }
         function openApiModalFromGate(e) { if(e) e.preventDefault(); document.getElementById('api-modal').classList.remove('hidden'); }
+        
         function switchMobileTab(tabId) {
             document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
@@ -496,27 +567,37 @@
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
             return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
+
+        // 雲端快取
         async function saveGameToCloud() {
             const key = localStorage.getItem('game_api_key'); if (!key || chatHistory.length === 0) return;
             try {
                 const hashID = await getPlayerHashID(key);
                 await fetch(`https://api.npoint.io/heralink_rpg_saves_${hashID}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chatHistory: chatHistory }) });
             } catch (e) {}
-            localStorage.setItem('heralink_local_save_' + localCode, JSON.stringify(chatHistory));
+            localStorage.setItem('heralink_game_save', JSON.stringify(chatHistory));
         }
+
+        // 優化讀檔相容性，防堵雲端 404 時阻斷本地快取
         async function loadGameFromCloud() {
             const key = localStorage.getItem('game_api_key'); if (!key) return false;
             try {
                 const hashID = await getPlayerHashID(key);
                 const response = await fetch(`https://api.npoint.io/heralink_rpg_saves_${hashID}`);
-                if (response.ok) { const data = await response.json(); if (data && data.chatHistory) { restoreGameState(data.chatHistory); return true; } }
-            } catch (e) {
-                for (let i = 0; i < localStorage.length; i++) {
-                    if (localStorage.key(i).startsWith('heralink_local_save_')) { restoreGameState(JSON.parse(localStorage.getItem(localStorage.key(i)))); return true; }
+                if (response.ok) { 
+                    const data = await response.json(); 
+                    if (data && data.chatHistory) { restoreGameState(data.chatHistory); return true; } 
                 }
+            } catch (e) { console.log("Cloud server check bypass."); }
+
+            // 雲端無響應或無存檔時，調度本地持久槽
+            if (localStorage.getItem('heralink_game_save')) {
+                restoreGameState(JSON.parse(localStorage.getItem('heralink_game_save')));
+                return true;
             }
             return false;
         }
+
         function importSaveTokenFromGate() {
             if (!localStorage.getItem('game_api_key')) { alert("// 赫拉學院通訊 //\n請先配置底層 API Key 金鑰核心。"); document.getElementById('api-modal').classList.remove('hidden'); return; }
             const rawToken = document.getElementById('gate-import-token').value.trim(); if (!rawToken) return;
@@ -525,6 +606,7 @@
                 if (Array.isArray(parsed) && parsed.length > 0) { restoreGameState(parsed); document.getElementById('start-gate-modal').classList.add('hidden'); alert("🟢 進度數據流校準完成！已還原過往局勢線。"); }
             } catch (e) { alert("🚨 進度代碼解析失敗。"); }
         }
+
         function restoreGameState(historyArray) {
             chatHistory = historyArray; const lastModel = [...chatHistory].reverse().find(h => h.role === "model");
             if (lastModel) { document.getElementById('story-stream').innerHTML = `<div class="story-block"><p style="color:var(--accent-gold);"><strong>// 數據重組 //</strong> 已成功修復您的繼承者命運線。</p></div>`; parseAndPopulateUI(lastModel.text); document.getElementById('character-modal').classList.add('hidden'); }
@@ -557,19 +639,26 @@
 
             const initialLocalProfile = `
 # 🏛️ 赫拉學院 • 學生即時動態檔案
+
 ### 👤 基本檔案
 | 姓名 | ${name} |
 | 階級 | \`${charClass}\` |
 | 陣營/派系 | \`尚未加入\` |
 | 家族當前狀態 | \`穩定 (開局初始化)\` |
 | 論壇匿名代碼 | \`${localCode}\` |
+
 ### 📱 HeraLink 匿名論壇動態
 * 社交名聲標籤 : \`神秘局外人 (基於 ${status})\`
 * 本週論壇熱搜 : #新學期繼承者名冊 #赫拉學院特招生
 * 輿論威脅指數 : \`30%\`
 * 🕵️ 當前解密追蹤紀錄 : 1. \`[ 未發起代碼解密行動 ]\`
+
 ### 🤝 核心 NPC 關係權力圖
-1. 正在黑箱校準內閣成員情報... ｜ \`🖤🖤🖤🖤🖤\`
+> ❤️好感度/🖤戒備度 | 💎利益綁定度
+
+1. 正在黑箱校準赫拉內閣成員情報... ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+   * 💬 態度潛台詞 : 「觀察中。」
+
 ### 🎒 背包與關鍵籌碼
 * 資金/可動用資源 : 充裕 (源自 ${familyName})
 * 持有秘密/把柄 : 1. *[ 家族秘辛：${secret || '無'} ]*
@@ -597,7 +686,8 @@
                 let response, data, aiResponseText = "";
                 if (provider === 'gemini') {
                     const geminiContents = chatHistory.map(h => ({ role: h.role === "model" ? "model" : "user", parts: [{ text: h.text }] }));
-                    // 【已徹底矯正為 3.5 正式端點模型，防堵 404】
+                    
+                    // 【已徹底矯正模型代號，確保相容官方正式通用 3.5 端點，防止 404 崩潰】
                     response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: geminiContents, generationConfig: { temperature: 0.75, maxOutputTokens: 8192 } })
                     });
@@ -694,7 +784,7 @@
 
         function submitCustomChoice() {
             const inputEl = document.getElementById('custom-choice-input'); const customText = inputEl.value.trim(); if (!customText) return;
-            const fullActionText = `【【D】玩家自由決策/反擊行動】：${customText}`; inputEl.value = "";
+            const fullActionText = `【玩家決策行動】：${customText}`; inputEl.value = "";
             const stream = document.getElementById('story-stream'); const choiceBlock = document.createElement('div');
             choiceBlock.className = 'story-block'; choiceBlock.style.borderLeft = '4px solid #fff'; choiceBlock.innerHTML = `<p style="color: #fff; font-weight: bold;">${fullActionText}</p>`;
             stream.appendChild(choiceBlock); stream.scrollTop = stream.scrollHeight;
@@ -715,38 +805,11 @@
             sendPromptToAI(fullActionText);
         }
 
-        function restartGame() {
-            if (confirm('確定要清除進度，重啟一場全新赫拉學院的世界線嗎？')) {
-                chatHistory = [];
-                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p><strong>【系統提示】</strong> 歷史線已重置。您已進入全新檔案...</p></div>`;
-                document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
-                document.getElementById('forum-container').innerHTML = marked.parse(DEFAULT_FORUM_MD);
-                document.getElementById('options-container').innerHTML = '';
-                document.getElementById('start-gate-modal').classList.remove('hidden');
-            }
-        }
-
-        function exportSaveToken() {
-            if (chatHistory.length === 0) { alert("您目前沒有進度檔案可備份。"); return; }
-            const token = btoa(encodeURIComponent(JSON.stringify(chatHistory)));
-            navigator.clipboard.writeText(token).then(() => { alert("📋 【進度複製成功】\n已成功將全量存檔壓縮為加密代碼代碼！您可至手機端等貼上還原！"); });
-        }
-
-        function importSaveToken() {
-            const rawToken = document.getElementById('import-token-input').value.trim(); if (!rawToken) return;
-            try {
-                const parsed = JSON.parse(decodeURIComponent(atob(rawToken)));
-                if (Array.isArray(parsed) && parsed.length > 0) { restoreGameState(parsed); document.getElementById('api-modal').classList.add('hidden'); alert("🟢 導入成功！進度已恢復。"); }
-            } catch (e) { alert("🚨 進度代碼解析失敗。"); }
-        }
-
-        function setLoading(loading) {
-            isWaitingForAI = loading; const indicator = document.getElementById('loading-indicator');
-            const optionBtns = document.querySelectorAll('.option-btn');
-            const customBtn = document.querySelector('.custom-input-wrapper button');
-            const decryptBtn = document.querySelector('.decryption-input-wrapper button');
-            if (loading) { indicator.classList.remove('hidden'); optionBtns.forEach(b => b.disabled = true); if(customBtn) customBtn.disabled = true; if(decryptBtn) decryptBtn.disabled = true; } 
-            else { indicator.classList.add('hidden'); optionBtns.forEach(b => b.disabled = false); if(customBtn) customBtn.disabled = false; if(decryptBtn) decryptBtn.disabled = false; }
+        function showDecryptionResultWindow(title, message, icon, color) {
+            document.getElementById('decrypt-result-title').innerText = title;
+            document.getElementById('decrypt-result-message').innerHTML = message;
+            const iconEl = document.getElementById('decrypt-icon'); iconEl.innerText = icon; iconEl.style.color = color;
+            document.getElementById('decrypt-result-modal').classList.remove('hidden');
         }
     </script>
 </body>
