@@ -9,14 +9,14 @@
         :root {
             --bg-deep: #07080b;
             --bg-panel: #11141c;
-            --bg-card: #161a24;
-            --accent-gold: #c5a059;
-            --accent-gold-hover: #e5c17d;
+            --bg-card: #181d26;
+            --accent-gold: #d4af37;
+            --accent-gold-hover: #f3e5ab;
             --text-main: #cbd5e1;
             --text-bright: #ffffff;
             --text-muted: #4b5563;
-            --threat-red: #9e2a2b;
-            --border-color: #222a36;
+            --threat-red: #ef4444;
+            --border-color: #262f3d;
         }
 
         * {
@@ -25,7 +25,6 @@
             padding: 0;
         }
 
-        /* 全域黑體縮排，英文與數字優先專屬 Times New Roman */
         body, input, select, textarea, button {
             font-family: 'Times New Roman', 'PingFang TC', 'Microsoft JhengHei', -apple-system, sans-serif;
         }
@@ -55,23 +54,33 @@
             font-weight: 700;
         }
 
-        .header-actions button {
-            background: transparent;
+        /* 👑 全網頁按鈕美學重構：統一放大點選區，移除所有原生灰色外觀 */
+        button, .modal-btn {
+            background-color: #1a2230;
             border: 1px solid var(--accent-gold);
             color: var(--accent-gold);
-            padding: 6px 12px;
-            border-radius: 4px;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 6px;
             cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+            display: inline-block;
+        }
+
+        button:hover, .modal-btn:hover {
+            background-color: var(--accent-gold);
+            color: #07080b;
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.35);
+        }
+
+        .header-actions button {
+            padding: 8px 16px;
             font-size: 0.85rem;
-            transition: all 0.3s;
+            background: transparent;
         }
 
-        .header-actions button:hover {
-            background: var(--accent-gold);
-            color: var(--bg-deep);
-        }
-
-        /* RWD 手機版頂部切換頁籤選單 */
         .mobile-tabs {
             display: none;
             background-color: var(--bg-panel);
@@ -171,17 +180,20 @@
         }
 
         .profile-box, .forum-box { font-size: 0.9rem; line-height: 1.7; }
+        .profile-box h1, .forum-box h1 {
+            color: var(--accent-gold); font-size: 1.15rem; margin-bottom: 15px; border-bottom: 2px solid var(--accent-gold); padding-bottom: 8px;
+        }
         .profile-box h3, .forum-box h2, .forum-box h3 {
-            color: var(--accent-gold); font-size: 0.95rem; margin-top: 25px; margin-bottom: 12px;
-            border-bottom: 1px solid rgba(197, 160, 89, 0.2); padding-bottom: 6px; letter-spacing: 1px;
+            color: var(--accent-gold); font-size: 0.95rem; margin-top: 20px; margin-bottom: 10px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15); padding-bottom: 6px; letter-spacing: 1px;
         }
         .profile-box table, .forum-box table { width: 100%; border-collapse: collapse; margin: 12px 0; background-color: rgba(255, 255, 255, 0.01); }
         .profile-box th, .profile-box td, .forum-box th, .forum-box td { border: 1px solid var(--border-color); padding: 10px; text-align: left; }
-        .profile-box th, .forum-box th { background-color: rgba(197, 160, 89, 0.08); color: var(--accent-gold); font-weight: 600; }
+        .profile-box th, .forum-box th { background-color: rgba(212, 175, 55, 0.08); color: var(--accent-gold); font-weight: 600; }
         .profile-box ul, .forum-box ul { padding-left: 18px; margin: 10px 0; }
         .profile-box li, .forum-box li { margin-bottom: 6px; }
         .profile-box blockquote, .forum-box blockquote { border-left: 3px solid var(--accent-gold); background: rgba(255,255,255,0.02); padding: 12px; margin: 12px 0; font-style: italic; }
-        .forum-section-container { background: rgba(158, 42, 43, 0.02); border: 1px dashed rgba(158, 42, 43, 0.2); padding: 14px; border-radius: 6px; }
+        .forum-section-container { background: rgba(239, 68, 68, 0.01); border: 1px dashed rgba(239, 68, 68, 0.15); padding: 14px; border-radius: 6px; margin-top: 15px; }
 
         .story-block {
             background-color: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px;
@@ -192,35 +204,24 @@
         .story-block strong { color: var(--accent-gold); }
 
         .options-container { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 8px; }
-        .option-btn {
-            background-color: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main);
-            padding: 14px 20px; text-align: left; border-radius: 6px; cursor: pointer; font-size: 0.95rem; transition: all 0.25s ease; line-height: 1.4;
-        }
-        .option-btn:hover { border-color: var(--accent-gold); background-color: rgba(197, 160, 89, 0.04); color: var(--text-bright); transform: translateX(4px); }
-        .option-btn strong { color: var(--accent-gold); margin-right: 8px; }
-
+        
         .custom-input-wrapper, .decryption-input-wrapper { display: flex; gap: 10px; width: 100%; }
         .custom-input-wrapper input, .decryption-input-wrapper input { flex: 1; background-color: var(--bg-deep); border: 1px dashed var(--border-color); border-radius: 6px; padding: 12px; color: #fff; font-size: 0.95rem; }
         .custom-input-wrapper input:focus, .decryption-input-wrapper input:focus { outline: none; border-color: var(--accent-gold); }
-        .custom-input-wrapper button, .decryption-input-wrapper button { background-color: var(--accent-gold); color: var(--bg-deep); border: none; padding: 0 24px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-        .custom-input-wrapper button:hover { background-color: var(--accent-gold-hover); }
 
-        .decryption-input-wrapper input { border: 1px solid rgba(158, 42, 43, 0.3); }
-        .decryption-input-wrapper input:focus { border-color: var(--threat-red); box-shadow: 0 0 8px rgba(158, 42, 43, 0.2); }
-
-        /* 👑 【大重構】寬敞不擁擠、色調和諧奢華的古典豪門彈窗樣式 */
+        /* 👑 【大重構】開闊大氣、古典和諧的深藍奢華彈窗介面 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { position: relative; background-color: rgba(17, 20, 28, 0.98); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 35px; width: 95%; max-width: 650px; max-height: 88vh; overflow-y: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
+        .modal-content { position: relative; background-color: rgba(17, 20, 28, 0.98); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 40px; width: 95%; max-width: 650px; max-height: 88vh; overflow-y: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
 
         .close-x { position: absolute; top: 16px; right: 20px; font-size: 1.4rem; color: var(--text-muted); cursor: pointer; border: none; background: none; font-family: Arial, sans-serif; transition: color 0.2s, transform 0.2s; line-height: 1; z-index: 11; }
         .close-x:hover { color: var(--accent-gold); transform: scale(1.1); }
 
         .modal-content h2 { color: var(--accent-gold); margin-bottom: 20px; font-size: 1.4rem; text-align: center; letter-spacing: 2px; font-weight: 700; }
-        .modal-subsection-title { color: var(--accent-gold); font-size: 1rem; margin: 25px 0 14px 0; padding-bottom: 6px; border-bottom: 1px dashed rgba(197, 160, 89, 0.3); font-weight: 600; letter-spacing: 1px; }
+        .modal-subsection-title { color: var(--accent-gold); font-size: 1rem; margin: 25px 0 14px 0; padding-bottom: 6px; border-bottom: 1px dashed rgba(212, 175, 55, 0.3); font-weight: 600; letter-spacing: 1px; }
 
-        .form-group { margin-bottom: 18px; text-align: left; }
+        .form-group { margin-bottom: 20px; text-align: left; }
         .form-group label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; font-weight: 600; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; background-color: rgba(7, 8, 11, 0.6); border: 1px solid var(--border-color); border-radius: 5px; padding: 12px; color: #fff; font-size: 0.95rem; transition: border-color 0.2s; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; background-color: rgba(7, 8, 11, 0.5); border: 1px solid var(--border-color); border-radius: 5px; padding: 12px; color: #fff; font-size: 0.95rem; transition: border-color 0.2s; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent-gold); }
         .form-group textarea { height: 75px; resize: none; }
 
@@ -270,9 +271,7 @@
 
     <div class="game-container">
         <aside class="sidebar" id="game-sidebar">
-            <div>
-                <div id="profile-container" class="profile-box"></div>
-            </div>
+            <div id="profile-container" class="profile-box"></div>
             <div id="forum-section" class="forum-section-container">
                 <div id="forum-container" class="forum-box"></div>
             </div>
@@ -281,7 +280,7 @@
         <main class="main-content" id="game-main">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。請先填寫首頁引導大門的繼承者檔案以開啟全新世界線分支...</p>
+                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。請點擊首頁引導大門的按鈕填寫卡片配置通訊核心...</p>
                 </div>
             </div>
 
@@ -322,18 +321,18 @@
     </div>
 
     <div id="start-gate-modal" class="modal-overlay">
-        <div class="modal-content" style="text-align: center; max-width: 450px;">
+        <div class="modal-content" style="text-align: center; max-width: 450px; padding: 40px 30px;">
             <button class="close-x" onclick="closeModal('start-gate-modal')">✕</button>
-            <h2>🏛️ 歡迎來到赫拉學院</h2>
+            <h2 style="letter-spacing: 2px; margin-bottom: 5px;">🏛️ 歡迎來到赫拉學院</h2>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px;">H E R A _ A C A D E M Y _ V E R _ 2 . 5</p>
             
             <div style="display: flex; flex-direction: column; gap: 14px;">
-                <button class="modal-btn" onclick="openCharacterModalFromGate()" style="margin-top: 0; background-color: var(--accent-gold); color: #000; padding: 14px; border: none; border-radius: 4px;">🎭 填寫角色卡 (全新世界線開局)</button>
+                <button class="modal-btn" onclick="openCharacterModalFromGate()" style="margin-top: 0; background-color: var(--accent-gold); color: #000; padding: 14px; border: none; border-radius: 4px; width: 100%;">🎭 填寫角色卡 (全新世界線開局)</button>
                 <div style="border-top: 1px dashed var(--border-color); margin: 15px 0; padding-top: 15px; text-align: left;">
-                    <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">📂 恢復既有進度 (貼上移轉代碼)：</label>
+                    <label style="display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; font-weight: 600;">📂 恢復既有進度 (貼上移轉代碼)：</label>
                     <div class="custom-input-wrapper">
                         <input type="text" id="gate-import-token" placeholder="貼上在其他裝置複製的進度字串...">
-                        <button onclick="importSaveTokenFromGate()" style="padding: 0 15px; font-size: 0.9rem;">載入存檔</button>
+                        <button onclick="importSaveTokenFromGate()" style="padding: 0 18px; font-size: 0.9rem;">載入存檔</button>
                     </div>
                 </div>
             </div>
@@ -358,17 +357,17 @@
                 <label>請輸入您的 API 密鑰 (Key)：</label>
                 <input type="password" id="api-key-input" placeholder="AIzaSy... 或 sk-proj-...">
             </div>
-            <button class="modal-btn" onclick="saveApiKey()">儲存金鑰並嘗試雲端載入</button>
+            <button class="modal-btn" onclick="saveApiKey()" style="width: 100%;">儲存金鑰並嘗試雲端載入</button>
 
             <div class="modal-subsection-title">💾 跨裝置備份轉移手動控台</div>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">手動防護轉移進度控制列：</p>
+            <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 12px;">手動防護轉移進度控制列：</p>
             <div class="form-group">
-                <button class="modal-btn" onclick="exportSaveToken()" style="background-color: #252c38; color: var(--accent-gold); border: 1px solid var(--border-color); margin-top: 0;">一鍵複製「全量遊戲進度代碼」</button>
+                <button class="modal-btn" onclick="exportSaveToken()" style="background-color: #252c38; color: var(--accent-gold); border: 1px solid var(--border-color); margin-top: 0; width: 100%;">一鍵複製「全量遊戲進度代碼」</button>
             </div>
             <div class="form-group">
                 <label>手動讀檔轉移（在此貼上複製的進度代碼）：</label>
                 <input type="text" id="import-token-input" placeholder="貼上在其他裝置複製的進度字串...">
-                <button class="modal-btn" onclick="importSaveToken()" style="background-color: var(--accent-gold); color: #000; margin-top: 8px;">強制手動導入此進度檔案</button>
+                <button class="modal-btn" onclick="importSaveToken()" style="background-color: var(--accent-gold); color: #000; margin-top: 8px; width: 100%;">強制手動導入此進度檔案</button>
             </div>
         </div>
     </div>
@@ -470,7 +469,10 @@
                 <input type="text" id="char-tw" placeholder="例如：強行降智套路">
             </div>
 
-            <button class="modal-btn" onclick="startStoryGame()">踏入權力交界處</button>
+            <div style="display: flex; gap: 14px; margin-top: 25px; width: 100%;">
+                <button type="button" class="modal-btn" onclick="backToGateFromCharacter()" style="background-color: transparent; border-color: #4b5563; color: #a3a3a3; width: 35%;">← 返回大門</button>
+                <button type="button" class="modal-btn" onclick="startStoryGame()" style="background-color: var(--accent-gold); color: #000; flex: 1;">踏入權力交界處</button>
+            </div>
         </div>
     </div>
 
@@ -480,7 +482,7 @@
             <div id="decrypt-icon" class="decrypt-status-icon" style="color: var(--accent-gold);">📡</div>
             <h2 id="decrypt-result-title" style="color: #fff; letter-spacing: 2px;">底層網協破解中</h2>
             <p id="decrypt-result-message" style="font-size: 0.95rem; line-height: 1.6; margin: 15px 0; color: var(--text-main);">正在向系統發起端口確認對比...</p>
-            <button class="modal-btn" id="decrypt-close-btn" onclick="closeModal('decrypt-result-modal')" style="background-color: #252c38; color: #fff; border: 1px solid var(--border-color);">關閉驗證視窗</button>
+            <button class="modal-btn" id="decrypt-close-btn" onclick="closeModal('decrypt-result-modal')" style="background-color: #252c38; color: #fff; border: 1px solid var(--border-color); width: 100%;">關閉驗證視窗</button>
         </div>
     </div>
 
@@ -489,7 +491,7 @@
         let isWaitingForAI = false;
         let localCode = "0x" + Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
 
-        // 【全量校準初始化快取】確保一開始左側介面完整呈現所有要求的細項項目欄位
+        // 完美渲染初始面板
         const DEFAULT_PROFILE_MD = `
 # 🏛️ 貴族學院 • 學生即時動態檔案
 
@@ -573,7 +575,13 @@
 
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         
-        // 【控制修復】高相容按鈕與等候狀態鎖定器（確保重啟事件100%生效不卡死）
+        // 【新增】角色卡視窗返回上一頁控制邏輯
+        function backToGateFromCharacter() {
+            document.getElementById('character-modal').classList.add('hidden');
+            document.getElementById('start-gate-modal').classList.remove('hidden');
+        }
+
+        // 【核心控制修復】高相容按鈕與等候狀態鎖定器（確保重啟與點擊事件100%生效不卡死）
         function setLoading(loading) {
             isWaitingForAI = loading;
             const indicator = document.getElementById('loading-indicator');
@@ -620,7 +628,6 @@
 
         function checkCharacterState() { if (chatHistory.length === 0) document.getElementById('character-modal').classList.remove('hidden'); }
         
-        // 【大門智慧重置】引導開局
         function openCharacterModalFromGate() {
             if (!localStorage.getItem('game_api_key')) { 
                 alert("// 赫拉學院通訊 //\n偵測到系統尚未配置 AI 通訊核心，請先配置 API Key 才能開啟赫拉大門。"); 
@@ -688,7 +695,6 @@
             if (lastModel) { document.getElementById('story-stream').innerHTML = `<div class="story-block"><p style="color:var(--accent-gold);"><strong>// 數據重組 //</strong> 已成功修復您的繼承者命運線。</p></div>`; parseAndPopulateUI(lastModel.text); document.getElementById('character-modal').classList.add('hidden'); }
         }
 
-        // 【完美重塑】解決原本因 setLoading 缺失引起的重啟點擊死結
         function restartGame() {
             if (confirm('確定要清除當前進度，重啟一場全新赫拉學院的世界線嗎？')) {
                 chatHistory = [];
@@ -744,7 +750,7 @@
 ### 🤝 核心 NPC 關係權力圖
 > ❤️好感度/🖤戒備度 | 💎利益綁定度
 
-1. 車律謹 (Crown) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+1. 车律谨 (Crown) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
    * 💬 態度潛台詞 : 「別隨便探聽不屬於妳這階級的秘密。」
 
 ### 🎒 背包與關鍵籌碼
@@ -775,7 +781,7 @@
                 if (provider === 'gemini') {
                     const geminiContents = chatHistory.map(h => ({ role: h.role === "model" ? "model" : "user", parts: [{ text: h.text }] }));
                     
-                    // 【已徹底修正模型端點：gemini-3.5-flash】
+                    // 修正官方相容端點調度
                     response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: geminiContents, generationConfig: { temperature: 0.75, maxOutputTokens: 8192 } })
                     });
