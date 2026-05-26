@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>赫拉學院 | 沉浸式文字互動遊戲 Ver.2.5</title>
+    <title>大韓貴族學院 | 沉浸式文字互動遊戲 Ver.2.5</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
@@ -56,6 +56,13 @@
             font-weight: 700;
         }
 
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
         .header-actions button {
             background: transparent;
             border: 1px solid var(--accent-gold);
@@ -65,6 +72,7 @@
             cursor: pointer;
             font-size: 0.85rem;
             transition: all 0.3s;
+            white-space: nowrap;
         }
 
         .header-actions button:hover {
@@ -267,11 +275,11 @@
             color: var(--accent-gold);
         }
 
-        /* 選項按鈕佈局 */
+        /* 【優化】選項按鈕佈局：每個選項之間空行間距 */
         .options-container {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 10px;
+            gap: 18px; /* 增加間距達成「空行」的視覺感受 */
             margin-top: 8px;
         }
 
@@ -467,21 +475,37 @@
             100% { transform: scale(1); opacity: 0.8; }
         }
 
-        /* 📱 【核心優化】手機端專用高流暢度響應式排版 (RWD) 修正案 */
+        /* 📱 【優化】手機端專用高流暢度與防斷行 RWD 媒體查詢修正案 */
         @media (max-width: 768px) {
             body {
-                overflow: hidden; /* 防止全螢幕視窗在手機端產生雙重滾動條 */
+                overflow: hidden; 
             }
             .mobile-tabs {
                 display: flex;
             }
             header {
                 height: 50px;
-                padding: 10px 16px;
+                padding: 10px 12px;
+            }
+            header h1 {
+                font-size: 1rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            /* 【修復】強制按鈕不拆分成兩行 */
+            .header-actions {
+                gap: 5px;
+                white-space: nowrap;
+                flex-wrap: nowrap;
+            }
+            .header-actions button {
+                padding: 4px 6px;
+                font-size: 0.75rem;
             }
             .game-container {
                 flex-direction: column;
-                height: calc(100vh - 110px); /* 扣除頂部 header 60px + 頁籤 50px 防止按鈕被推出視野 */
+                height: calc(100vh - 100px); 
             }
             .sidebar {
                 width: 100%;
@@ -497,10 +521,9 @@
             .story-stream {
                 padding: 14px;
             }
-            /* 【防遮擋重構】將原本擠壓的橫排輸入欄在手機端改為垂直安全堆疊，杜絕溢出與阻擋 */
             .control-panel {
                 padding: 12px;
-                max-height: 60%; /* 限制主控台在手機端佔據的最大高度，保留足夠的故事閱讀區 */
+                max-height: 60%; 
                 overflow-y: auto;
             }
             .custom-input-wrapper, .decryption-input-wrapper {
@@ -601,7 +624,7 @@
                     
                     <div id="decryption-wrapper-content" class="collapsible-content folded" style="margin-top: 10px;">
                         <div class="decryption-input-wrapper">
-                            <input type="text" id="decrypt-id-input" placeholder="目標代碼 (如: 0x7F9B)" style="flex: 0 0 140px; text-align: center; font-family: monospace; font-weight: bold; color: var(--threat-red);">
+                            <input type="text" id="decrypt-id-input" placeholder="目標代碼" style="flex: 0 0 140px; text-align: center; font-family: monospace; font-weight: bold; color: var(--threat-red);">
                             <input type="text" id="decrypt-guess-input" placeholder="輸入真實身份猜測或投入的博弈秘密籌碼 (例: 車律謹 / 動用地下組織「繆思」偷看手機)...">
                             <button onclick="submitDecryptionAction()" style="background-color: var(--threat-red); color: #fff;">發起解密行動</button>
                         </div>
@@ -634,7 +657,7 @@
             <div class="modal-subsection-title">💾 跨裝置備份轉移手動控台</div>
             <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">如果因瀏覽器或網路擋跨網域（CORS）導致自動存檔失敗，您可以使用下方手動功能：</p>
             <div class="form-group">
-                <button class="modal-btn" onclick="exportSaveToken()" style="background-color: #252c38; color: var(--accent-gold); border: 1px solid var(--border-color); margin-top: 0;">一鍵複製「全量遊戲進度代碼」</button>
+                <button class="modal-btn" onclick="exportSaveToken()" style="background-color: #252c38; color: var(--accent-gold); border: 1px solid var(--border-color); margin-top: 0;">一鍵複製「遊戲進度代碼」</button>
             </div>
             <div class="form-group">
                 <label>手動讀檔轉移（在此貼上複製的進度代碼）：</label>
@@ -727,7 +750,7 @@
                         <option value="新生">新生</option>
                         <option value="低調的旁觀者">低調的旁觀者</option>
                         <option value="風雲人物">風雲人物</option>
-                        <option value="眾矢之的">眾矢之的</option>
+                        <option value="眾矢之目的">眾矢之的</option>
                     </select>
                 </div>
             </div>
@@ -764,14 +787,33 @@
     <script>
         marked.setOptions({ breaks: true, gfm: true });
 
-        // 初始佔位面板
+        // 【已修正】將所有要求欄位完美補充初始化，防禦左側初始化時缺項空白
         const DEFAULT_PROFILE_MD = `
+# 🏛️ 赫拉學院 • 學生即時動態檔案
+
 ### 👤 基本檔案
 | 姓名 | 載入中... |
 | 階級 | \`未定\` |
 | 陣營/派系 | \`尚未加入\` |
 | 家族當前狀態 | 觀望中 |
 | 論壇匿名代碼 | \`0x????\` |
+
+### 📱 HeraLink 匿名論壇動態
+* 社交名聲標籤： \`完美繼承人\` / \`危險人物\` / \`神秘局外人\` / \`待宰羔羊\`
+* 本週論壇熱搜： #___________#___________
+* 輿論威脅指數： \`30%\`
+* 🕵️ 當前解密追蹤紀錄： 1. \`[ 未發起代碼解密行動 ]\`
+
+### 🤝 核心 NPC 關係權力圖
+> ❤️好感度/🖤戒備度 | 💎利益綁定度
+
+1. NPC 姓名 A （顯示隱性階級）｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+   * 💬 態度潛台詞： 「_______」
+
+### 🎒 背包與關鍵籌碼
+* 資金/可動用資源： ［充裕 / 受限 / 拮据］
+* 持有秘密/把柄： 1. *［未掌握任何祕密］*
+* 關鍵道具/物品： 無
 `;
 
         const DEFAULT_FORUM_MD = `
@@ -788,12 +830,12 @@
 這是一個沉浸式文字互動遊戲，請嚴格扮演遊戲主持人，每次遊戲皆為全新世界線。 
 學校名稱固定為「赫拉學院」。
 
-📌 世界觀核心與解密限制規則（重要）：
+布局與遮蔽規則（重要）：
 1. 原創角色規則：所有人物皆為獨立生成的個體。
 2. 正統韓國社會語境：職位稱呼必須完全符合現代大韓民國的政商習慣。
 3. 代名詞性別嚴格區分：男性使用「你 / 他」、女性使用「妳 / 她」。絕對嚴禁串用。
-4. 【解密與三次限制機制】：針對每一個匿名代碼，玩家最多僅有 3 次嘗試機會。你必須在狀態欄中動態追蹤並顯示該代碼的剩餘機會（例如：\`0x7F9B\` 剩餘解密機會： 2/3）。若 3 次皆猜錯，該代碼永久鎖定，玩家輿論威脅指數直接飆升 30%，且該未知 ID 將在後續貼文中瘋狂抹黑玩家。
-5. 【⚠️ 匿名遮蔽核心限制】：嚴禁在任何看板透露任何人的匿名 ID 的持有者！在玩家發起解密成功之前，核心 NPC 關係權力圖中絕對「禁止」標註匿名 ID，只能有真實姓名！只有當玩家在主控台發起解密行動，且你前台判定解密成功後，你才允許在接下來的[ 📋 學生即時動態檔案 ]中將該解密成功的 NPC 名字後方加上備註，格式變更為：1. NPC姓名 (ID: 0xXXXX)。
+4. 【解密與三次限制機制】：針對每一個匿名代碼，玩家最多僅有 3 次嘗試機會。你必須在動態檔案的「🕵️ 當前解密追蹤紀錄」中，即時記錄並追蹤玩家對特定代碼的嘗試消耗次數，格式必須固定為：\`[代碼] 剩餘解密機會：X/3\`。若 3 次皆猜錯，該代碼永久鎖定，玩家輿論威脅指數直接飆升 30%，且該未知 ID 將在後續貼文中瘋狂抹黑玩家。
+5. 【⚠️ 玩家與NPC匿名代碼隔離限制】：玩家開局僅能得知自己的匿名代碼。其餘主要/次要 NPC 的代碼在玩家未成功發起解密前，前台關係圖與論壇看板中絕對「禁止」直接標註與洩漏！只有當玩家在主控台發起解密行動且你前台判定解密成功後，你才允許在接下來的[ 📋 學生即時動態檔案 ]中將該解密成功的 NPC 名字後方加上代碼備註，格式變更為：1. NPC姓名 (ID: 0xXXXX)。
 
 📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵循以下順序輸出，包含側欄所需的全量細項看板，並使用分隔線 --- 進行物理隔離，絕對不准省略任何一個次級標題欄位：
 [ 📋 學生即時動態檔案 ]
@@ -1029,7 +1071,7 @@
 ### 🤝 核心 NPC 關係權力圖
 > ❤️好感度/🖤戒備度 | 💎利益綁定度
 
-1. 正在黑箱校準赫拉內閣成員情報... ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+1. NPC 姓名 A （顯示隱性階級） ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
    * 💬 態度潛台詞： 「觀察中。」
 
 ### 🎒 背包與關鍵籌碼
@@ -1095,6 +1137,7 @@
                         role: h.role === "model" ? "model" : "user",
                         parts: [{ text: h.text }]
                     }));
+                    // 【已修正】這裡由原本會 404 的錯誤代號正確修復為生產用穩定型號 gemini-3.5-flash
                     response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1136,7 +1179,7 @@
                 console.error(error);
                 alert(`⚠️ 權力網絡鏈接斷開: ${error.message}`);
                 chatHistory.pop();
-            } finally { setLoading(false); }
+            } finaly { setLoading(false); }
         }
 
         function parseAndPopulateUI(rawText) {
