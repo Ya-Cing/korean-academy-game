@@ -72,7 +72,7 @@
             color: var(--bg-deep);
         }
 
-        /* 【新增】手機端專用底部頁籤導航列（桌機隱藏） */
+        /* 手機端專用底部頁籤導航列（桌機隱藏） */
         .mobile-tabs {
             display: none;
             background-color: var(--bg-panel);
@@ -358,6 +358,7 @@
         }
 
         .modal-content {
+            position: relative; /* 確保關閉按鈕相對於視窗定位 */
             background-color: var(--bg-panel);
             border: 1px solid var(--accent-gold);
             border-radius: 8px;
@@ -367,6 +368,27 @@
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        }
+
+        /* 右上角關閉按鈕專屬樣式 */
+        .close-x {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: Arial, sans-serif;
+            transition: color 0.2s, transform 0.2s;
+            line-height: 1;
+            z-index: 11;
+        }
+
+        .close-x:hover {
+            color: var(--accent-gold);
+            transform: scale(1.1);
         }
 
         .modal-content h2 {
@@ -467,13 +489,13 @@
             100% { transform: scale(1); opacity: 0.8; }
         }
 
-        /* 📱 【核心升級】手機端專用響應式排版 RWD 媒體查詢 */
+        /* 手機端專用響應式排版 RWD 媒體查詢 */
         @media (max-width: 768px) {
             body {
                 overflow: auto;
             }
             .mobile-tabs {
-                display: flex; /* 在手機上顯示頁籤選單 */
+                display: flex;
             }
             header {
                 height: 50px;
@@ -487,12 +509,12 @@
                 width: 100%;
                 height: 100%;
                 padding: 16px;
-                display: none; /* 預設隱藏，由頁籤控制顯示 */
+                display: none;
             }
             .main-content {
                 width: 100%;
                 height: 100%;
-                display: flex; /* 預設顯示劇情 */
+                display: flex;
             }
             .story-stream {
                 padding: 16px;
@@ -500,14 +522,13 @@
             .control-panel {
                 padding: 14px;
             }
-            /* 手機版顯示特定分頁的覆蓋邏輯 */
             body.show-profile .sidebar { display: block; }
             body.show-profile #forum-section { display: none; }
             body.show-profile .main-content { display: none; }
 
             body.show-forum .sidebar { display: block; }
             body.show-forum #profile-container { display: none; }
-            body.show-forum .sidebar > div:first-child { display: none; } /* 隱藏個人檔案，只留論壇 */
+            body.show-forum .sidebar > div:first-child { display: none; }
             body.show-forum .main-content { display: none; }
 
             body.show-story .sidebar { display: none; }
@@ -547,14 +568,17 @@
         <main class="main-content" id="game-main">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。請先點擊上方金鑰設定，並填寫繼承者檔案以開啟全新世界線分支...</p>
+                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。這裡聚集了財閥、政界、醫療世家、法律家族、娛樂資本與舊財團的下一代。學校表面是培養菁英的名門學院，實際上卻是上流社會為下一代建立的「權力培養場」。學生的地位、待遇、人際關係、話語權，甚至戀愛與未來，幾乎都與背後家族勢力緊密相連。
+
+「在這裡，分數只是裝飾，背後的家世才是你唯一的准考證。」
+...</p>
                 </div>
             </div>
 
             <div class="control-panel">
                 <div id="choices-section">
                     <div class="collapsible-header" onclick="toggleSection('choices-wrapper-content')">
-                        <div class="section-title">🎯 命運博弈抉擇</div>
+                        <div class="section-title">🎯 命運抉擇</div>
                         <span class="toggle-icon" id="choices-wrapper-content-icon">▼ 展開/摺疊</span>
                     </div>
                     
@@ -589,8 +613,33 @@
         </main>
     </div>
 
+    <div id="start-gate-modal" class="modal-overlay">
+        <div class="modal-content" style="text-align: center; max-width: 450px;">
+            <button class="close-x" onclick="closeModal('start-gate-modal')">✕</button>
+            <h2 style="letter-spacing: 2px; margin-bottom: 5px;">🏛️ 歡迎來到赫拉學院</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px;">H E R A _ A C A D E M Y _ V E R _ 2 . 5</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+                <button class="modal-btn" onclick="openCharacterModalFromGate()" style="margin-top: 0; background-color: var(--accent-gold); color: #000; padding: 14px;">🎭 填寫角色卡 (全新世界線開局)</button>
+                
+                <div style="border-top: 1px dashed var(--border-color); margin: 15px 0; padding-top: 15px; text-align: left;">
+                    <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">📂 恢復既有進度 (貼上存檔代碼)：</label>
+                    <div class="custom-input-wrapper">
+                        <input type="text" id="gate-import-token" placeholder="貼上您在其他裝置複製的進度字串...">
+                        <button onclick="importSaveTokenFromGate()" style="padding: 0 15px; font-size: 0.9rem;">載入存檔</button>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 25px; font-size: 0.85rem;">
+                <a href="#" onclick="openApiModalFromGate(event)" style="color: var(--accent-gold); text-decoration: none; border-bottom: 1px dashed var(--accent-gold); padding-bottom: 2px;">⚙️ 配置 AI 通訊金鑰端點 (開局必備)</a>
+            </p>
+        </div>
+    </div>
+
     <div id="api-modal" class="modal-overlay hidden">
         <div class="modal-content">
+            <button class="close-x" onclick="closeModal('api-modal')">✕</button>
             <h2>🔑 核心金鑰與進度同步中樞</h2>
             <div class="form-group" style="margin-bottom: 14px;">
                 <label>請選擇 AI 模型供應商：</label>
@@ -620,6 +669,7 @@
 
     <div id="character-modal" class="modal-overlay hidden">
         <div class="modal-content">
+            <button class="close-x" onclick="closeModal('character-modal')">✕</button>
             <h2>🎭 建立您的繼承者檔案</h2>
             
             <div class="modal-subsection-title">一、 基本資料</div>
@@ -726,12 +776,13 @@
 
     <div id="decrypt-result-modal" class="modal-overlay hidden">
         <div class="modal-content decrypt-modal-content">
+            <button class="close-x" onclick="closeModal('decrypt-result-modal')">✕</button>
             <div id="decrypt-icon" class="decrypt-status-icon" style="color: var(--accent-gold);">📡</div>
             <h2 id="decrypt-result-title" style="color: #fff; letter-spacing: 2px;">底層網協破解中</h2>
             <p id="decrypt-result-message" style="font-size: 0.95rem; line-height: 1.6; margin: 15px 0; color: var(--text-main);">
                 正在向系統發起端口確認對比...
             </p>
-            <button class="modal-btn" id="decrypt-close-btn" onclick="closeDecryptResultModal()" style="background-color: #252c38; color: #fff; border: 1px solid var(--border-color);">關閉驗證視窗</button>
+            <button class="modal-btn" id="decrypt-close-btn" onclick="closeModal('decrypt-result-modal')" style="background-color: #252c38; color: #fff; border: 1px solid var(--border-color);">關閉驗證視窗</button>
         </div>
     </div>
 
@@ -779,18 +830,61 @@
         let chatHistory = [];
         let isWaitingForAI = false;
 
-        // 【手機 RWD 功能】控制底部分頁切換
+        // 通用關閉視窗函數
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // 入口跳轉控制
+        function openCharacterModalFromGate() {
+            const savedKey = localStorage.getItem('game_api_key');
+            if (!savedKey) {
+                alert("// 赫拉學院系統提示 //\n請先配置底層 AI 通訊核心，才能順利開啟世界線分支。");
+                document.getElementById('api-modal').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('start-gate-modal').classList.add('hidden');
+            document.getElementById('character-modal').classList.remove('hidden');
+        }
+
+        function openApiModalFromGate(e) {
+            if(e) e.preventDefault();
+            document.getElementById('api-modal').classList.remove('hidden');
+        }
+
+        function importSaveTokenFromGate() {
+            const savedKey = localStorage.getItem('game_api_key');
+            if (!savedKey) {
+                alert("// 赫拉學院系統提示 //\n請先配置底層 API Key 通訊核心，才能載入歷史過往局勢數據。");
+                document.getElementById('api-modal').classList.remove('hidden');
+                return;
+            }
+            const rawToken = document.getElementById('gate-import-token').value.trim();
+            if (!rawToken) { alert("請貼上合法的進度轉移代碼！"); return; }
+            try {
+                const parsedHistory = JSON.parse(decodeURIComponent(atob(rawToken)));
+                if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
+                    restoreGameState(parsedHistory);
+                    document.getElementById('start-gate-modal').classList.add('hidden');
+                    alert("🟢 【赫拉學院】存檔代碼解析成功！已還原過往局勢線。");
+                } else { throw new Error(); }
+            } catch (e) {
+                alert("🚨 進度代碼解析失敗，請確認是否複製完整。");
+            }
+        }
+
+        // 手機 RWD 功能控制底部分頁切換
         function switchMobileTab(tabId) {
             document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
             
-            document.body.className = ''; // 清除舊狀態
+            document.body.className = ''; 
             if (tabId === 'profile') document.body.classList.add('show-profile');
             else if (tabId === 'forum') document.body.classList.add('show-forum');
             else document.body.classList.add('show-story');
         }
 
-        // 【存檔功能】新增：計算密鑰特徵編碼
+        // 存檔功能：計算密鑰特徵編碼
         async function getPlayerHashID(key) {
             const msgBuffer = new TextEncoder().encode(key);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -798,13 +892,12 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // 【存檔功能】自動備份至雲端快取
+        // 存檔功能：自動備份至雲端快取
         async function saveGameToCloud() {
             const key = localStorage.getItem('game_api_key');
             if (!key || chatHistory.length === 0) return;
             try {
                 const hashID = await getPlayerHashID(key);
-                // 改用極具彈性的二進位無阻塞端點進行靜態資料緩存
                 await fetch(`https://api.npoint.io/heralink_rpg_saves_${hashID}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -813,11 +906,10 @@
             } catch (e) {
                 console.warn("自動雲端快取受限，已改為本地端不敗快取機制。");
             }
-            // 本地 LocalStorage 雙核心保障備份
             localStorage.setItem('heralink_local_save_' + localCode, JSON.stringify(chatHistory));
         }
 
-        // 【存檔功能】從雲端快取載入進度
+        // 存檔功能：從雲端快取載入進度
         async function loadGameFromCloud() {
             const key = localStorage.getItem('game_api_key');
             if (!key) return false;
@@ -832,7 +924,6 @@
                     }
                 }
             } catch (e) {
-                // 雲端不可用時，嘗試從本地快取撈回
                 for (let i = 0; i < localStorage.length; i++) {
                     const localKey = localStorage.key(i);
                     if (localKey.startsWith('heralink_local_save_')) {
@@ -845,7 +936,7 @@
             return false;
         }
 
-        // 【存檔功能】手動匯出轉移字串（跨裝置絕對成功防護罩）
+        // 存檔功能：手動匯出轉移字串
         function exportSaveToken() {
             if (chatHistory.length === 0) {
                 alert("您尚未踏入赫拉學院，目前沒有進度檔案可供備份。");
@@ -859,7 +950,7 @@
             });
         }
 
-        // 【存檔功能】手動導入轉移字串
+        // 存檔功能：手動導入轉移字串
         function importSaveToken() {
             const rawToken = document.getElementById('import-token-input').value.trim();
             if (!rawToken) { alert("請先貼上移轉進度代碼！"); return; }
@@ -890,14 +981,8 @@
             document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
             document.getElementById('forum-container').innerHTML = marked.parse(DEFAULT_FORUM_MD);
             
-            const savedKey = localStorage.getItem('game_api_key');
-            if (!savedKey) {
-                document.getElementById('api-modal').classList.remove('hidden');
-            } else {
-                loadGameFromCloud().then((success) => {
-                    if (!success) checkCharacterState();
-                });
-            }
+            // 初始化強制優先帶出首頁大門引導畫面
+            document.getElementById('start-gate-modal').classList.remove('hidden');
         };
 
         function toggleApiKeyModal() {
@@ -973,311 +1058,4 @@
 | 論壇匿名代碼 | \`${localCode}\` |
 
 ### 📱 HeraLink 匿名論壇動態
-* 社交名聲標籤： \`神秘局外人 (基於 ${status})\`
-* 本週論壇熱搜： #新學期繼承者名冊 #赫拉學院特招生
-* 輿論威脅指數： \`30%\`
-* 🕵️ 當前解密追蹤紀錄： 1. \`[ 未發起代碼解密行動 ]\`
-
-### 🤝 核心 NPC 關係權力圖
-> ❤️好感度/🖤戒備度 | 💎利益綁定度
-
-1. 正在黑箱校準赫拉內閣成員情報... ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
-   * 💬 態度潛台詞： 「觀察中。」
-
-### 🎒 背包與關鍵籌碼
-* 資金/可動用資源： 充裕 (源自 ${familyName} 產業：${familyIndustry.substring(0,20)}...)
-* 持有秘密/把柄： 1. *[ 家族秘辛：${secret || '無'} ]*
-* 關鍵道具/物品： 2. 權力准考證 (期望加入：${club || '未定'})
-`;
-            document.getElementById('profile-container').innerHTML = marked.parse(initialLocalProfile);
-
-            chatHistory = [
-                { role: "user", text: `【核心系統指令與世界觀載入】\n${SYSTEM_INSTRUCTION}\n\n請理解上述所有規則，並準備好扮演遊戲主持人。` },
-                { role: "model", text: "【系統提示】赫拉學院 Ver.2.5 核心系統已成功載入後台。我將嚴格遵守階級、性別代名詞、解密三次硬限制與物理隔離。請提交角色卡。" }
-            ];
-
-            const characterCardPrompt = `
-【玩家角色卡提交 - 遊戲正式開啟】
-這是我的完整角色設定，請根據此設定開啟第一章首發劇情，並初始化狀態欄與論壇：
-
-## 一、 基本資料
-* 姓名：${name}
-* 性別：${gender}
-* 年齡：${age}
-* 年級：${grade}
-
-## 二、 家族背景
-* 家族名稱：${familyName}
-* 家族階級：${charClass}
-* 家族主要勢力或產業：${familyIndustry}
-* 與家族成員的關係簡述：${familyRel || '未註明'}
-
-## 三、 角色設定
-* 外貌特徵與自帶氣質：${vibe || '未註明'}
-* 隱密設定：${secret || '無'}
-
-## 四、 校園相關
-* 期望加入的社團／學生會職務：${club || '無'}
-* 初始校園狀態：${status}
-
-## 五、 玩家偏好設定
-* 期望的劇情風格：${style || '無預設'}
-* 期望遇見的明星/角色：${prefer || '無預設'}
-* 絕對不希望出現的雷點內容：${tw || '無'}
-
-請直接開始第一幕，嚴格按照 1.動態檔案表格 2.劇情 3.HeraLink看板 4.選項 的物理隔離順序輸出。`;
-
-            document.getElementById('character-modal').classList.add('hidden');
-            sendPromptToAI(characterCardPrompt);
-        }
-
-        async function sendPromptToAI(userPrompt) {
-            if (isWaitingForAI) return;
-            const provider = localStorage.getItem('game_api_provider') || 'gemini';
-            const apiKey = localStorage.getItem('game_api_key');
-            if (!apiKey) { toggleApiKeyModal(); return; }
-
-            setLoading(true);
-            chatHistory.push({ role: "user", text: userPrompt });
-
-            try {
-                let response, data, aiResponseText = "";
-                if (provider === 'gemini') {
-                    const geminiContents = chatHistory.map(h => ({
-                        role: h.role === "model" ? "model" : "user",
-                        parts: [{ text: h.text }]
-                    }));
-                    response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: geminiContents,
-                            generationConfig: { temperature: 0.75, maxOutputTokens: 8192 }
-                        })
-                    });
-                    data = await response.json();
-                    if (data.error) throw new Error(data.error.message || "Gemini 拒絕連線");
-                    aiResponseText = data.candidates[0].content.parts[0].text;
-                } else {
-                    const openaiMessages = chatHistory.map(h => ({
-                        role: h.role === "model" ? "assistant" : "user",
-                        content: h.text
-                    }));
-                    response = await fetch(`https://api.openai.com/v1/chat/completions`, {
-                        method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${apiKey}`
-                        },
-                        body: JSON.stringify({
-                            model: "gpt-4o-mini",
-                            messages: openaiMessages,
-                            temperature: 0.75
-                        })
-                    });
-                    data = await response.json();
-                    if (data.error) throw new Error(data.error.message || "ChatGPT 拒絕連線");
-                    aiResponseText = data.choices[0].message.content;
-                }
-
-                chatHistory.push({ role: "model", text: aiResponseText });
-                parseAndPopulateUI(aiResponseText);
-                saveGameToCloud(); // 解析完成後執行快取備份
-
-            } catch (error) {
-                console.error(error);
-                alert(`⚠️ 權力網絡鏈接斷開: ${error.message}`);
-                chatHistory.pop();
-            } finally { setLoading(false); }
-        }
-
-        function parseAndPopulateUI(rawText) {
-            const regexProfile = /(?:\[\s*📋\s*學生即時動態檔案\s*\]|#+\s*📋\s*學生即時動態檔案|#+\s*學生即時動態檔案)/i;
-            const regexStory = /(?:\[\s*🎬\s*劇情\s*\]|#+\s*🎬\s*劇情|#+\s*當前劇情)/i;
-            const regexForum = /(?:\[\s*📱\s*HeraLink\s*即時熱搜看板\s*\]|#+\s*📱\s*HeraLink\s*即時熱搜看板|#+\s*📱\s*HeraLink\s*匿名論壇\s*•\s*即時熱搜看板|#+\s*🔥\s*今日即時熱門貼文)/i;
-            const regexOptions = /(?:\[\s*🎯\s*分歧選項\s*\]|#+\s*🎯\s*分歧選項|#+\s*🎯\s*命運博弈抉擇|#+\s*分歧選項)/i;
-
-            let posProfile = rawText.search(regexProfile);
-            let posStory = rawText.search(regexStory);
-            let posForum = rawText.search(regexForum);
-            let posOptions = rawText.search(regexOptions);
-
-            let sectionsFound = [];
-            if (posProfile !== -1) sectionsFound.push({ id: 'profile', pos: posProfile, regex: regexProfile });
-            if (posStory !== -1) sectionsFound.push({ id: 'story', pos: posStory, regex: regexStory });
-            if (posForum !== -1) sectionsFound.push({ id: 'forum', pos: posForum, regex: regexForum });
-            if (posOptions !== -1) sectionsFound.push({ id: 'options', pos: posOptions, regex: regexOptions });
-
-            sectionsFound.sort((a, b) => a.pos - b.pos);
-            let extracted = { profile: "", story: "", forum: "", options: "" };
-
-            for (let i = 0; i < sectionsFound.length; i++) {
-                let start = sectionsFound[i].pos;
-                let end = (i + 1 < sectionsFound.length) ? sectionsFound[i+1].pos : rawText.length;
-                let blockText = rawText.substring(start, end).trim();
-                blockText = blockText.replace(sectionsFound[i].regex, "").trim();
-                extracted[sectionsFound[i].id] = blockText;
-            }
-
-            if (sectionsFound.length < 2) {
-                const fallback = rawText.split(/\n---\n|\n---\s*\n/);
-                if (fallback.length >= 3) {
-                    extracted.profile = fallback[0];
-                    extracted.story = fallback[1];
-                    if (fallback.length >= 4) { extracted.forum = fallback[2]; extracted.options = fallback[3]; }
-                    else extracted.options = fallback[2];
-                } else { extracted.story = rawText; }
-            }
-
-            if (extracted.profile) {
-                let cleanProfile = extracted.profile.replace(/^[\s\-=\*]+/g, "").trim();
-                document.getElementById('profile-container').innerHTML = marked.parse(cleanProfile);
-                if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久揭鎖")) {
-                    showDecryptionResultWindow("🔑 解密驗證成功", "已成功侵入 HeraLink 核心協議層！持有者身分已永久同步解鎖。", "🟢", "#d4af37");
-                } else if (rawText.includes("解密行動失敗") || rawText.includes("永久鎖定") || rawText.includes("反噬")) {
-                    showDecryptionResultWindow("🚨 安全警報：驗證失敗", "反向破解失敗！威脅指數直接上升，並將面臨全論壇抹黑反噬！", "🔴", "#ef4444");
-                }
-            }
-
-            if (extracted.story) {
-                let cleanStory = extracted.story.replace(/^[\s\-=\*]+/g, "").trim();
-                const stream = document.getElementById('story-stream');
-                const block = document.createElement('div');
-                block.className = 'story-block';
-                block.innerHTML = marked.parse(cleanStory);
-                stream.appendChild(block);
-                setTimeout(() => { stream.scrollTop = stream.scrollHeight; }, 100);
-            }
-
-            if (extracted.forum) {
-                let cleanForum = extracted.forum.replace(/^[\s\-=\*]+/g, "").trim();
-                document.getElementById('forum-container').innerHTML = marked.parse(cleanForum);
-            }
-
-            if (extracted.options) {
-                document.getElementById('choices-wrapper-content').classList.remove('folded');
-                parseOptionsToButtons(extracted.options);
-            }
-        }
-
-        function parseOptionsToButtons(optionsText) {
-            const container = document.getElementById('options-container');
-            container.innerHTML = "";
-            const lines = optionsText.split('\n');
-            let btnCount = 0;
-            lines.forEach(line => {
-                const cleanLine = line.replace(/\*\*/g, '').trim();
-                const match = cleanLine.match(/^(【A】|【B】|【C】|A\.|B\.|C\.)\s*(.+)/);
-                if (match) {
-                    btnCount++;
-                    const label = match[1];
-                    const text = match[2];
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.innerHTML = `<strong>${label}</strong> ${text}`;
-                    btn.onclick = () => selectChoice(label, text);
-                    container.appendChild(btn);
-                }
-            });
-            if (btnCount === 0) container.innerHTML = marked.parse(optionsText);
-        }
-
-        function selectChoice(label, text) {
-            const fullActionText = `【我選擇了 ${label}：${text}】`;
-            const stream = document.getElementById('story-stream');
-            const choiceBlock = document.createElement('div');
-            choiceBlock.className = 'story-block';
-            choiceBlock.style.borderLeft = '4px solid var(--accent-gold)';
-            choiceBlock.style.background = 'rgba(212,175,55,0.02)';
-            choiceBlock.innerHTML = `<p style="color: var(--accent-gold); font-weight: bold;">${fullActionText}</p>`;
-            stream.appendChild(choiceBlock);
-            stream.scrollTop = stream.scrollHeight;
-            
-            // 如果是在手機端，點選選項後自動切換回劇情頁籤，避免玩家迷路
-            if (window.innerWidth <= 768) switchMobileTab('story');
-
-            sendPromptToAI(fullActionText);
-        }
-
-        function submitCustomChoice() {
-            const inputEl = document.getElementById('custom-choice-input');
-            const customText = inputEl.value.trim();
-            if (!customText) return;
-
-            const fullActionText = `【【D】玩家自由決策/反擊行動】：${customText}`;
-            inputEl.value = "";
-
-            const stream = document.getElementById('story-stream');
-            const choiceBlock = document.createElement('div');
-            choiceBlock.className = 'story-block';
-            choiceBlock.style.borderLeft = '4px solid #fff';
-            choiceBlock.innerHTML = `<p style="color: #fff; font-weight: bold;">${fullActionText}</p>`;
-            stream.appendChild(choiceBlock);
-            stream.scrollTop = stream.scrollHeight;
-
-            sendPromptToAI(fullActionText);
-        }
-
-        function submitDecryptionAction() {
-            const idEl = document.getElementById('decrypt-id-input');
-            const guessEl = document.getElementById('decrypt-guess-input');
-            const targetId = idEl.value.trim();
-            const guessText = guessEl.value.trim();
-
-            if (!targetId || !guessText) {
-                alert('請同時輸入目標代碼與調查手段籌碼！');
-                return;
-            }
-
-            showDecryptionResultWindow("📡 底層網協對比中", `目標代碼：<span style="color:var(--threat-red);font-weight:bold;">${targetId}</span><br>手法確認：${guessText}`, "📡", "var(--accent-gold)");
-
-            const fullActionText = `【【系統高級指令】發起 HeraLink 匿名代碼解密行動】\n- 目標解密代碼：${targetId}\n- 身份調查與猜測/投入籌碼手段：${guessText}`;
-            idEl.value = "";
-            guessEl.value = "";
-
-            const stream = document.getElementById('story-stream');
-            const choiceBlock = document.createElement('div');
-            choiceBlock.className = 'story-block';
-            choiceBlock.style.borderLeft = '4px solid var(--threat-red)';
-            choiceBlock.style.background = 'rgba(239, 68, 68, 0.02)';
-            choiceBlock.innerHTML = `<p style="color: var(--threat-red); font-weight: bold; font-family: monospace;">${fullActionText.replace(/\n/g, '<br>')}</p>`;
-            stream.appendChild(choiceBlock);
-            stream.scrollTop = stream.scrollHeight;
-
-            sendPromptToAI(fullActionText);
-        }
-
-        function showDecryptionResultWindow(title, message, icon, color) {
-            document.getElementById('decrypt-result-title').innerText = title;
-            document.getElementById('decrypt-result-message').innerHTML = message;
-            const iconEl = document.getElementById('decrypt-icon');
-            iconEl.innerText = icon;
-            iconEl.style.color = color;
-            document.getElementById('decrypt-result-modal').classList.remove('hidden');
-        }
-
-        function closeDecryptResultModal() {
-            document.getElementById('decrypt-result-modal').classList.add('hidden');
-        }
-
-        function setLoading(loading) {
-            isWaitingForAI = loading;
-            const indicator = document.getElementById('loading-indicator');
-            const optionBtns = document.querySelectorAll('.option-btn');
-            const customBtn = document.querySelector('.custom-input-wrapper button');
-            const decryptBtn = document.querySelector('.decryption-input-wrapper button');
-            if (loading) {
-                indicator.classList.remove('hidden');
-                optionBtns.forEach(b => b.disabled = true);
-                if(customBtn) customBtn.disabled = true;
-                if(decryptBtn) decryptBtn.disabled = true;
-            } else {
-                indicator.classList.add('hidden');
-                optionBtns.forEach(b => b.disabled = false);
-                if(customBtn) customBtn.disabled = false;
-                if(decryptBtn) decryptBtn.disabled = false;
-            }
-        }
-    </script>
-</body>
-</html>
+* 社交名聲標籤 : \`神秘局外人 (基
