@@ -37,6 +37,35 @@
             height: 100vh;
         }
 
+        /* 【新增】電影感全螢幕開門過場動畫畫布 */
+        .opening-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #000000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+        .opening-text {
+            color: var(--accent-gold);
+            font-size: 2.2rem;
+            letter-spacing: 6px;
+            font-weight: 700;
+            opacity: 0;
+            text-align: center;
+            animation: cinematicFade 3s forwards;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4), 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+
+        @keyframes cinematicFade {
+            0% { opacity: 0; transform: scale(0.96); filter: blur(4px); }
+            30% { opacity: 1; transform: scale(1); filter: blur(0); }
+            75% { opacity: 1; transform: scale(1.02); filter: blur(0); }
+            100% { opacity: 0; transform: scale(1.05); filter: blur(2px); }
+        }
+
         /* 頂部導航欄 */
         header {
             background-color: var(--bg-panel);
@@ -64,7 +93,6 @@
             white-space: nowrap;
         }
 
-        /* 按鈕視覺加大與規格統一化 */
         .header-actions button {
             background: transparent;
             border: 1px solid var(--accent-gold);
@@ -360,7 +388,7 @@
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            position: relative; /* 核心追加：建立相對定位邊界以供關閉按鈕錨定 */
+            position: relative;
         }
 
         .modal-content h2 {
@@ -371,7 +399,7 @@
             letter-spacing: 1px;
         }
 
-        /* 【新增】半透明彈窗右上角關閉鈕，游標觸碰時產生藍色霓虹光芒 */
+        /* 半透明彈窗右上角關閉鈕，游標觸碰時產生藍色霓虹光芒 */
         .modal-close-btn {
             position: absolute;
             top: 15px;
@@ -421,7 +449,7 @@
             gap: 12px;
         }
 
-        /* 深色系奢華選單與輸入框：融合面板，不突兀 */
+        /* 深色系選單與輸入框：融合面板，不突兀 */
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             background-color: var(--bg-deep);
@@ -433,7 +461,6 @@
             transition: border-color 0.25s;
         }
 
-        /* 確保下拉選單內部的選項在不同瀏覽器下皆維持夜黑，融合不突兀 */
         .form-group select option {
             background-color: var(--bg-deep);
             color: var(--text-main);
@@ -517,7 +544,6 @@
                 font-size: 1rem;
                 letter-spacing: 1px;
             }
-            /* 金鑰設定與重啟按鈕固定一行，絕對不換行 */
             .header-actions {
                 display: flex;
                 flex-wrap: nowrap;
@@ -591,6 +617,10 @@
 </head>
 <body>
 
+    <div id="opening-canvas" class="opening-layer">
+        <div class="opening-text">歡迎來到赫拉學院</div>
+    </div>
+
     <header>
         <h1>🏛️ 赫拉學院 <span style="font-size: 0.75rem; color: var(--text-muted);">Ver.2.5</span></h1>
         <div class="header-actions">
@@ -621,7 +651,7 @@
         <main class="main-content" id="game-main">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。請填寫審查中樞檔案以開啟世界線分支...</p>
+                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。入學審查中樞已在前方阻攔，請在起始頁面填入核心金鑰密鑰以啟航局勢線...</p>
                 </div>
             </div>
 
@@ -666,29 +696,22 @@
     <div id="start-portal-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <button class="modal-close-btn" onclick="toggleApiKeyModal()">&times;</button>
-
             <h2>🏛️ 赫拉學院 • 權力入學審查中樞</h2>
             
-            <div class="modal-subsection-title" style="color: var(--accent-gold); font-weight: bold;">🔑 步驟一：對接核心網協端口（必填防線）</div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>請選擇 AI 模型供應商：</label>
-                    <select id="api-provider">
-                        <option value="gemini">Google Gemini (型號: gemini-3.5-flash)</option>
-                        <option value="openai">OpenAI ChatGPT (型號: gpt-4o-mini)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>請輸入您的核心 API Key 密鑰：</label>
-                    <input type="password" id="api-key-input" placeholder="必須先填入密鑰，下方三個功能按鈕才可點擊點亮">
-                </div>
+            <div id="portal-menu-view" class="options-container" style="margin-top: 20px;">
+                <button class="option-btn" onclick="navigateToPortalSubView('portal-char-view')">
+                    <strong>[ 軌道 A ]</strong> 建立全新的世界線開局
+                </button>
+                <button class="option-btn" onclick="navigateToPortalSubView('portal-load-view')">
+                    <strong>[ 軌道 B ]</strong> 手動填入存檔代碼讀檔
+                </button>
+                <button class="option-btn" onclick="navigateToPortalSubView('portal-api-view')">
+                    <strong>[ 軌道 C ]</strong> 輸入您的核心 API Key 密鑰
+                </button>
             </div>
 
-            <div class="modal-subsection-title" style="color: var(--accent-gold); font-weight: bold;">🎭 步驟二：選擇您的運作軌道（三大獨立選項）</div>
-            
-            <div style="background: rgba(255,255,255,0.02); padding: 16px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 16px;">
-                <div style="font-weight: bold; color: var(--accent-gold); margin-bottom: 12px;">🌟 軌道 A：建立全新的世界線開局</div>
-                
+            <div id="portal-char-view" class="hidden" style="margin-top: 15px;">
+                <div style="font-weight: bold; color: var(--accent-gold); margin-bottom: 12px;">🌟 軌道 A：繼承者身份建檔</div>
                 <div class="modal-subsection-title">一、 基本資料</div>
                 <div class="form-group">
                     <label>姓名：</label>
@@ -786,31 +809,46 @@
                     <label>絕對不希望出現的雷點內容：</label>
                     <input type="text" id="char-tw" placeholder="例如：強行降智、盲目臣服、去言情傳統霸總套路">
                 </div>
-
-                <button class="modal-btn" onclick="triggerNewGameStart()">⚡ 驗證 Key 並且建立檔案入學</button>
+                <button class="modal-btn" onclick="triggerNewGameStart()">⚡ 確認建檔並踏入權力交界處</button>
+                <button class="modal-btn" style="background:#252c38; color:#cbd5e1; border:1px solid var(--border-color);" onclick="returnToPortalMenu()">返回主選單</button>
             </div>
 
-            <div style="background: rgba(239, 68, 68, 0.02); padding: 16px; border: 1px dashed var(--threat-red); border-radius: 6px; margin-bottom: 16px;">
-                <div style="font-weight: bold; color: var(--threat-red); margin-bottom: 8px;">💾 軌道 B：手動填入存檔代碼讀檔</div>
-                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">請在下方貼上您過往備份的全量壓縮進度字串：</p>
-                <input type="text" id="import-token-input" placeholder="在此貼上過往複製的進度加密字串...">
-                <button class="modal-btn" onclick="triggerImportSaveStart()" style="background-color: var(--threat-red); color: #fff;">確認提取並還原雲端命運線</button>
+            <div id="portal-load-view" class="hidden" style="margin-top: 15px;">
+                <div style="background: rgba(239, 68, 68, 0.02); padding: 16px; border: 1px dashed var(--threat-red); border-radius: 6px;">
+                    <div style="font-weight: bold; color: var(--threat-red); margin-bottom: 8px;">💾 軌道 B：備份進度還原</div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">請在下方貼上您在其他裝置複製的全量遊戲壓縮字串：</p>
+                    <input type="text" id="import-token-input" placeholder="在此貼上複製的加密字串...">
+                    <button class="modal-btn" onclick="triggerImportSaveStart()" style="background-color: var(--threat-red); color: #fff;">提取密碼並回復雲端世界線</button>
+                </div>
+                <button class="modal-btn" style="background:#252c38; color:#cbd5e1; border:1px solid var(--border-color);" onclick="returnToPortalMenu()">返回主選單</button>
             </div>
 
-            <div style="background: rgba(100, 116, 139, 0.05); padding: 16px; border: 1px solid var(--text-muted); border-radius: 6px;">
-                <div style="font-weight: bold; color: var(--text-main); margin-bottom: 8px;">🔄 軌道 C：清除快取並完全重新開始</div>
-                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">這將會徹底抹除當前裝置上的對話歷史、NPC關係與論壇數據，重頭建立乾淨的全新檔案。</p>
-                <button class="modal-btn" onclick="triggerResetPortalGame()" style="background-color: #252c38; color: var(--text-bright); border: 1px solid var(--border-color);">徹底清空快取數據</button>
+            <div id="portal-api-view" class="hidden" style="margin-top: 15px;">
+                <div style="background: rgba(212,175,55,0.02); padding: 16px; border: 1px solid var(--border-color); border-radius: 6px;">
+                    <div style="font-weight: bold; color: var(--accent-gold); margin-bottom: 8px;">🔑 軌道 C：核心端口連線</div>
+                    <div class="form-group">
+                        <label>請選擇 AI 模型供應商：</label>
+                        <select id="api-provider">
+                            <option value="gemini">Google Gemini (預設型號: gemini-3.5-flash)</option>
+                            <option value="openai">OpenAI ChatGPT (預設型號: gpt-4o-mini)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>請輸入您的核心 API Key 密鑰：</label>
+                        <input type="password" id="api-key-input" placeholder="填入以 AIzaSy... 或 sk-proj-... 開頭的代碼">
+                    </div>
+                    <button class="modal-btn" onclick="saveApiKey()">確認對接金鑰端口</button>
+                </div>
+                <button class="modal-btn" style="background:#252c38; color:#cbd5e1; border:1px solid var(--border-color);" onclick="returnToPortalMenu()">返回主選單</button>
             </div>
-            
-            <button class="modal-btn" id="portal-copy-btn" onclick="exportSaveToken()" style="background-color: #1e293b; color: var(--accent-gold); border: 1px solid var(--border-color); margin-top: 14px;">一鍵生成複製當前全量進度轉移代碼</button>
+
+            <button class="modal-btn" id="portal-copy-btn" onclick="exportSaveToken()" style="background-color: #1e293b; color: var(--accent-gold); border: 1px solid var(--border-color); margin-top: 14px;">一鍵打包當前進度（生成跨裝置移轉代碼）</button>
         </div>
     </div>
 
     <div id="decrypt-result-modal" class="modal-overlay hidden">
         <div class="modal-content decrypt-modal-content">
             <button class="modal-close-btn" onclick="closeDecryptResultModal()">&times;</button>
-
             <div id="decrypt-icon" class="decrypt-status-icon" style="color: var(--accent-gold);">📡</div>
             <h2 id="decrypt-result-title" style="color: #fff; letter-spacing: 2px;">底層網協破解中</h2>
             <p id="decrypt-result-message" style="font-size: 0.95rem; line-height: 1.6; margin: 15px 0; color: var(--text-main);">
@@ -861,7 +899,7 @@
 > 📌 文章標題： [公告] HeraLink 數據端口已加密重啟
 > 👤 發文者暱稱： 匿名 \`(ID: 0x0000)\` ｜ 🕒 發布時間： \`08:00\` 
 > 
-> ## 📄 【貼文內文】
+> ## 📄 【貼文內文}
 > 「 歡迎來到權力中心：赫拉學院。在這裡，守好妳/你的匿名代碼。後果自負。 」
 `;
 
@@ -979,29 +1017,65 @@
             }
         }
 
+        // 🎬 控制開門動畫過場與大門戶喚醒
         window.onload = function() {
             document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
             document.getElementById('forum-container').innerHTML = marked.parse(DEFAULT_FORUM_MD);
             
             const savedKey = localStorage.getItem('game_api_key');
-            document.getElementById('start-portal-modal').classList.remove('hidden');
-            if (savedKey) {
-                document.getElementById('api-key-input').value = savedKey;
-                document.getElementById('api-provider').value = localStorage.getItem('game_api_provider') || 'gemini';
-                loadGameFromCloud();
-            }
+            
+            // 2.5 秒開門動畫播畢後自動淡出，隨後喚醒審查門戶
+            setTimeout(() => {
+                const canvas = document.getElementById('opening-canvas');
+                canvas.style.opacity = '0';
+                setTimeout(() => {
+                    canvas.style.visibility = 'hidden';
+                    document.getElementById('start-portal-modal').classList.remove('hidden');
+                    returnToPortalMenu(); // 預設展示主功能選單
+                    if (savedKey) {
+                        document.getElementById('api-key-input').value = savedKey;
+                        document.getElementById('api-provider').value = localStorage.getItem('game_api_provider') || 'gemini';
+                        loadGameFromCloud();
+                    }
+                }, 1000);
+            }, 3000);
         };
+
+        // 🗂️ 統合式大門戶子畫面切換機制
+        function navigateToPortalSubView(viewId) {
+            // 如果點擊的是開局或讀檔，但本地此時沒有任何 Key 紀錄，強行鎖定並導向 Key 設定頁面
+            const key = document.getElementById('api-key-input').value.trim() || localStorage.getItem('game_api_key');
+            if ((viewId === 'portal-char-view' || viewId === 'portal-load-view') && !key) {
+                alert('🚨 端口審查未通過：您必須先在配置中填入有效的 API 金鑰密鑰後，才可運行此軌道！');
+                navigateToPortalSubView('portal-api-view');
+                return;
+            }
+
+            document.getElementById('portal-menu-view').classList.add('hidden');
+            document.getElementById('portal-char-view').classList.add('hidden');
+            document.getElementById('portal-load-view').classList.add('hidden');
+            document.getElementById('portal-api-view').classList.add('hidden');
+            
+            document.getElementById(viewId).classList.remove('hidden');
+        }
+
+        function returnToPortalMenu() {
+            document.getElementById('portal-menu-view').classList.remove('hidden');
+            document.getElementById('portal-char-view').classList.add('hidden');
+            document.getElementById('portal-load-view').classList.add('hidden');
+            document.getElementById('portal-api-view').classList.add('hidden');
+        }
 
         function toggleApiKeyModal() {
             document.getElementById('start-portal-modal').classList.toggle('hidden');
         }
 
-        // 強效驗證防線：判定 API 沒填絕對不可運行
+        // 驗證金鑰
         function checkAndLockApiKey() {
             const provider = document.getElementById('api-provider').value;
             const key = document.getElementById('api-key-input').value.trim();
             if (!key) {
-                alert('🚨 審查未通過：您必須在步驟一中填入有效的 API 金鑰密鑰後才可以運行此操作！');
+                alert('🚨 審查未通過：您必須填入有效的 API 金鑰密鑰後才可以進行此操作！');
                 return false;
             }
             localStorage.setItem('game_api_provider', provider);
@@ -1009,13 +1083,17 @@
             return true;
         }
 
-        function triggerNewGameStart() {
+        function saveApiKey() {
             if (!checkAndLockApiKey()) return;
+            alert('🟢 金鑰端口配置成功！已解鎖軌道開局權限。');
+            returnToPortalMenu();
+        }
+
+        function triggerNewGameStart() {
             startStoryGame();
         }
 
         function triggerImportSaveStart() {
-            if (!checkAndLockApiKey()) return;
             const rawToken = document.getElementById('import-token-input').value.trim();
             if (!rawToken) { alert("請先填入有效的轉移存檔字串！"); return; }
             try {
@@ -1027,24 +1105,15 @@
             } catch (e) { alert("🚨 進度代碼解析失敗。"); }
         }
 
-        function triggerResetPortalGame() {
-            if (!checkAndLockApiKey()) return;
-            if (confirm('警告：確定要清除當前進度，徹底清空快取數據並重新開始嗎？')) {
+        function restartGame() {
+            if (confirm('確定要清除當前進度，回到起始審查大門戶重啟一場全新的世界線嗎？')) {
                 chatHistory = [];
-                localStorage.removeItem('game_api_key');
-                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p><strong>【系統提示】</strong> 歷史數據已重置，大門戶已就緒。</p></div>`;
+                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p><strong>【系統提示】</strong> 歷史線已重置。請重新在中央審查大門戶配置入學檔案。</p></div>`;
                 document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
                 document.getElementById('forum-container').innerHTML = marked.parse(DEFAULT_FORUM_MD);
                 document.getElementById('options-container').innerHTML = '';
-                document.getElementById('import-token-input').value = '';
-                document.getElementById('api-key-input').value = '';
-                alert("🔄 快取清空成功！請重新輸入金鑰與檔案配置。");
-            }
-        }
-
-        function restartGame() {
-            if (confirm('確定要回到起始審查大門戶嗎？（當前未存檔之進度將遺失）')) {
                 document.getElementById('start-portal-modal').classList.remove('hidden');
+                returnToPortalMenu();
             }
         }
 
@@ -1091,9 +1160,9 @@
 ### 🤝 核心 NPC 關係權力圖
 > ❤️好感度/🖤戒備度 | 💎利益綁定度
 
-1. 车律谨 (隱性階級: Crown) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+1. NPC A (隱性階級: Crown) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
    * 💬 態度潛台詞： 「觀察中。少跟我攀關係。」
-2. 韩韶禧 (隱性階級: Noble) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+2. NPC B (隱性階級: Noble) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
    * 💬 態度潛台詞： 「新面孔？看妳能撐多久。」
 
 ### 🎒 背包與關鍵籌碼
