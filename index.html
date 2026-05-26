@@ -9,14 +9,14 @@
         :root {
             --bg-deep: #07080b;
             --bg-panel: #11141c;
-            --bg-card: #181d26;
-            --accent-gold: #d4af37;
-            --accent-gold-hover: #f3e5ab;
+            --bg-card: #161a24;
+            --accent-gold: #c5a059;
+            --accent-gold-hover: #e5c17d;
             --text-main: #cbd5e1;
             --text-bright: #ffffff;
-            --text-muted: #64748b;
-            --threat-red: #ef4444;
-            --border-color: #262f3d;
+            --text-muted: #4b5563;
+            --threat-red: #9e2a2b;
+            --border-color: #222a36;
         }
 
         * {
@@ -25,7 +25,7 @@
             padding: 0;
         }
 
-        /* 全域現代黑體縮排，英文/數字專屬 Times New Roman */
+        /* 全域黑體縮排，英文與數字優先專屬 Times New Roman */
         body, input, select, textarea, button {
             font-family: 'Times New Roman', 'PingFang TC', 'Microsoft JhengHei', -apple-system, sans-serif;
         }
@@ -172,16 +172,16 @@
 
         .profile-box, .forum-box { font-size: 0.9rem; line-height: 1.7; }
         .profile-box h3, .forum-box h2, .forum-box h3 {
-            color: var(--accent-gold); font-size: 0.95rem; margin-top: 20px; margin-bottom: 10px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.15); padding-bottom: 6px; letter-spacing: 1px;
+            color: var(--accent-gold); font-size: 0.95rem; margin-top: 25px; margin-bottom: 12px;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2); padding-bottom: 6px; letter-spacing: 1px;
         }
         .profile-box table, .forum-box table { width: 100%; border-collapse: collapse; margin: 12px 0; background-color: rgba(255, 255, 255, 0.01); }
         .profile-box th, .profile-box td, .forum-box th, .forum-box td { border: 1px solid var(--border-color); padding: 10px; text-align: left; }
-        .profile-box th, .forum-box th { background-color: rgba(212, 175, 55, 0.08); color: var(--accent-gold); font-weight: 600; }
+        .profile-box th, .forum-box th { background-color: rgba(197, 160, 89, 0.08); color: var(--accent-gold); font-weight: 600; }
         .profile-box ul, .forum-box ul { padding-left: 18px; margin: 10px 0; }
         .profile-box li, .forum-box li { margin-bottom: 6px; }
         .profile-box blockquote, .forum-box blockquote { border-left: 3px solid var(--accent-gold); background: rgba(255,255,255,0.02); padding: 12px; margin: 12px 0; font-style: italic; }
-        .forum-section-container { background: rgba(239, 68, 68, 0.01); border: 1px dashed rgba(239, 68, 68, 0.15); padding: 14px; border-radius: 6px; }
+        .forum-section-container { background: rgba(158, 42, 43, 0.02); border: 1px dashed rgba(158, 42, 43, 0.2); padding: 14px; border-radius: 6px; }
 
         .story-block {
             background-color: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px;
@@ -196,7 +196,7 @@
             background-color: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main);
             padding: 14px 20px; text-align: left; border-radius: 6px; cursor: pointer; font-size: 0.95rem; transition: all 0.25s ease; line-height: 1.4;
         }
-        .option-btn:hover { border-color: var(--accent-gold); background-color: rgba(212, 175, 55, 0.05); color: var(--text-bright); transform: translateX(4px); }
+        .option-btn:hover { border-color: var(--accent-gold); background-color: rgba(197, 160, 89, 0.04); color: var(--text-bright); transform: translateX(4px); }
         .option-btn strong { color: var(--accent-gold); margin-right: 8px; }
 
         .custom-input-wrapper, .decryption-input-wrapper { display: flex; gap: 10px; width: 100%; }
@@ -205,14 +205,24 @@
         .custom-input-wrapper button, .decryption-input-wrapper button { background-color: var(--accent-gold); color: var(--bg-deep); border: none; padding: 0 24px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         .custom-input-wrapper button:hover { background-color: var(--accent-gold-hover); }
 
-        .decryption-input-wrapper input { border: 1px solid rgba(239, 68, 68, 0.2); }
-        .decryption-input-wrapper input:focus { border-color: var(--threat-red); box-shadow: 0 0 8px rgba(239, 68, 68, 0.2); }
+        .decryption-input-wrapper input { border: 1px solid rgba(158, 42, 43, 0.3); }
+        .decryption-input-wrapper input:focus { border-color: var(--threat-red); box-shadow: 0 0 8px rgba(158, 42, 43, 0.2); }
 
+        /* 👑 【大重構】寬敞不擁擠、色調和諧奢華的古典豪門彈窗樣式 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { position: relative; background-color: var(--bg-panel); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 30px; width: 95%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
+        .modal-content { position: relative; background-color: rgba(17, 20, 28, 0.98); border: 1px solid var(--accent-gold); border-radius: 8px; padding: 35px; width: 95%; max-width: 650px; max-height: 88vh; overflow-y: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
 
-        .close-x { position: absolute; top: 15px; right: 20px; font-size: 1.3rem; color: var(--text-muted); cursor: pointer; border: none; background: none; font-family: Arial, sans-serif; transition: color 0.2s, transform 0.2s; line-height: 1; z-index: 11; }
+        .close-x { position: absolute; top: 16px; right: 20px; font-size: 1.4rem; color: var(--text-muted); cursor: pointer; border: none; background: none; font-family: Arial, sans-serif; transition: color 0.2s, transform 0.2s; line-height: 1; z-index: 11; }
         .close-x:hover { color: var(--accent-gold); transform: scale(1.1); }
+
+        .modal-content h2 { color: var(--accent-gold); margin-bottom: 20px; font-size: 1.4rem; text-align: center; letter-spacing: 2px; font-weight: 700; }
+        .modal-subsection-title { color: var(--accent-gold); font-size: 1rem; margin: 25px 0 14px 0; padding-bottom: 6px; border-bottom: 1px dashed rgba(197, 160, 89, 0.3); font-weight: 600; letter-spacing: 1px; }
+
+        .form-group { margin-bottom: 18px; text-align: left; }
+        .form-group label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 8px; font-weight: 600; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; background-color: rgba(7, 8, 11, 0.6); border: 1px solid var(--border-color); border-radius: 5px; padding: 12px; color: #fff; font-size: 0.95rem; transition: border-color 0.2s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent-gold); }
+        .form-group textarea { height: 75px; resize: none; }
 
         .decrypt-modal-content { border: 1px solid var(--threat-red) !important; text-align: center; }
         .decrypt-status-icon { font-size: 3rem; margin-bottom: 15px; animation: pulse 1.5s infinite; }
@@ -245,17 +255,17 @@
 <body>
 
     <header>
-        <h1>🏛 *赫拉學院* <span style="font-size: 0.75rem; color: var(--text-muted);">Ver.2.5</span></h1>
+        <h1>🏛️ 赫拉學院 <span style="font-size: 0.75rem; color: var(--text-muted);">Ver.2.5</span></h1>
         <div class="header-actions">
-            <button onclick="toggleApiKeyModal()">⚙ *存檔/金鑰設定*</button>
-            <button onclick="restartGame()" style="margin-left: 8px; border-color: var(--threat-red); color: var(--threat-red);">🔄 *重啟*</button>
+            <button onclick="toggleApiKeyModal()">⚙️ 存檔/金鑰設定</button>
+            <button onclick="restartGame()" style="margin-left: 8px; border-color: var(--threat-red); color: var(--threat-red);">🔄 重啟</button>
         </div>
     </header>
 
     <div class="mobile-tabs">
-        <div class="tab-item active" id="tab-story" onclick="switchMobileTab('story')">🎬 *劇情故事*</div>
-        <div class="tab-item" id="tab-profile" onclick="switchMobileTab('profile')">📊 *繼承者檔案*</div>
-        <div class="tab-item" id="tab-forum" onclick="switchMobileTab('forum')">📱 *匿名論壇*</div>
+        <div class="tab-item active" id="tab-story" onclick="switchMobileTab('story')">🎬 劇情故事</div>
+        <div class="tab-item" id="tab-profile" onclick="switchMobileTab('profile')">📊 繼承者檔案</div>
+        <div class="tab-item" id="tab-forum" onclick="switchMobileTab('forum')">📱 匿名論壇</div>
     </div>
 
     <div class="game-container">
@@ -271,41 +281,41 @@
         <main class="main-content" id="game-main">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>// *系統提示* //</strong> *歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。分數只是裝飾，家世才是唯一的准考證。請點擊首頁大門的按鈕填寫卡片配置通訊核心...*</p>
+                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。請先填寫首頁引導大門的繼承者檔案以開啟全新世界線分支...</p>
                 </div>
             </div>
 
             <div class="control-panel">
                 <div id="choices-section">
                     <div class="collapsible-header" onclick="toggleSection('choices-wrapper-content')">
-                        <div class="section-title">🎯 *命運抉擇*</div>
-                        <span class="toggle-icon" id="choices-wrapper-content-icon">▼ *展開/摺疊*</span>
+                        <div class="section-title">🎯 命運抉擇</div>
+                        <span class="toggle-icon" id="choices-wrapper-content-icon">▼ 展開/摺疊</span>
                     </div>
                     <div id="choices-wrapper-content" class="collapsible-content">
                         <div id="options-container" class="options-container"></div>
                         <div class="custom-input-wrapper" id="custom-wrapper" style="margin-top: 12px;">
                             <input type="text" id="custom-choice-input" placeholder="輸入您的選擇或自由應對、利益抉擇、拉攏手段...">
-                            <button onclick="submitCustomChoice()">*送出決策*</button>
+                            <button onclick="submitCustomChoice()">送出決策</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="decryption-box-wrapper" style="border-top: 1px dashed var(--border-color); padding-top: 8px;">
                     <div class="collapsible-header" onclick="toggleSection('decryption-wrapper-content')">
-                        <div class="section-title" style="color: var(--threat-red); border-left-color: var(--threat-red); font-size: 0.8rem;">🕵️ *【系統高級指令】HeraLink 匿名代碼解密主控台*</div>
-                        <span class="toggle-icon" id="decryption-wrapper-content-icon" style="color: var(--threat-red);">▼ *展開/摺疊*</span>
+                        <div class="section-title" style="color: var(--threat-red); border-left-color: var(--threat-red); font-size: 0.8rem;">🕵️ 【系統高級指令】HeraLink 匿名代碼解密主控台</div>
+                        <span class="toggle-icon" id="decryption-wrapper-content-icon" style="color: var(--threat-red);">▼ 展開/摺疊</span>
                     </div>
                     <div id="decryption-wrapper-content" class="collapsible-content folded" style="margin-top: 10px;">
                         <div class="decryption-input-wrapper">
                             <input type="text" id="decrypt-id-input" placeholder="目標代碼 (如: 0x7F9B)" style="flex: 0 0 140px; text-align: center; font-family: monospace; font-weight: bold; color: var(--threat-red);">
                             <input type="text" id="decrypt-guess-input" placeholder="輸入真實身份猜測或投入的博弈秘密籌碼...">
-                            <button onclick="submitDecryptionAction()" style="background-color: var(--threat-red); color: #fff;">*發起解密行動*</button>
+                            <button onclick="submitDecryptionAction()" style="background-color: var(--threat-red); color: #fff;">發起解密行動</button>
                         </div>
                     </div>
                 </div>
 
                 <div id="loading-indicator" class="loading-spinner hidden">
-                    <span>⚡ *正在計算家族利益與社交輿論風向...*</span>
+                    <span>⚡ 正在計算家族利益與社交輿論風向...</span>
                 </div>
             </div>
         </main>
@@ -314,21 +324,21 @@
     <div id="start-gate-modal" class="modal-overlay">
         <div class="modal-content" style="text-align: center; max-width: 450px;">
             <button class="close-x" onclick="closeModal('start-gate-modal')">✕</button>
-            <h2 style="letter-spacing: 2px; margin-bottom: 5px;">🏛 *歡迎來到赫拉學院*</h2>
+            <h2>🏛️ 歡迎來到赫拉學院</h2>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px;">H E R A _ A C A D E M Y _ V E R _ 2 . 5</p>
             
             <div style="display: flex; flex-direction: column; gap: 14px;">
-                <button class="modal-btn" onclick="openCharacterModalFromGate()" style="margin-top: 0; background-color: var(--accent-gold); color: #000; padding: 14px; border: none;">🎭 *填寫角色卡 (全新世界線開局)*</button>
+                <button class="modal-btn" onclick="openCharacterModalFromGate()" style="margin-top: 0; background-color: var(--accent-gold); color: #000; padding: 14px; border: none; border-radius: 4px;">🎭 填寫角色卡 (全新世界線開局)</button>
                 <div style="border-top: 1px dashed var(--border-color); margin: 15px 0; padding-top: 15px; text-align: left;">
-                    <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">📂 *恢復既有進度 (貼上移轉代碼)：*</label>
+                    <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">📂 恢復既有進度 (貼上移轉代碼)：</label>
                     <div class="custom-input-wrapper">
                         <input type="text" id="gate-import-token" placeholder="貼上在其他裝置複製的進度字串...">
-                        <button onclick="importSaveTokenFromGate()" style="padding: 0 15px; font-size: 0.9rem;">*載入存檔*</button>
+                        <button onclick="importSaveTokenFromGate()" style="padding: 0 15px; font-size: 0.9rem;">載入存檔</button>
                     </div>
                 </div>
             </div>
             <p style="margin-top: 25px; font-size: 0.85rem;">
-                <a href="#" onclick="openApiModalFromGate(event)" style="color: var(--accent-gold); text-decoration: none; border-bottom: 1px dashed var(--accent-gold); padding-bottom: 2px;">⚙ *配置 AI 通訊金鑰端點 (開局必備)*</a>
+                <a href="#" onclick="openApiModalFromGate(event)" style="color: var(--accent-gold); text-decoration: none; border-bottom: 1px dashed var(--accent-gold); padding-bottom: 2px;">⚙️ 配置 AI 通訊金鑰端點 (開局必備)</a>
             </p>
         </div>
     </div>
@@ -336,8 +346,8 @@
     <div id="api-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <button class="close-x" onclick="closeModal('api-modal')">✕</button>
-            <h2>🔑 *核心金鑰與進度同步中樞*</h2>
-            <div class="form-group" style="margin-bottom: 14px;">
+            <h2>🔑 核心金鑰與進度同步中樞</h2>
+            <div class="form-group">
                 <label>請選擇 AI 模型供應商：</label>
                 <select id="api-provider">
                     <option value="gemini">Google Gemini (型號: gemini-3.5-flash)</option>
@@ -348,17 +358,17 @@
                 <label>請輸入您的 API 密鑰 (Key)：</label>
                 <input type="password" id="api-key-input" placeholder="AIzaSy... 或 sk-proj-...">
             </div>
-            <button class="modal-btn" onclick="saveApiKey()">*儲存金鑰並嘗試雲端載入*</button>
+            <button class="modal-btn" onclick="saveApiKey()">儲存金鑰並嘗試雲端載入</button>
 
-            <div class="modal-subsection-title">💾 *跨裝置備份轉移手動控台*</div>
+            <div class="modal-subsection-title">💾 跨裝置備份轉移手動控台</div>
             <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">手動防護轉移進度控制列：</p>
             <div class="form-group">
-                <button class="modal-btn" onclick="exportSaveToken()" style="background-color: #252c38; color: var(--accent-gold); border: 1px solid var(--border-color); margin-top: 0;">*一鍵複製「全量遊戲進度代碼」*</button>
+                <button class="modal-btn" onclick="exportSaveToken()" style="background-color: #252c38; color: var(--accent-gold); border: 1px solid var(--border-color); margin-top: 0;">一鍵複製「全量遊戲進度代碼」</button>
             </div>
             <div class="form-group">
                 <label>手動讀檔轉移（在此貼上複製的進度代碼）：</label>
                 <input type="text" id="import-token-input" placeholder="貼上在其他裝置複製的進度字串...">
-                <button class="modal-btn" onclick="importSaveToken()" style="background-color: var(--accent-gold); color: #000; margin-top: 8px;">*強制手動導入此進度檔案*</button>
+                <button class="modal-btn" onclick="importSaveToken()" style="background-color: var(--accent-gold); color: #000; margin-top: 8px;">強制手動導入此進度檔案</button>
             </div>
         </div>
     </div>
@@ -366,8 +376,9 @@
     <div id="character-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <button class="close-x" onclick="closeModal('character-modal')">✕</button>
-            <h2>🎭 *建立您的繼承者檔案*</h2>
+            <h2>🎭 建立您的繼承者檔案</h2>
             
+            <div class="modal-subsection-title">一、 基本資料</div>
             <div class="form-group">
                 <label>姓名：</label>
                 <input type="text" id="char-name" placeholder="例如：車恩尚、李信">
@@ -396,6 +407,8 @@
                     <option value="19 歲">19 歲</option>
                 </select>
             </div>
+
+            <div class="modal-subsection-title">二、 家族背景</div>
             <div class="form-group">
                 <label>家族名稱：</label>
                 <input type="text" id="char-family-name" placeholder="例如：順洋集團、大韓醫院">
@@ -403,10 +416,10 @@
             <div class="form-group">
                 <label>家族階級：</label>
                 <select id="char-class">
-                    <option value="Crown">Crown (皇冠)：頂級財閥、掌權政要核心繼承人</option>
-                    <option value="Noble">Noble (貴族)：大型企業、頂尖法律/醫療世家</option>
-                    <option value="Prestige">Prestige (名望)：新興資本、知名經紀公司高層</option>
-                    <option value="General">General (平民)：社會關懷特招生或特殊關係戶</option>
+                    <option value="Crown">Crown (皇冠) — 頂級財閥、掌權政要核心繼承人</option>
+                    <option value="Noble">Noble (貴族) — 頂尖法律/醫療世家</option>
+                    <option value="Prestige">Prestige (名望) — 新興資本、知名經紀公司高層</option>
+                    <option value="General">General (平民) — 社會關懷特招生或特殊關係戶</option>
                 </select>
             </div>
             <div class="form-group">
@@ -417,6 +430,8 @@
                 <label>與家族成員的關係簡述：</label>
                 <textarea id="char-family-rel" placeholder="例如：受寵的獨生女、被邊緣化的私生子..."></textarea>
             </div>
+
+            <div class="modal-subsection-title">三、 角色設定</div>
             <div class="form-group">
                 <label>外貌特徵與自帶氣質：</label>
                 <textarea id="char-vibe" placeholder="例如：高冷貓系、清澈無辜的眼神..."></textarea>
@@ -425,6 +440,8 @@
                 <label>隱密設定 (選填)：</label>
                 <textarea id="char-secret" placeholder="例如：已有家族商業婚約、不為人知的假身分..."></textarea>
             </div>
+
+            <div class="modal-subsection-title">四、 校園相關</div>
             <div class="form-group">
                 <label>期望加入的社團/學生會職務：</label>
                 <input type="text" id="char-club" placeholder="例如：學生會企劃部、馬術社">
@@ -438,6 +455,8 @@
                     <option value="眾矢之的">眾矢之的</option>
                 </select>
             </div>
+
+            <div class="modal-subsection-title">五、 玩家偏好設定 (選填)</div>
             <div class="form-group">
                 <label>期望的劇情風格：</label>
                 <input type="text" id="char-style" placeholder="例如：極權政商博弈、暗黑復仇">
@@ -451,7 +470,7 @@
                 <input type="text" id="char-tw" placeholder="例如：強行降智套路">
             </div>
 
-            <button class="modal-btn" onclick="startStoryGame()">*踏入權力交界處*</button>
+            <button class="modal-btn" onclick="startStoryGame()">踏入權力交界處</button>
         </div>
     </div>
 
@@ -459,9 +478,9 @@
         <div class="modal-content decrypt-modal-content">
             <button class="close-x" onclick="closeModal('decrypt-result-modal')">✕</button>
             <div id="decrypt-icon" class="decrypt-status-icon" style="color: var(--accent-gold);">📡</div>
-            <h2 id="decrypt-result-title" style="color: #fff; letter-spacing: 2px;">*底層網協破解中*</h2>
+            <h2 id="decrypt-result-title" style="color: #fff; letter-spacing: 2px;">底層網協破解中</h2>
             <p id="decrypt-result-message" style="font-size: 0.95rem; line-height: 1.6; margin: 15px 0; color: var(--text-main);">正在向系統發起端口確認對比...</p>
-            <button class="modal-btn" id="decrypt-close-btn" onclick="closeModal('decrypt-result-modal')" style="background-color: #252c38; color: #fff; border: 1px solid var(--border-color);">*關閉驗證視窗*</button>
+            <button class="modal-btn" id="decrypt-close-btn" onclick="closeModal('decrypt-result-modal')" style="background-color: #252c38; color: #fff; border: 1px solid var(--border-color);">關閉驗證視窗</button>
         </div>
     </div>
 
@@ -470,7 +489,7 @@
         let isWaitingForAI = false;
         let localCode = "0x" + Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
 
-        // 【全量完美初始化面板】確保一開始左側介面完整呈現所有要求的項目欄位
+        // 【全量校準初始化快取】確保一開始左側介面完整呈現所有要求的細項項目欄位
         const DEFAULT_PROFILE_MD = `
 # 🏛️ 貴族學院 • 學生即時動態檔案
 
@@ -490,7 +509,7 @@
 ### 🤝 核心 NPC 關係權力圖
 > ❤️好感度/🖤戒備度 | 💎利益綁定度
 
-1. 車律謹 (Crown) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+1. 车律谨 (Crown) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
    * 💬 態度潛台詞： 「別隨便探聽不屬於妳這階級的秘密。」
 
 ### 🎒 背包與關鍵籌碼
@@ -518,7 +537,7 @@
 
 ### 📊 HeraLink 風向數據統計
 * 當前討論熱度： \`70%\`
-* 輿論走向偏向： \`［觀望中］\`
+* 輿論走向偏向： \`觀望中\`
 `;
 
         const SYSTEM_INSTRUCTION = `
@@ -553,9 +572,8 @@
 `;
 
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        function closeDecryptResultModal() { document.getElementById('decrypt-result-modal').classList.add('hidden'); }
         
-        // 【新增修復控制按鈕鎖定函數】防堵原本因缺失此函數導致的重啟及開局卡死 Bug
+        // 【控制修復】高相容按鈕與等候狀態鎖定器（確保重啟事件100%生效不卡死）
         function setLoading(loading) {
             isWaitingForAI = loading;
             const indicator = document.getElementById('loading-indicator');
@@ -563,15 +581,15 @@
             const customBtn = document.querySelector('.custom-input-wrapper button');
             const decryptBtn = document.querySelector('.decryption-input-wrapper button');
             if (loading) {
-                if(indicator) indicator.classList.remove('hidden');
+                if (indicator) indicator.classList.remove('hidden');
                 optionBtns.forEach(b => b.disabled = true);
-                if(customBtn) customBtn.disabled = true;
-                if(decryptBtn) decryptBtn.disabled = true;
+                if (customBtn) customBtn.disabled = true;
+                if (decryptBtn) decryptBtn.disabled = true;
             } else {
-                if(indicator) indicator.classList.add('hidden');
+                if (indicator) indicator.classList.add('hidden');
                 optionBtns.forEach(b => b.disabled = false);
-                if(customBtn) customBtn.disabled = false;
-                if(decryptBtn) decryptBtn.disabled = false;
+                if (customBtn) customBtn.disabled = false;
+                if (decryptBtn) decryptBtn.disabled = false;
             }
         }
 
@@ -601,9 +619,16 @@
         }
 
         function checkCharacterState() { if (chatHistory.length === 0) document.getElementById('character-modal').classList.remove('hidden'); }
+        
+        // 【大門智慧重置】引導開局
         function openCharacterModalFromGate() {
-            if (!localStorage.getItem('game_api_key')) { alert("// 赫拉學院通訊 //\n請先配置底層 AI 金鑰，才能點開權力大門。"); document.getElementById('api-modal').classList.remove('hidden'); return; }
-            document.getElementById('start-gate-modal').classList.add('hidden'); document.getElementById('character-modal').classList.remove('hidden');
+            if (!localStorage.getItem('game_api_key')) { 
+                alert("// 赫拉學院通訊 //\n偵測到系統尚未配置 AI 通訊核心，請先配置 API Key 才能開啟赫拉大門。"); 
+                document.getElementById('api-modal').classList.remove('hidden'); 
+                return; 
+            }
+            document.getElementById('start-gate-modal').classList.add('hidden'); 
+            document.getElementById('character-modal').classList.remove('hidden');
         }
         function openApiModalFromGate(e) { if(e) e.preventDefault(); document.getElementById('api-modal').classList.remove('hidden'); }
         
@@ -622,7 +647,6 @@
             return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // 雲端快取
         async function saveGameToCloud() {
             const key = localStorage.getItem('game_api_key'); if (!key || chatHistory.length === 0) return;
             try {
@@ -632,7 +656,6 @@
             localStorage.setItem('heralink_game_save', JSON.stringify(chatHistory));
         }
 
-        // 讀取存檔
         async function loadGameFromCloud() {
             const key = localStorage.getItem('game_api_key'); if (!key) return false;
             try {
@@ -642,7 +665,7 @@
                     const data = await response.json(); 
                     if (data && data.chatHistory) { restoreGameState(data.chatHistory); return true; } 
                 }
-            } catch (e) { console.log("Cloud save bypass."); }
+            } catch (e) { console.log("Local backup router deployed."); }
 
             if (localStorage.getItem('heralink_game_save')) {
                 restoreGameState(JSON.parse(localStorage.getItem('heralink_game_save')));
@@ -665,11 +688,11 @@
             if (lastModel) { document.getElementById('story-stream').innerHTML = `<div class="story-block"><p style="color:var(--accent-gold);"><strong>// 數據重組 //</strong> 已成功修復您的繼承者命運線。</p></div>`; parseAndPopulateUI(lastModel.text); document.getElementById('character-modal').classList.add('hidden'); }
         }
 
-        // 【已完全修復】修正重啟按鈕點擊後完全無響應的結構死結
+        // 【完美重塑】解決原本因 setLoading 缺失引起的重啟點擊死結
         function restartGame() {
-            if (confirm('確定要清除進度，重啟一場全新赫拉學院的世界線嗎？')) {
+            if (confirm('確定要清除當前進度，重啟一場全新赫拉學院的世界線嗎？')) {
                 chatHistory = [];
-                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p><strong>【系統提示】</strong> 歷史線已重置。請填寫您的全新繼承者角色卡...</p></div>`;
+                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p><strong>【系統提示】</strong> 歷史線已重置。請重開大門填寫您的全新繼承者角色卡...</p></div>`;
                 document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
                 document.getElementById('forum-container').innerHTML = marked.parse(DEFAULT_FORUM_MD);
                 document.getElementById('options-container').innerHTML = '';
@@ -752,7 +775,7 @@
                 if (provider === 'gemini') {
                     const geminiContents = chatHistory.map(h => ({ role: h.role === "model" ? "model" : "user", parts: [{ text: h.text }] }));
                     
-                    // 【已徹底校正模型字串】修正此前引發 404 報錯的幽靈程式代碼，更正為生產端點通用型號 gemini-3.5-flash
+                    // 【已徹底修正模型端點：gemini-3.5-flash】
                     response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: geminiContents, generationConfig: { temperature: 0.75, maxOutputTokens: 8192 } })
                     });
@@ -768,7 +791,7 @@
                 }
                 chatHistory.push({ role: "model", text: aiResponseText });
                 parseAndPopulateUI(aiResponseText); saveGameToCloud();
-            } catch (error) { alert(`⚠️ 連線中斷: ${error.message}`); chatHistory.pop(); } final { setLoading(false); }
+            } catch (error) { alert(`⚠️ 連線中斷: ${error.message}`); chatHistory.pop(); } finally { setLoading(false); }
         }
 
         function parseAndPopulateUI(rawText) {
@@ -868,6 +891,13 @@
             choiceBlock.innerHTML = `<p style="color: var(--threat-red); font-weight: bold; font-family: monospace;">${fullActionText.replace(/\n/g, '<br>')}</p>`;
             stream.appendChild(choiceBlock); stream.scrollTop = stream.scrollHeight;
             sendPromptToAI(fullActionText);
+        }
+
+        function showDecryptionResultWindow(title, message, icon, color) {
+            document.getElementById('decrypt-result-title').innerText = title;
+            document.getElementById('decrypt-result-message').innerHTML = message;
+            const iconEl = document.getElementById('decrypt-icon'); iconEl.innerText = icon; iconEl.style.color = color;
+            document.getElementById('decrypt-result-modal').classList.remove('hidden');
         }
 
         function exportSaveToken() {
