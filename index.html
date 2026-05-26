@@ -345,7 +345,7 @@
             <div class="form-group" style="margin-bottom: 14px;">
                 <label>請選擇 AI 模型供應商：</label>
                 <select id="api-provider">
-                    <option value="gemini">Google Gemini (型號: gemini-1.5-flash)</option>
+                    <option value="gemini">Google Gemini (型號: gemini-3.5-flash)</option>
                     <option value="openai">OpenAI ChatGPT (型號: gpt-4o-mini)</option>
                 </select>
             </div>
@@ -382,7 +382,7 @@
             <div class="modal-subsection-title">二、 家族背景</div>
             <div class="form-row">
                 <div class="form-group"><label>家族名稱：</label><input type="text" id="char-family-name" placeholder="example: 順洋集團、大韓醫院"></div>
-                <div class="form-group"><label>家族階級：</label><select id="char-class"><option value="Crown">Crown (皇冠)：頂級財閥繼承人</option><option value="Noble">Noble (貴族)：頂尖法律/醫療世家</option><option value="Prestige">Prestige (名望)：新興資本高層</option><option value="General">General (平民)：社會關懷特招生</option></select></div>
+                <div class="form-group"><label>家族階級：</label><select id="char-class"><option value="Crown">Crown (皇冠)：頂級財閥、掌權政要核心繼承人。掌控學生會，一言定生死</option><option value="Noble">Noble (貴族)：大型企業、頂尖法律/醫療世家。地位高，內部派系鬥爭激烈</option><option value="Prestige">Prestige (名望)：新興資本、知名經紀公司高層。有錢但缺乏底蘊，最易嫉妒與站隊</option><option value="General">General (平民)：特招生或特殊關係戶。缺乏背景，常被當作棋子，卻也是最大變數</option></select></div>
             </div>
             <div class="form-group"><label>家族主要勢力或產業：</label><textarea id="char-family-industry" placeholder="例如：掌握全國50%半導體股份..."></textarea></div>
             <div class="form-group"><label>與家族成員的關係簡述：</label><textarea id="char-family-rel" placeholder="例如：受寵的獨生女..."></textarea></div>
@@ -597,8 +597,8 @@
                 let response, data, aiResponseText = "";
                 if (provider === 'gemini') {
                     const geminiContents = chatHistory.map(h => ({ role: h.role === "model" ? "model" : "user", parts: [{ text: h.text }] }));
-                    // 【已徹底矯正為 1.5 正式端點模型，防堵 404】
-                    response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    // 【已徹底矯正為 3.5 正式端點模型，防堵 404】
+                    response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash:generateContent?key=${apiKey}`, {
                         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: geminiContents, generationConfig: { temperature: 0.75, maxOutputTokens: 8192 } })
                     });
                     data = await response.json(); if (data.error) throw new Error(data.error.message);
@@ -718,7 +718,7 @@
         function restartGame() {
             if (confirm('確定要清除進度，重啟一場全新赫拉學院的世界線嗎？')) {
                 chatHistory = [];
-                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p><strong>【系統提示】</strong> 歷史線已重置。請重新點擊首頁按鈕進入檔案...</p></div>`;
+                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p><strong>【系統提示】</strong> 歷史線已重置。您已進入全新檔案...</p></div>`;
                 document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
                 document.getElementById('forum-container').innerHTML = marked.parse(DEFAULT_FORUM_MD);
                 document.getElementById('options-container').innerHTML = '';
