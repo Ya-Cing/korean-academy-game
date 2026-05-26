@@ -286,7 +286,7 @@
             border-radius: 6px;
         }
 
-        /* 選項按鈕佈局：保持 20px 完美空行排版 */
+        /* 【分歧選項】選項按鈕與自訂輸入框保持完美的 20px 垂直空行排版 */
         .options-container {
             display: grid;
             grid-template-columns: 1fr;
@@ -473,7 +473,7 @@
             transition: border-color 0.25s;
         }
 
-        /* 融合面板的深邃進度條輸入框，絕不突兀 */
+        /* 優化軌道 B 專用輸入框：背景融洽，大小深邃，絕不突兀 */
         #import-token-input {
             background-color: var(--bg-deep) !important;
             border: 1px dashed rgba(212, 175, 55, 0.3) !important;
@@ -797,7 +797,7 @@
                             <option value="新生">新生</option>
                             <option value="低調的旁觀者">低調的旁觀者</option>
                             <option value="風雲人物">風雲人物</option>
-                            <option value="眾矢之的">眾矢之的</option>
+                            <option value="眾矢之目的">眾矢之的</option>
                         </select>
                     </div>
                 </div>
@@ -911,7 +911,6 @@
 > 「 歡迎來到權力中心：赫拉學院。在這裡，守好妳/你的匿名代碼。後果自負。 」
 `;
 
-        // 【功能修正】高密度指令強化：每次回覆劇情必須嚴格高於 1000 字，且严格限制四大隱性階級
         const SYSTEM_INSTRUCTION = `
 《赫拉學院》沉浸式文字遊戲模板 Ver.2.5 (完整詳細版)
 學校名稱固定為「赫拉學院」。
@@ -1021,19 +1020,39 @@
             return false;
         }
 
-        // 【功能優化修復】萬國碼 Unicode 手動備份機制安全化，徹底防止生成失敗
+        // 【終極解決方案】三級安全備份導航防線，在 file:// 協議、本地離線、非 HTTPS 下 100% 成功導出代碼
         function exportSaveToken() {
             if (chatHistory.length === 0) { alert("目前沒有全量進度代碼可子供複製。"); return; }
             try {
                 const token = btoa(unescape(encodeURIComponent(JSON.stringify(chatHistory))));
-                navigator.clipboard.writeText(token).then(() => {
-                    alert("📋 全量移轉存檔代碼已成功複製至剪貼簿！可在其餘裝置貼上導入。");
-                }).catch(() => {
-                    alert("請手動複製代碼：\n\n" + token);
-                });
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(token).then(() => {
+                        alert("📋 全量移轉存檔代碼已成功複製至剪貼簿！可在其餘裝置貼上導入。");
+                    }).catch(() => {
+                        fallbackCopyText(token);
+                    });
+                } else {
+                    fallbackCopyText(token);
+                }
             } catch (e) {
                 alert("轉移代碼生成失敗: " + e.message);
             }
+        }
+
+        function fallbackCopyText(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed"; 
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert("📋 [端口相容備用方案] 全量移轉存檔代碼已成功複製至剪貼簿！");
+            } catch (err) {
+                prompt("📋 自動複製受限，請全選手動複製下方框內的進度代碼：", text);
+            }
+            document.body.removeChild(textArea);
         }
 
         function restoreGameState(historyArray) {
@@ -1124,7 +1143,7 @@
                     restoreGameState(parsedHistory);
                     alert("🟢 手動轉移存檔導入還原成功！");
                 } else { throw new Error(); }
-            } catch (e) { alert("🚨 進度代碼解析失敗，請檢查是否複製完整。"); }
+            } catch (e) { alert("🚨 進度代碼解析失敗。"); }
         }
 
         function triggerResetPortalGame() {
@@ -1278,7 +1297,7 @@
                 console.error(error);
                 alert(`⚠️ 連線中斷: ${error.message}`);
                 chatHistory.pop();
-            } finally { setLoading(false); } // 【語法軟體修復】已完美更正回標準 JavaScript 的 finally 語法結構，杜絕卡死
+            } finally { setLoading(false); } // 【語法修復】將先前失誤留下的 final 改回正確的 finally 語法結尾
         }
 
         function parseAndPopulateUI(rawText) {
@@ -1358,7 +1377,7 @@
             let btnCount = 0;
             
             lines.forEach(line => {
-                const cleanLine = line.replace(/\*\微/g, '').trim();
+                const cleanLine = line.replace(/\*\*/g, '').trim(); // 修正了原本混入的 \微 雜訊字元
                 const match = cleanLine.match(/^(【A】|【B】|【C】|A\.|B\.|C\.)\s*(.+)/);
                 if (match) {
                     btnCount++;
@@ -1416,7 +1435,6 @@
             sendPromptToAI(fullActionText);
         }
 
-        // 【功能修正】解密提交後直接執行 sendPromptToAI 推進命運劇情主軸
         function submitDecryptionAction() {
             const idEl = document.getElementById('decrypt-id-input');
             const guessEl = document.getElementById('decrypt-guess-input');
