@@ -1177,21 +1177,25 @@
             returnToPortalMenu();
         }
 
-        function triggerNewGameStart() {
-            startStoryGame();
-        }
+       // ⚙️ 起始頁面全新開局觸發點（已補齊強效金鑰鎖定防線）
+function triggerNewGameStart() {
+    if (!checkAndLockApiKey()) return; // 💡 修正：強行攔截！玩家若沒填寫或未確認 API Key 絕不允許步入學院
+    startStoryGame();
+}
 
-        function triggerImportSaveStart() {
-            const rawToken = document.getElementById('import-token-input').value.trim();
-            if (!rawToken) { alert("請先填入有效的轉移存檔字串！"); return; }
-            try {
-                const parsedHistory = JSON.parse(decodeURIComponent(escape(atob(rawToken))));
-                if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
-                    restoreGameState(parsedHistory);
-                    alert("🟢 手動轉移存檔導入還原成功！");
-                } else { throw new Error(); }
-            } catch (e) { alert("🚨 進度代碼解析失敗。"); }
-        }
+// ⚙️ 起始頁面導入進度代碼觸發點（已補齊強效金鑰鎖定防線）
+function triggerImportSaveStart() {
+    if (!checkAndLockApiKey()) return; // 💡 修正：強行攔截！確保玩家手動導入存檔後，能擁有正常通訊權限
+    const rawToken = document.getElementById('import-token-input').value.trim();
+    if (!rawToken) { alert("請先填入有效的轉移存檔字串！"); return; }
+    try {
+        const parsedHistory = JSON.parse(decodeURIComponent(escape(atob(rawToken))));
+        if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
+            restoreGameState(parsedHistory);
+            alert("🟢 手動轉移存檔導入還原成功！");
+        } else { throw new Error(); }
+    } catch (e) { alert("🚨 進度代碼解析失敗。"); }
+}
 
         // 清除重新開始觸發點
         function triggerResetPortalGame() {
