@@ -979,7 +979,7 @@
 🤖 AI 敘事與操作規則：
 1. 每次回覆劇情「必須嚴格高於 1000 字」，具備極強的電影畫面場景感與微表情刻畫。
 2. 親密感與信任度必須通過利益交換緩慢累積。
-3. 【⚠️ 命運抉擇與去字數統計規範】：每段劇情結尾提供的 【A】、【B】、【C】 三個分歧選項，其選項內的文字敘述長度「每一項都必須嚴格超過 200 字」高密度推演。由玩家自行填寫的 【D】 選項則免除此限制。**【核心警報限制】：在渲染選項與文本時，前台絕對不要、禁止顯示任何字數統計、字數標註或「(共 X 字)」等提示性贅字，只需自然、優雅地呈現情節與選項本身。**
+3. 【⚠️ 命運抉擇與去字數統計規範】：每段劇情結尾提供的 【A】、【B】、【C】 三個分歧選項，其選項內的文字敘述長度「每一項都必須嚴格超過 200 字」高密度推演。AI「絕對禁止」輸出任何關於【D】選項的文字內容，因為【D】選項由玩家在前端組件中自行輸入。請確保 A、B、C 格式清晰以便前端渲染成完整的按鈕。在渲染選項與文本時，絕對不要、禁止顯示任何字數統計、字數標註或「(共 X 字)」等提示性贅字，只需自然、優雅地呈現情節與選項本身。
 
 📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵循以下順序輸出，包含側欄所需的全量細項看板，並使用分隔線 --- 進行物理隔離，絕對不准省略任何一個次級標題欄位：
 [ 📋 學生即時動態檔案 ]
@@ -1417,33 +1417,35 @@
             }
         }
 
-        // 動態拼裝 A, B, C 與常規自訂 D 輸入欄位，保持完美的 20px 垂直空行間距
+// 💡 修改重點 2：重構選項按鈕解析函數。使用全域修飾符與跨行匹配 ([\s\S]*?)，確保 A, B, C 超過 200 字且內含分段時，依然維持完整按鈕樣式。
         function parseOptionsToButtons(optionsText) {
             const container = document.getElementById('options-container');
             container.innerHTML = "";
-            const lines = optionsText.split('\n');
+            
+            // 使用正則捕獲區塊：從 【A】 或 A. 開始，直到下一個標籤或文本結束。這能完美包裹200字以上的長文本
+            const regex = /(【A】|【B】|【C】|A\.|B\.|C\.)([\s\S]*?)(?=(【A】|【B】|【C】|【D】|A\.|B\.|C\.|D\.|$))/g;
+            let match;
             let btnCount = 0;
             
-            lines.forEach(line => {
-                const cleanLine = line.replace(/\*\*/g, '').trim(); 
-                const match = cleanLine.match(/^(【A】|【B】|【C】|A\.|B\.|C\.)\s*(.+)/);
-                if (match) {
-                    btnCount++;
-                    const label = match[1];
-                    const text = match[2];
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.innerHTML = `<strong>${label}</strong> ${text}`;
-                    btn.onclick = () => selectChoice(label, text);
-                    container.appendChild(btn);
-                }
-            });
+            while ((match = regex.exec(optionsText)) !== null) {
+                btnCount++;
+                const label = match[1].trim();
+                const text = match[2].replace(/\*\*/g, '').trim(); // 清理多餘的 Markdown 加粗標記
+                
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                // 為了閱讀體驗，長文本內部保留 line-height。
+                btn.innerHTML = `<strong>${label}</strong> ${text}`;
+                btn.onclick = () => selectChoice(label, text);
+                container.appendChild(btn);
+            }
             
+            // 萬一 AI 格式吐錯的保底渲染
             if (btnCount === 0) {
                 container.innerHTML = marked.parse(optionsText);
             }
 
-            // 【功能修正】保留 D 選項在命運抉擇處，輸入的地方僅顯示可填入等安全字眼（字數豁免上限）
+            // 固定在最下方添加只有玩家能自行輸入的 【D】 選項組件
             const dBlock = document.createElement('div');
             dBlock.className = 'custom-input-wrapper';
             dBlock.innerHTML = `
