@@ -349,13 +349,17 @@
         }
 
         .custom-input-wrapper input, .decryption-input-wrapper input {
-            flex: 1;
             background-color: var(--bg-deep);
-            border: 1px dashed var(--border-color);
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 14px;
-            color: #fff;
             font-size: 0.95rem;
+        }
+
+        .custom-input-wrapper input {
+            flex: 1;
+            color: #fff;
+            border-style: dashed;
         }
 
         .custom-input-wrapper input:focus, .decryption-input-wrapper input:focus {
@@ -379,9 +383,21 @@
             background-color: var(--accent-gold-hover);
         }
 
-        /* 【功能修正】解密主控台：完全恢復原本的外觀與描邊樣式，防溢出與Conspicuous */
+        /* 【功能修正】解密主控台：將目標代碼欄（decrypt-id-input）的格式完整複製給猜測欄（decrypt-guess-input），外觀完全同步 */
         .decryption-input-wrapper input {
             border: 1px solid rgba(239, 68, 68, 0.2);
+            text-align: center;
+            font-family: monospace;
+            font-weight: bold;
+            color: var(--threat-red) !important;
+        }
+
+        #decrypt-id-input {
+            flex: 0 0 140px;
+        }
+
+        #decrypt-guess-input {
+            flex: 1;
         }
 
         /* 彈窗／遮罩層 */
@@ -492,7 +508,7 @@
         }
 
         /* 融合面板的深邃進度條輸入框，絕不突兀 */
-        #import-token-input {
+        .modal-content #import-token-input {
             background-color: var(--bg-deep) !important;
             border: 1px dashed rgba(212, 175, 55, 0.3) !important;
             padding: 10px 12px !important;
@@ -619,10 +635,9 @@
                 height: 42px;
                 flex: none;
             }
-            #decrypt-id-input {
+            #decrypt-id-input, #decrypt-guess-input {
                 width: 100% !important;
-                text-align: left;
-                padding-left: 12px;
+                text-align: center;
             }
             .option-btn {
                 padding: 14px 18px;
@@ -703,8 +718,8 @@
                     
                     <div id="decryption-wrapper-content" class="collapsible-content folded" style="margin-top: 10px;">
                         <div class="decryption-input-wrapper">
-                            <input type="text" id="decrypt-id-input" placeholder="目標代碼 (如: 0x7F9B)" style="flex: 0 0 140px; text-align: center; font-family: monospace; font-weight: bold; color: var(--threat-red);">
-                            <input type="text" id="decrypt-guess-input" placeholder="輸入真實身份猜測或投入的博弈秘密籌碼 (例: 車律謹 / 動用地下組織「繆思」偷看手機)...">
+                            <input type="text" id="decrypt-id-input" placeholder="目標代碼">
+                            <input type="text" id="decrypt-guess-input" placeholder="【可填入真實身份猜測或投入的博弈秘密籌碼...】">
                             <button onclick="submitDecryptionAction()" style="background-color: var(--threat-red); color: #fff;">發起解密行動</button>
                         </div>
                     </div>
@@ -887,7 +902,7 @@
     <script>
         marked.setOptions({ breaks: true, gfm: true });
 
-        // 初始精裝版全量欄位看板，主要NPC排除明文ID
+        // 初始精裝版全量欄位佔位面板，主要NPC排除明文ID
         const DEFAULT_PROFILE_MD = `
 # 🏛️ 貴族學院 • 學生即時動態檔案
 
@@ -929,7 +944,7 @@
 > 「 歡迎來到權力中心：赫拉學院。在這裡，守好妳/你的匿名代碼。後果自負。 」
 `;
 
-        // 【功能修正】命運分歧選項防線強化：A、B、C 三個選項字數必須嚴格「超過 200 字」高密度推演
+        // 【功能修正】高密度與去數據化再強化：A, B, C 三個分歧長度必須嚴格超過 200 字，但前台絕對禁吐任何字數統計標記
         const SYSTEM_INSTRUCTION = `
 《赫拉學院》沉浸式文字遊戲模板 Ver.2.5 (完整詳細版)
 學校名稱固定為「赫拉學院」。
@@ -953,7 +968,7 @@
 🤖 AI 敘事與操作規則：
 1. 每次回覆劇情「必須嚴格高於 1000 字」，具備極強的電影畫面場景感與微表情刻畫。
 2. 親密感與信任度必須通過利益交換緩慢累積。
-3. 【⚠️ 命運抉擇生成規範】：每段劇情結尾提供的 【A】、【B】、【C】 三個分歧選項，其選項內的文字敘述長度「每一項都必須嚴格超過 200 字」，提供玩家極高密度的派系角力、代價估算與長線影響力情節。而最後供玩家自行輸入的 【D】 選項則豁免此 200 字限制。
+3. 【⚠️ 命運抉擇與去字數統計規範】：每段劇情結尾提供的 【A】、【B】、【C】 三個分歧選項，其選項內的文字敘述長度「每一項都必須嚴格超過 200 字」高密度推演。由玩家自行填寫的 【D】 選項則免除此限制。**【核心警報限制】：在渲染選項與文本時，前台絕對不要、禁止顯示任何字數統計、字數標註或「(共 X 字)」等提示性贅字，只需自然、優雅地呈現情節與選項本身。**
 
 📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵循以下順序輸出，包含側欄所需的全量細項看板，並使用分隔線 --- 進行物理隔離，絕對不准省略任何一個次級標題欄位：
 [ 📋 學生即時動態檔案 ]
@@ -1132,6 +1147,7 @@
             document.getElementById('start-portal-modal').classList.toggle('hidden');
         }
 
+        // 驗證金鑰防線
         function checkAndLockApiKey() {
             const provider = document.getElementById('api-provider').value;
             const key = document.getElementById('api-key-input').value.trim();
@@ -1166,6 +1182,7 @@
             } catch (e) { alert("🚨 進度代碼解析失敗。"); }
         }
 
+        // 清除重新開始觸發點
         function triggerResetPortalGame() {
             if (!checkAndLockApiKey()) return;
             if (confirm('警告：確定要清除當前進度，徹底清空快取數據並重新開始嗎？')) {
@@ -1222,7 +1239,7 @@
 | 論壇匿名代碼 | \`${localCode}\` |
 
 ### 📱 HeraLink 匿名論壇動態
-* 社交名聲標籤： \`神秘局外人 (基於 ${status})\`
+* 社交名聲標籤 : \`神秘局外人 (基於 ${status})\`
 * 本週論壇熱搜： #新學期繼承者名冊 #赫拉學院特招生
 * 輿論威脅指數： \`30%\`
 * 🕵️ 當前解密追蹤紀錄： 1. \`[ 未發起代碼解密行動 ]\`
@@ -1317,7 +1334,7 @@
                 console.error(error);
                 alert(`⚠️ 連線中斷: ${error.message}`);
                 chatHistory.pop();
-            } finally { setLoading(false); } // 高安全閉合
+            } finally { setLoading(false); } 
         }
 
         function parseAndPopulateUI(rawText) {
@@ -1415,11 +1432,11 @@
                 container.innerHTML = marked.parse(optionsText);
             }
 
-            // 【功能修正】保留 D 選項在命運抉擇底部，欄位字數嚴格物理上修 200 字限制，Placeholder 僅呈現安全可填入字眼
+            // 【功能修正】保留 D 選項在命運抉擇處，輸入的地方僅顯示可填入等安全字眼（字數豁免上限）
             const dBlock = document.createElement('div');
             dBlock.className = 'custom-input-wrapper';
             dBlock.innerHTML = `
-                <input type="text" id="custom-choice-input" placeholder="【D】可填入自訂反擊行動、心理博弈手段..." maxlength="200">
+                <input type="text" id="custom-choice-input" placeholder="【D】可填入自訂反擊行動、心理博弈手段...">
                 <button onclick="submitCustomChoice()">送出決策</button>
             `;
             container.appendChild(dBlock);
