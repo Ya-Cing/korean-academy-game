@@ -1419,24 +1419,43 @@
 
         // 動態拼裝 A, B, C 與常規自訂 D 輸入欄位，保持完美的 20px 垂直空行間距
         function parseOptionsToButtons(optionsText) {
-            const container = document.getElementById('options-container');
-            container.innerHTML = "";
-            const lines = optionsText.split('\n');
-            let btnCount = 0;
-            
-            lines.forEach(line => {
-                const cleanLine = line.replace(/\*\*/g, '').trim(); 
-                const match = cleanLine.match(/^(【A】|【B】|【C】|A\.|B\.|C\.)\s*(.+)/);
-                if (match) {
-                    btnCount++;
-                    const label = match[1];
-                    const text = match[2];
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.innerHTML = `<strong>${label}</strong> ${text}`;
-                    btn.onclick = () => selectChoice(label, text);
-                    container.appendChild(btn);
-                }
+    const container = document.getElementById('options-container');
+    container.innerHTML = ""; // 清空舊有的抉擇殘留數據
+    const lines = optionsText.split('\n');
+    let btnCount = 0;
+    
+    // 逐行過濾分析 AI 回傳的文本結構
+    lines.forEach(line => {
+        const cleanLine = line.replace(/\*\*/g, '').trim(); 
+        // 精準正則表達式防線：只捕捉 A, B, C 開頭的劇情分歧文本
+        const match = cleanLine.match(/^(【A】|【B】|【C】|A\.|B\.|C\.)\s*(.+)/);
+        if (match) {
+            btnCount++;
+            const label = match[1];
+            const text = match[2];
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<strong>${label}</strong> ${text}`;
+            btn.onclick = () => selectChoice(label, text);
+            container.appendChild(btn);
+        }
+    });
+    
+    // 後備降級機制：若 AI 回覆格式發生非預期異變，則安全渲染基礎 Markdown 文本
+    if (btnCount === 0) {
+        container.innerHTML = marked.parse(optionsText);
+    }
+
+    // ⚖️ 權力網格對稱渲染：雷打不動將【D】選項指派為玩家實體輸入框
+    // 藉由 CSS 網格（Grid）的 gap: 20px 屬性，會自動與上方的 A、B、C 按鈕保持完美的空行視覺間距
+    const dBlock = document.createElement('div');
+    dBlock.className = 'custom-input-wrapper';
+    dBlock.innerHTML = `
+        <input type="text" id="custom-choice-input" placeholder="【D】可填入自訂反擊行動、心理博弈手段..." maxlength="200">
+        <button onclick="submitCustomChoice()">送出決策</button>
+    `;
+    container.appendChild(dBlock);
+}
             });
             
             if (btnCount === 0) {
