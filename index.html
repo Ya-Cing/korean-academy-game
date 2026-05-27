@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大韓貴族學院 | 沉浸式文字互動遊戲 Ver.2.5</title>
+    <title>赫拉學院 | 沉浸式文字互動遊戲 Ver.2.5</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
@@ -452,7 +452,7 @@
 
         .modal-close-btn:hover {
             opacity: 1;
-            color: #00d2ff;
+            color: #FFD700;
             text-shadow: 0 0 8px #00d2ff, 0 0 15px #00d2ff, 0 0 25px #00d2ff;
         }
 
@@ -694,7 +694,7 @@
         <main class="main-content" id="game-main">
             <div id="story-stream" class="story-stream">
                 <div class="story-block">
-                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。在這裡，分數只是裝飾，背後的家世才是你唯一的准考證。</p>
+                    <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。在這裡，分數只是裝飾，背後的家世才是你唯一的准考證......</p>
                 </div>
             </div>
 
@@ -855,7 +855,7 @@
             <div id="portal-load-view" class="hidden" style="margin-top: 15px;">
                 <div style="background: rgba(239, 68, 68, 0.02); padding: 16px; border: 1px dashed var(--threat-red); border-radius: 6px;">
                     <div style="font-weight: bold; color: var(--threat-red); margin-bottom: 8px;">💾 備份進度還原</div>
-                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">請在下方貼上您在其他裝置複製的全量遊戲壓縮字串：</p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">請在下方貼上您在其他裝置複製的移轉存檔代碼：</p>
                     <input type="text" id="import-token-input" placeholder="在此貼上複製的加密字串...">
                     <button class="modal-btn" onclick="triggerImportSaveStart()" style="background-color: var(--threat-red); color: #fff;">提取密碼並回復雲端世界線</button>
                 </div>
@@ -1073,7 +1073,7 @@
                 const token = btoa(unescape(encodeURIComponent(JSON.stringify(chatHistory))));
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(token).then(() => {
-                        alert("📋 全量移轉存檔代碼已成功複製至剪貼簿！可在其餘裝置貼上導入。");
+                        alert("📋 移轉存檔代碼已成功複製至剪貼簿！可在其餘裝置貼上導入。");
                     }).catch(() => {
                         fallbackCopyText(token);
                     });
@@ -1094,7 +1094,7 @@
             textArea.select();
             try {
                 document.execCommand('copy');
-                alert("📋 [相容端口配對] 全量移轉存檔代碼已成功複製至剪貼簿！");
+                alert("📋 [相容端口配對] 移轉存檔代碼已成功複製至剪貼簿！");
             } catch (err) {
                 prompt("📋 自動複製受限，請全選手動複製下方框內的進度代碼：", text);
             }
@@ -1105,7 +1105,7 @@
             chatHistory = historyArray;
             const lastModelResponse = [...chatHistory].reverse().find(h => h.role === "model");
             if (lastModelResponse) {
-                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p style="color:var(--accent-gold);"><strong>// 雲端進度同步完畢 //</strong> 已加載最新世界線局勢。</p></div>`;
+                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p style="color:var(--accent-gold);"><strong>// 雲端進度同步完畢 //</strong> 已加載世界線最新局勢。</p></div>`;
                 parseAndPopulateUI(lastModelResponse.text);
                 document.getElementById('start-portal-modal').classList.add('hidden');
             }
@@ -1183,7 +1183,7 @@
 
         function triggerImportSaveStart() {
             const rawToken = document.getElementById('import-token-input').value.trim();
-            if (!rawToken) { alert("請先填入有效的轉移存檔字串！"); return; }
+            if (!rawToken) { alert("請先填入有效的轉移存檔代碼！"); return; }
             try {
                 const parsedHistory = JSON.parse(decodeURIComponent(escape(atob(rawToken))));
                 if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
@@ -1199,7 +1199,7 @@
             if (confirm('警告：確定要清除當前進度，徹底清空快取數據並重新開始嗎？')) {
                 chatHistory = [];
                 localStorage.removeItem('game_api_key');
-                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p><strong>【系統提示】</strong> 歷史數據已重置，大門戶已就緒。</p></div>`;
+                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p><strong>【系統提示】</strong> 歷史數據已重置，學院大門已就緒。</p></div>`;
                 document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
                 document.getElementById('forum-container').innerHTML = marked.parse(DEFAULT_FORUM_MD);
                 document.getElementById('options-container').innerHTML = '';
@@ -1210,7 +1210,7 @@
         }
 
         function restartGame() {
-            if (confirm('確定要回到起始審查大門戶嗎？（當前未存檔之進度將遺失）')) {
+            if (confirm('確定要回到起始審查大門嗎？（當前未存檔之進度將遺失）')) {
                 document.getElementById('start-portal-modal').classList.remove('hidden');
             }
         }
@@ -1235,7 +1235,7 @@
             const tw = document.getElementById('char-tw').value.trim();
 
             if (!name || !familyName || !familyIndustry) {
-                alert('請填寫完整姓名、家族名稱與產業壟斷描述！');
+                alert('請填寫完整「姓名」、「家族名稱」與「家族主要勢力或產業」！');
                 return;
             }
 
@@ -1389,7 +1389,7 @@
             if (extracted.profile) {
                 let cleanProfile = extracted.profile.replace(/^[\s\-=\*]+/g, "").trim();
                 document.getElementById('profile-container').innerHTML = marked.parse(cleanProfile);
-                if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久揭鎖")) {
+                if (rawText.includes("解密成功") || rawText.includes("真實身份已被永久解鎖")) {
                     showDecryptionResultWindow("🔑 解密驗證成功", "已成功侵入核心協議層！持有者身分已永久同步。");
                 } else if (rawText.includes("解密行動失敗") || rawText.includes("永久鎖定") || rawText.includes("反噬")) {
                     showDecryptionResultWindow("🚨 安全警報：驗證失敗", "反向追蹤調查失敗！威脅指數飆升。");
@@ -1447,7 +1447,7 @@
             const dBlock = document.createElement('div');
             dBlock.className = 'custom-input-wrapper';
             dBlock.innerHTML = `
-                <input type="text" id="custom-choice-input" placeholder="【D】可填入自訂反擊行動、心理博弈手段...">
+                <input type="text" id="custom-choice-input" placeholder="【D】填入自訂行動、心理博弈手段...">
                 <button onclick="submitCustomChoice()">送出決策</button>
             `;
             container.appendChild(dBlock);
@@ -1471,7 +1471,7 @@
             const inputEl = document.getElementById('custom-choice-input');
             const customText = inputEl.value.trim();
             if (!customText) return;
-            const fullActionText = `【【D】玩家自由決策/反擊行動】：${customText}`;
+            const fullActionText = `【【D】玩家自由決策/行動】：${customText}`;
             inputEl.value = "";
             const stream = document.getElementById('story-stream');
             const choiceBlock = document.createElement('div');
