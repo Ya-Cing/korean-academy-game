@@ -1008,7 +1008,7 @@
 [ 🎯 分歧選項 ]
 `;
 
-        let chatHistory = [];
+let chatHistory = [];
         let isWaitingForAI = false;
 
         function switchMobileTab(tabId) {
@@ -1037,7 +1037,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chatHistory: chatHistory })
                 });
-            } catch (e) { console.warn("備用緩存啟用。"); }
+            } catch (e) { console.warn("備用緩存儲存。"); }
             localStorage.setItem('heralink_local_save_' + localCode, JSON.stringify(chatHistory));
         }
 
@@ -1066,57 +1066,59 @@
             return false;
         }
 
-// 💡 修改重點：重構存檔壓縮及精簡算法，解決隨著回合增加導致代碼過長無法複製的問題
-        function exportSaveToken() {
-            if (chatHistory.length === 0) { alert("目前沒有全量進度代碼可供複製。"); return; }
-            try {
-                let optimizedHistory = [];
-                
-                // 1. 永遠完整保留開局核心前 3 項設定（系統設定、初始化回覆、初始角色卡）
-                const setupCount = Math.min(chatHistory.length, 3);
-                for (let i = 0; i < setupCount; i++) {
-                    optimizedHistory.push(chatHistory[i]);
-                }
-                
-                // 2. 處理中間的對話歷史，剔除冗餘數據，同時設置滑動窗口防止無限膨脹
-                if (chatHistory.length > 3) {
-                    let intermediate = chatHistory.slice(3, chatHistory.length - 1);
-                    
-                    // 記憶體滑動窗口限制：中間過程最多保留最近 8 個節點（即 4 個回合的交互紀錄）
-                    const maxHistoryNodes = 8;
-                    if (intermediate.length > maxHistoryNodes) {
-                        intermediate = intermediate.slice(intermediate.length - maxHistoryNodes);
-                    }
-                    
-                    // 深度精簡：舊回合的模型回應只保留核心故事線 [🎬 劇情] 文本，刪掉重複又沉重的側邊欄與論壇看板
-                    intermediate = intermediate.map(entry => {
-                        if (entry.role === "model") {
-                            const regexStory = /(?:\[\s*🎬\s*劇情\s*\]|#+\s*🎬\s*劇情|#+\s*當前劇情)/i;
-                            let posStory = entry.text.search(regexStory);
-                            if (posStory !== -1) {
-                                let subText = entry.text.substring(posStory);
-                                let endPos = subText.search(/\n---\n|\n---\s*\n/);
-                                let cleanNarrative = endPos !== -1 ? subText.substring(0, endPos) : subText;
-                                return { role: "model", text: cleanNarrative.trim() };
-                            }
-                        }
-                        return entry;
-                    });
-                    
-                    optimizedHistory.push(...intermediate);
-                }
-                
-                // 3. 永遠完整保留最後一個節點（目前的看板與分歧選項，供重新載入時還原 UI 介面）
-                if (chatHistory.length > 3) {
-                    optimizedHistory.push(chatHistory[chatHistory.length - 1]);
-                }
+        // 💡 存檔極限縮短優化：現代瀏覽器原生 Deflate 壓縮演算法
+        async function compressText(text) {
+            const stream = new Response(text).body.pipeThrough(new CompressionStream('deflate'));
+            const buffer = await new Response(stream).arrayBuffer();
+            let binary = '';
+            const bytes = new Uint8Array(buffer);
+            for (let i = 0; i < bytes.byteLength; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return btoa(binary);
+        }
 
-                // 將經過深度體積優化後的數據結構轉化為密鑰代碼
-                const token = btoa(unescape(encodeURIComponent(JSON.stringify(optimizedHistory))));
+        // 💡 存檔極限縮短優化：現代瀏覽器原生 Deflate 解壓縮演算法
+        async function decompressText(base64) {
+            const binary = atob(base64);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) {
+                bytes[i] = binary.charCodeAt(i);
+            }
+            const stream = new Response(bytes).body.pipeThrough(new DecompressionStream('deflate'));
+            return await new Response(stream).text();
+        }
+
+        // 💡 存檔極限縮短優化：重構存檔導出，結構脫水 + 高密度壓縮
+        async function exportSaveToken() {
+            if (chatHistory.length === 0) { alert("目前沒有進度代碼可供複製。"); return; }
+            try {
+                let exportData = {
+                    playerCard: null, // 只存核心角色配置提示詞
+                    history: [],      // 只存玩家抉擇歷史線，拋棄所有舊 AI 文字
+                    lastModel: null   // 只存最後一次回覆用來還原 UI
+                };
+
+                // 1. 抓取最初提交的角色卡
+                const cardNode = chatHistory.find(h => h.role === "user" && h.text.includes("【玩家角色卡提交"));
+                if (cardNode) exportData.playerCard = cardNode.text;
+
+                // 2. 篩選所有玩家抉擇歷史，排除系统提示詞與最初的角色卡
+                exportData.history = chatHistory
+                    .filter(h => h.role === "user" && !h.text.includes("【核心系統指令") && !h.text.includes("【玩家角色卡提交"))
+                    .map(h => h.text);
+
+                // 3. 保留最後一次 AI 回覆
+                const lastModelResponse = [...chatHistory].reverse().find(h => h.role === "model");
+                if (lastModelResponse) exportData.lastModel = lastModelResponse.text;
+
+                // 4. JSON 字串二進位化壓縮
+                const jsonStr = JSON.stringify(exportData);
+                const token = await compressText(jsonStr);
                 
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(token).then(() => {
-                        alert("📋 移轉存檔代碼已成功複製至剪貼簿！已完成深度無損壓縮。");
+                        alert("📋 存檔代碼已成功複製！");
                     }).catch(() => {
                         fallbackCopyText(token);
                     });
