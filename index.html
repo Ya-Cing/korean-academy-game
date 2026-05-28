@@ -383,7 +383,7 @@
             background-color: var(--accent-gold-hover);
         }
 
-        /* 【功能修正】解密主控台：將目標代碼欄（decrypt-id-input）的格式完整複製給猜測欄（decrypt-guess-input），外觀完全同步 */
+        /* 解密主控台 */
         .decryption-input-wrapper input {
             border: 1px solid rgba(239, 68, 68, 0.2);
             text-align: center;
@@ -433,7 +433,6 @@
             letter-spacing: 1px;
         }
 
-        /* 半透明彈窗右上角關閉鈕，游標觸碰時產生藍色霓虹光芒 */
         .modal-close-btn {
             position: absolute;
             top: 15px;
@@ -456,7 +455,6 @@
             text-shadow: 0 0 8px #00d2ff, 0 0 15px #00d2ff, 0 0 25px #00d2ff;
         }
 
-        /* 金色 dashed 虛線底線效果類別 */
         .shrunk-dashed-title {
             font-size: 0.85rem !important;
             border-bottom: 1px dashed var(--accent-gold);
@@ -495,7 +493,6 @@
             gap: 12px;
         }
 
-        /* 深色系選單與輸入框：融合面板，不突兀 */
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             background-color: var(--bg-deep);
@@ -507,7 +504,6 @@
             transition: border-color 0.25s;
         }
 
-        /* 融合面板的深邃進度條輸入框，絕不突兀 */
         .modal-content #import-token-input {
             background-color: var(--bg-deep) !important;
             border: 1px dashed rgba(212, 175, 55, 0.3) !important;
@@ -531,7 +527,6 @@
             resize: none;
         }
 
-        /* 統一放大按鈕樣式規格 */
         .modal-btn {
             width: 100%;
             background-color: var(--accent-gold);
@@ -574,75 +569,22 @@
         }
 
         @media (max-width: 768px) {
-            body {
-                overflow: hidden; 
-            }
-            .mobile-tabs {
-                display: flex;
-            }
-            header {
-                height: 50px;
-                padding: 10px 16px;
-            }
-            header h1 {
-                font-size: 1rem;
-                letter-spacing: 1px;
-            }
-            .header-actions {
-                display: flex;
-                flex-wrap: nowrap;
-                white-space: nowrap;
-                gap: 6px;
-            }
-            .header-actions button {
-                padding: 4px 8px;
-                font-size: 0.75rem;
-            }
-            .game-container {
-                flex-direction: column;
-                height: calc(100vh - 110px); 
-            }
-            .sidebar {
-                width: 100%;
-                height: 100%;
-                padding: 16px;
-                display: none; 
-            }
-            .main-content {
-                width: 100%;
-                height: 100%;
-                display: flex; 
-            }
-            .story-stream {
-                padding: 14px;
-            }
-            .control-panel {
-                padding: 12px;
-                max-height: 60%; 
-                overflow-y: auto;
-            }
-            .custom-input-wrapper, .decryption-input-wrapper {
-                flex-direction: column;
-                gap: 8px;
-            }
-            .custom-input-wrapper input, .decryption-input-wrapper input {
-                width: 100% !important;
-                flex: none;
-            }
-            .custom-input-wrapper button, .decryption-input-wrapper button {
-                width: 100% !important;
-                padding: 10px 0;
-                height: 42px;
-                flex: none;
-            }
-            #decrypt-id-input, #decrypt-guess-input {
-                width: 100% !important;
-                text-align: center;
-            }
-            .option-btn {
-                padding: 14px 18px;
-                font-size: 0.95rem;
-            }
+            body { overflow: hidden; }
+            .mobile-tabs { display: flex; }
+            header { height: 50px; padding: 10px 16px; }
+            header h1 { font-size: 1rem; letter-spacing: 1px; }
+            .header-actions { display: flex; flex-wrap: nowrap; white-space: nowrap; gap: 6px; }
+            .header-actions button { padding: 4px 8px; font-size: 0.75rem; }
+            .game-container { flex-direction: column; height: calc(100vh - 110px); }
+            .sidebar { width: 100%; height: 100%; padding: 16px; display: none; }
+            .main-content { width: 100%; height: 100%; display: flex; }
+            .story-stream { padding: 14px; }
+            .control-panel { padding: 12px; max-height: 60%; overflow-y: auto; }
+            .custom-input-wrapper, .decryption-input-wrapper { flex-direction: column; gap: 8px; }
+            .custom-input-wrapper input, .decryption-input-wrapper input { width: 100% !important; flex: none; }
+            .custom-input-wrapper button, .decryption-input-wrapper button { width: 100% !important; padding: 10px 0; height: 42px; flex: none; }
+            #decrypt-id-input, #decrypt-guess-input { width: 100% !important; text-align: center; }
+            .option-btn { padding: 14px 18px; font-size: 0.95rem; }
 
             body.show-profile .sidebar { display: block; }
             body.show-profile #forum-section { display: none; }
@@ -916,7 +858,7 @@
 ### 📱 HeraLink 匿名論壇動態
 * 社交名聲標籤： \`神秘局外人\`
 * 本週論壇熱搜： #___________#___________ 
-* 輿論威脅指數： \`30%\`
+* 輿脅指數： \`30%\`
 * 🕵️ 當前解密追蹤紀錄： 1. \`[ 未發起代碼解密行動 ]\`
 
 ### 🤝 核心 NPC 關係權力圖
@@ -944,7 +886,6 @@
 > 「 歡迎來到權力中心：赫拉學院。在這裡，守好妳/你的匿名代碼。後果自負。 」
 `;
 
-        // 【功能修正】高密度與去數據化再強化：A, B, C 三個分歧長度必須嚴格超過 200 字，但前台絕對禁吐任何字數統計標記
         const SYSTEM_INSTRUCTION = `
 《赫拉學院》沉浸式文字遊戲模板 Ver.2.5 (完整詳細版)
 學校名稱固定為「赫拉學院」。
@@ -979,9 +920,9 @@
 🤖 AI 敘事與操作規則：
 1. 每次回覆劇情「必須嚴格高於 1000 字」，具備極強的電影畫面場景感與微表情刻畫。
 2. 親密感與信任度必須通過利益交換緩慢累積。
-3. 【⚠️ 命運抉擇與去字數統計規範】：每段劇情結尾提供的 【A】、【B】、【C】 三個分歧選項，其選項內的文字敘述長度「每一項都必須嚴格超過 200 字」高密度推演。AI「絕對禁止」輸出任何關於【D】選項的文字內容，因為【D】選項由玩家在前端組件中自行輸入。請確保 A、B、C 格式清晰以便前端渲染成完整的按鈕。在渲染選項與文本時，絕對不要、禁止顯示任何字數統計、字數標註或「(共 X 字)」等提示性贅字，只需自然、優雅地呈現情節與選項本身。
+3. 【⚠️ 命運抉擇與去字數統計規範】：每段劇情結尾提供的 【A】、【B】、【C】 三個分歧選項，其選項內的文字敘述長度「每一項都必須嚴格超過 200 字」高密度推演。AI「絕對禁止」輸出 any 關於【D】選項的文字內容，因為【D】選項由玩家在前端組件中自行輸入。請確保 A、B、C 格式清晰以便前端渲染成完整的按鈕。在渲染選項與文本時，絕對不要、禁止顯示 any 字數統計、字數標註或「(共 X 字)」等提示性贅字，只需自然、優雅地呈現情節與選項本身。
 
-📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵循以下順序輸出，包含側欄所需的全量細項看板，並使用分隔線 --- 進行物理隔離，絕對不准省略任何一個次級標題欄位：
+📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵循以下順序輸出，包含側欄所需的全量細項看板，並使用分隔線 --- 進行物理隔離，絕對不准省略 any 一個次級標題欄位：
 [ 📋 學生即時動態檔案 ]
 # 🏛️ 貴族學院 • 學生即時動態檔案
 ### 👤 基本檔案
@@ -1008,7 +949,7 @@
 [ 🎯 分歧選項 ]
 `;
 
-let chatHistory = [];
+        let chatHistory = [];
         let isWaitingForAI = false;
 
         function switchMobileTab(tabId) {
@@ -1095,31 +1036,32 @@ let chatHistory = [];
             return new TextDecoder().decode(decompressedBuffer);
         }
 
+        // 💡 修改重點 1：將導出結構字詞（Keys）全面縮寫為單字元（c, h, l），最大化縮短代碼長度
         async function exportSaveToken() {
             if (chatHistory.length === 0) { alert("目前沒有進度代碼可供複製。"); return; }
             try {
                 let exportData = {
-                    playerCard: null,
-                    history: [],
-                    lastModel: null
+                    c: null, // characterCard (玩家初始角色設定卡)
+                    h: [],   // history (僅保留玩家的歷史分歧決策文字，丟棄所有重複的故事板)
+                    l: null  // lastModel (完整保留當前最新的一發回覆，用來還原左右面板 UI)
                 };
 
                 const cardNode = chatHistory.find(h => h.role === "user" && h.text.includes("【玩家角色卡提交"));
-                if (cardNode) exportData.playerCard = cardNode.text;
+                if (cardNode) exportData.c = cardNode.text;
 
-                exportData.history = chatHistory
+                exportData.h = chatHistory
                     .filter(h => h.role === "user" && !h.text.includes("【核心系統指令") && !h.text.includes("【玩家角色卡提交"))
                     .map(h => h.text);
 
                 const lastModelResponse = [...chatHistory].reverse().find(h => h.role === "model");
-                if (lastModelResponse) exportData.lastModel = lastModelResponse.text;
+                if (lastModelResponse) exportData.l = lastModelResponse.text;
 
                 const jsonStr = JSON.stringify(exportData);
                 const token = await compressText(jsonStr);
                 
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(token).then(() => {
-                        alert("📋 存檔代碼已成功複製！");
+                        alert("📋 存檔代碼已成功複製至剪貼簿！已啟用【極限結構脫水 + 核心數據壓縮】。");
                     }).catch(() => {
                         fallbackCopyText(token);
                     });
@@ -1227,16 +1169,44 @@ let chatHistory = [];
             startStoryGame();
         }
 
-        function triggerImportSaveStart() {
+        // 💡 修改重點 2：徹底重構讀檔模組。改為非同步 async 函數，先呼叫 decompressText 解壓縮，再提取 c, h, l 欄位。
+        // 同時動態重組符合大模型 API 嚴格要求的「正反交替歷史記憶對話鏈」（user -> model -> user -> model），完全修復回復故事線失敗的問題。
+        async function triggerImportSaveStart() {
             const rawToken = document.getElementById('import-token-input').value.trim();
             if (!rawToken) { alert("請先填入有效的轉移存檔代碼！"); return; }
             try {
-                const parsedHistory = JSON.parse(decodeURIComponent(escape(atob(rawToken))));
-                if (Array.isArray(parsedHistory) && parsedHistory.length > 0) {
-                    restoreGameState(parsedHistory);
-                    alert("🟢 手動轉移存檔導入還原成功！");
-                } else { throw new Error(); }
-            } catch (e) { alert("🚨 進度代碼解析失敗。"); }
+                // 1. 使用 Deflate 串流執行二進位解壓縮
+                const jsonStr = await decompressText(rawToken);
+                const exportData = JSON.parse(jsonStr);
+                
+                if (!exportData || !exportData.c || !exportData.l) {
+                    throw new Error("數據壓縮包結構不完整或損壞。");
+                }
+
+                // 2. 注入目前 HTML 最新版本的全局系統指令（做到零字串浪費），重置基本記憶底層
+                let rebuiltHistory = [
+                    { role: "user", text: `【核心系統指令與世界觀載入】\n${SYSTEM_INSTRUCTION}\n\n請理解上述所有規則，並準備好扮演遊戲主持人。` },
+                    { role: "model", text: "【系統提示】赫拉學院 Ver.2.5 核心系統已成功載入後台。" },
+                    { role: "user", text: exportData.c }
+                ];
+
+                // 3. 提取 h 抉擇陣列。使用輕量占位符建立交替歷史，既能讓 AI 讀懂歷史軌跡，又不會弄混 API 規定的 user/model 輪流規則
+                if (exportData.h && exportData.h.length > 0) {
+                    for (let i = 0; i < exportData.h.length; i++) {
+                        rebuiltHistory.push({ role: "model", text: `[系統已接軌同步歷史抉擇進度軌跡 #${i+1}]` });
+                        rebuiltHistory.push({ role: "user", text: exportData.h[i] });
+                    }
+                }
+
+                // 4. 最後壓入完整保留的最後一發 AI 數據（欄位 l），用來完美驅動 parseAndPopulateUI 渲染左右兩側的資訊欄、論壇與當前選項按鈕
+                rebuiltHistory.push({ role: "model", text: exportData.l });
+
+                // 5. 還原遊戲狀態並關閉審查窗口
+                restoreGameState(rebuiltHistory);
+                alert("🟢 手動轉移存檔導入還原成功！故事線與權力面板已完全回復。");
+            } catch (e) {
+                alert("🚨 進度代碼解析還原失敗，請確保代碼複製完整。錯誤細節: " + e.message);
+            }
         }
 
         // 清除重新開始觸發點
@@ -1298,7 +1268,7 @@ let chatHistory = [];
 ### 📱 HeraLink 匿名論壇動態
 * 社交名聲標籤 : \`神秘局外人 (基於 ${status})\`
 * 本週論壇熱搜： #新學期繼承者名冊 #赫拉學院特招生
-* 輿論威脅指數： \`30%\`
+* 輿脅指數： \`30%\`
 * 🕵️ 當前解密追蹤紀錄： 1. \`[ 未發起代碼解密行動 ]\`
 
 ### 🤝 核心 NPC 關係權力圖
@@ -1463,12 +1433,9 @@ let chatHistory = [];
             }
         }
 
-// 💡 修改重點 2：重構選項按鈕解析函數。使用全域修飾符與跨行匹配 ([\s\S]*?)，確保 A, B, C 超過 200 字且內含分段時，依然維持完整按鈕樣式。
         function parseOptionsToButtons(optionsText) {
             const container = document.getElementById('options-container');
             container.innerHTML = "";
-            
-            // 使用正則捕獲區塊：從 【A】 或 A. 開始，直到下一個標籤或文本結束。這能完美包裹200字以上的長文本
             const regex = /(【A】|【B】|【C】|A\.|B\.|C\.)([\s\S]*?)(?=(【A】|【B】|【C】|【D】|A\.|B\.|C\.|D\.|$))/g;
             let match;
             let btnCount = 0;
@@ -1476,22 +1443,19 @@ let chatHistory = [];
             while ((match = regex.exec(optionsText)) !== null) {
                 btnCount++;
                 const label = match[1].trim();
-                const text = match[2].replace(/\*\*/g, '').trim(); // 清理多餘的 Markdown 加粗標記
+                const text = match[2].replace(/\*\*/g, '').trim(); 
                 
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
-                // 為了閱讀體驗，長文本內部保留 line-height。
                 btn.innerHTML = `<strong>${label}</strong> ${text}`;
                 btn.onclick = () => selectChoice(label, text);
                 container.appendChild(btn);
             }
             
-            // 萬一 AI 格式吐錯的保底渲染
             if (btnCount === 0) {
                 container.innerHTML = marked.parse(optionsText);
             }
 
-            // 固定在最下方添加只有玩家能自行輸入的 【D】 選項組件
             const dBlock = document.createElement('div');
             dBlock.className = 'custom-input-wrapper';
             dBlock.innerHTML = `
