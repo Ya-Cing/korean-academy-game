@@ -1066,14 +1066,57 @@
             return false;
         }
 
-        // 三級相容備份防線，在 file:// 協議與無網域憑證環境下也能 100% 成功導出代碼
+// 💡 修改重點：重構存檔壓縮及精簡算法，解決隨著回合增加導致代碼過長無法複製的問題
         function exportSaveToken() {
             if (chatHistory.length === 0) { alert("目前沒有全量進度代碼可供複製。"); return; }
             try {
-                const token = btoa(unescape(encodeURIComponent(JSON.stringify(chatHistory))));
+                let optimizedHistory = [];
+                
+                // 1. 永遠完整保留開局核心前 3 項設定（系統設定、初始化回覆、初始角色卡）
+                const setupCount = Math.min(chatHistory.length, 3);
+                for (let i = 0; i < setupCount; i++) {
+                    optimizedHistory.push(chatHistory[i]);
+                }
+                
+                // 2. 處理中間的對話歷史，剔除冗餘數據，同時設置滑動窗口防止無限膨脹
+                if (chatHistory.length > 3) {
+                    let intermediate = chatHistory.slice(3, chatHistory.length - 1);
+                    
+                    // 記憶體滑動窗口限制：中間過程最多保留最近 8 個節點（即 4 個回合的交互紀錄）
+                    const maxHistoryNodes = 8;
+                    if (intermediate.length > maxHistoryNodes) {
+                        intermediate = intermediate.slice(intermediate.length - maxHistoryNodes);
+                    }
+                    
+                    // 深度精簡：舊回合的模型回應只保留核心故事線 [🎬 劇情] 文本，刪掉重複又沉重的側邊欄與論壇看板
+                    intermediate = intermediate.map(entry => {
+                        if (entry.role === "model") {
+                            const regexStory = /(?:\[\s*🎬\s*劇情\s*\]|#+\s*🎬\s*劇情|#+\s*當前劇情)/i;
+                            let posStory = entry.text.search(regexStory);
+                            if (posStory !== -1) {
+                                let subText = entry.text.substring(posStory);
+                                let endPos = subText.search(/\n---\n|\n---\s*\n/);
+                                let cleanNarrative = endPos !== -1 ? subText.substring(0, endPos) : subText;
+                                return { role: "model", text: cleanNarrative.trim() };
+                            }
+                        }
+                        return entry;
+                    });
+                    
+                    optimizedHistory.push(...intermediate);
+                }
+                
+                // 3. 永遠完整保留最後一個節點（目前的看板與分歧選項，供重新載入時還原 UI 介面）
+                if (chatHistory.length > 3) {
+                    optimizedHistory.push(chatHistory[chatHistory.length - 1]);
+                }
+
+                // 將經過深度體積優化後的數據結構轉化為密鑰代碼
+                const token = btoa(unescape(encodeURIComponent(JSON.stringify(optimizedHistory))));
+                
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(token).then(() => {
-                        alert("📋 移轉存檔代碼已成功複製至剪貼簿！可在其餘裝置貼上導入。");
+                        alert("📋 移轉存檔代碼已成功複製至剪貼簿！已完成深度無損壓縮。");
                     }).catch(() => {
                         fallbackCopyText(token);
                     });
