@@ -1040,8 +1040,8 @@
 
         // 💡 修改重點二：加入高相容性、高質感的韓國頂級豪門 NPC 亂數姓名生成模組
         function generateRandomNPCName() {
-            const surnames = ['車', '李', '崔', '韓', '姜', '鄭', '趙', '具', '柳', '沈', '辛', '權', '殷', '閔'];
-            const names = ['律謹', '在賢', '智荷', '成勳', '宥利', '明宇', '泰延', '瑞俊', '恩彩', '智厚', '敏赫', '炫宇', '世延', '道真', '俊熙', '敘俊', '素希'];
+            const surnames = ['車', '李', '崔', '韓', '姜', '鄭', '趙', '具', '柳', '沈', '辛', '權', '殷', '閔', '金', '朴', '趙', '尹'];
+            const names = ['律謹', '在賢', '智荷', '成勳', '宥利', '明宇', '泰延', '瑞俊', '恩彩', '智厚', '敏赫', '炫宇', '世延', '道真', '俊熙', '敘俊', '素希', '知恩', '睿安', '道允', '時宇', '采源', '智雅', '尹書', '荷莉'];
             return surnames[Math.floor(Math.random() * surnames.length)] + names[Math.floor(Math.random() * names.length)];
         }
 
@@ -1070,7 +1070,7 @@
                 
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(token).then(() => {
-                        alert("📋 存檔代碼已成功完成【脫水結構壓縮】並複製至剪貼簿！可跨裝置匯入還原。");
+                        alert("📋 存檔代碼已成功複製至剪貼簿！可跨裝置匯入還原。");
                     }).catch(() => {
                         fallbackCopyText(token);
                     });
@@ -1233,7 +1233,7 @@
                 chatHistory = [];
                 document.getElementById('story-stream').innerHTML = `
                     <div class="story-block">
-                        <p><strong>// 系統提示 //</strong> 歡迎來到大韓民國前 0.01% 的最高權力育成所：赫拉學院。在這裡，分數只是裝飾，背後的家世才是你唯一的准考證......</p>
+                        <p><strong>【系統提示】</strong> 歷史數據已重置，學院大門已就緒。</p>
                     </div>`;
                 document.getElementById('options-container').innerHTML = '';
                 document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
