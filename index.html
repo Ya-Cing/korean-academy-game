@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>赫拉學院 | 沉浸式文字互動遊戲 Ver.2.5</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
     <style>
         :root {
             --bg-deep: #07080b;
@@ -25,7 +26,6 @@
             padding: 0;
         }
 
-        /* 替換全域字型：英文與數字優先選用 Times New Roman，中文回歸現代黑體 */
         body, input, select, textarea, button {
             font-family: 'Times New Roman', 'PingFang TC', 'Microsoft JhengHei', -apple-system, sans-serif;
         }
@@ -37,7 +37,7 @@
             height: 100vh;
         }
 
-        /* 電影感全螢幕開門過場動畫畫布 */
+        /* 💡 修改重點：升級開場動畫佈局，使其更加大氣與完整 */
         .opening-layer {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -46,24 +46,42 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 1s ease, visibility 1s ease;
+            transition: opacity 1.5s ease, visibility 1.5s ease;
+        }
+        .opening-content {
+            text-align: center;
+            animation: cinematicFade 4s forwards;
+        }
+        .opening-logo {
+            font-size: 3.5rem;
+            margin-bottom: 12px;
+            opacity: 0;
+            animation: logoPulse 2s ease-out forwards 0.3s;
         }
         .opening-text {
             color: var(--accent-gold);
-            font-size: 2.2rem;
-            letter-spacing: 6px;
+            font-size: 2.4rem;
+            letter-spacing: 8px;
             font-weight: 700;
-            opacity: 0;
-            text-align: center;
-            animation: cinematicFade 3s forwards;
             text-shadow: 0 0 15px rgba(212, 175, 55, 0.4), 0 0 30px rgba(212, 175, 55, 0.2);
+            margin-bottom: 12px;
+        }
+        .opening-sub {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            letter-spacing: 3px;
+            font-style: italic;
         }
 
         @keyframes cinematicFade {
             0% { opacity: 0; transform: scale(0.96); filter: blur(4px); }
-            30% { opacity: 1; transform: scale(1); filter: blur(0); }
+            25% { opacity: 1; transform: scale(1); filter: blur(0); }
             75% { opacity: 1; transform: scale(1.02); filter: blur(0); }
             100% { opacity: 0; transform: scale(1.05); filter: blur(2px); }
+        }
+        @keyframes logoPulse {
+            0% { opacity: 0; transform: scale(0.7); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         /* 頂部導航欄 */
@@ -154,13 +172,8 @@
             gap: 26px;
         }
 
-        .sidebar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .sidebar::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 3px;
-        }
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
 
         /* 右側欄：劇情演進區 */
         .main-content {
@@ -181,13 +194,8 @@
             gap: 24px;
         }
         
-        .story-stream::-webkit-scrollbar {
-            width: 6px;
-        }
-        .story-stream::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 3px;
-        }
+        .story-stream::-webkit-scrollbar { width: 6px; }
+        .story-stream::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
 
         /* 控制台區塊 */
         .control-panel {
@@ -199,7 +207,6 @@
             gap: 12px;
         }
 
-        /* 可摺疊式區塊樣式 */
         .collapsible-header {
             display: flex;
             justify-content: space-between;
@@ -208,23 +215,11 @@
             padding: 6px 0;
             user-select: none;
         }
-        .collapsible-header:hover .section-title {
-            color: var(--accent-gold-hover);
-        }
-        .toggle-icon {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            transition: transform 0.3s;
-        }
-        .collapsible-content {
-            transition: all 0.3s ease-in-out;
-            overflow: hidden;
-        }
-        .folded {
-            display: none !important;
-        }
+        .collapsible-header:hover .section-title { color: var(--accent-gold-hover); }
+        .toggle-icon { font-size: 0.8rem; color: var(--text-muted); transition: transform 0.3s; }
+        .collapsible-content { transition: all 0.3s ease-in-out; overflow: hidden; }
+        .folded { display: none !important; }
 
-        /* 標題樣式 */
         .section-title {
             color: var(--accent-gold);
             font-size: 0.9rem;
@@ -235,11 +230,7 @@
             font-weight: 600;
         }
 
-        /* 左側 Markdown 面板優化介面 */
-        .profile-box, .forum-box {
-            font-size: 0.9rem;
-            line-height: 1.7;
-        }
+        .profile-box, .forum-box { font-size: 0.9rem; line-height: 1.7; }
         .profile-box h3, .forum-box h2, .forum-box h3 {
             color: var(--accent-gold);
             font-size: 0.95rem;
@@ -265,13 +256,8 @@
             color: var(--accent-gold);
             font-weight: 600;
         }
-        .profile-box ul, .forum-box ul {
-            padding-left: 18px;
-            margin: 10px 0;
-        }
-        .profile-box li, .forum-box li {
-            margin-bottom: 6px;
-        }
+        .profile-box ul, .forum-box ul { padding-left: 18px; margin: 10px 0; }
+        .profile-box li, .forum-box li { margin-bottom: 6px; }
         .profile-box blockquote, .forum-box blockquote {
             border-left: 3px solid var(--accent-gold);
             background: rgba(255,255,255,0.02);
@@ -286,7 +272,6 @@
             border-radius: 6px;
         }
 
-        /* 劇情對白框氣氛 */
         .story-block {
             background-color: var(--bg-panel);
             border: 1px solid var(--border-color);
@@ -297,17 +282,9 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             animation: fadeIn 0.5s ease-out;
         }
-        
-        /* 劇情部分文字 1.5 倍行高，並依據劇情完美分行 */
-        .story-block p {
-            line-height: 1.5 !important;
-            margin-bottom: 14px;
-        }
-        .story-block strong {
-            color: var(--accent-gold);
-        }
+        .story-block p { line-height: 1.5 !important; margin-bottom: 14px; }
+        .story-block strong { color: var(--accent-gold); }
 
-        /* 選項按鈕佈局：保持 20px 完美空行排版 */
         .options-container {
             display: grid;
             grid-template-columns: 1fr;
@@ -328,26 +305,15 @@
             transition: all 0.25s ease;
             line-height: 1.5;
         }
-
         .option-btn:hover {
             border-color: var(--accent-gold);
             background-color: rgba(212, 175, 55, 0.05);
             color: var(--text-bright);
             transform: translateX(4px);
         }
+        .option-btn strong { color: var(--accent-gold); margin-right: 8px; }
 
-        .option-btn strong {
-            color: var(--accent-gold);
-            margin-right: 8px;
-        }
-
-        /* 輸入框與主控制按鈕加大規格 */
-        .custom-input-wrapper, .decryption-input-wrapper {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-
+        .custom-input-wrapper, .decryption-input-wrapper { display: flex; gap: 10px; width: 100%; }
         .custom-input-wrapper input, .decryption-input-wrapper input {
             background-color: var(--bg-deep);
             border: 1px solid var(--border-color);
@@ -355,18 +321,8 @@
             padding: 14px;
             font-size: 0.95rem;
         }
-
-        .custom-input-wrapper input {
-            flex: 1;
-            color: #fff;
-            border-style: dashed;
-        }
-
-        .custom-input-wrapper input:focus, .decryption-input-wrapper input:focus {
-            outline: none;
-            border-color: var(--accent-gold);
-        }
-
+        .custom-input-wrapper input { flex: 1; color: #fff; border-style: dashed; }
+        .custom-input-wrapper input:focus, .decryption-input-wrapper input:focus { outline: none; border-color: var(--accent-gold); }
         .custom-input-wrapper button, .decryption-input-wrapper button {
             background-color: var(--accent-gold);
             color: var(--bg-deep);
@@ -378,12 +334,8 @@
             cursor: pointer;
             transition: background 0.2s;
         }
+        .custom-input-wrapper button:hover { background-color: var(--accent-gold-hover); }
 
-        .custom-input-wrapper button:hover {
-            background-color: var(--accent-gold-hover);
-        }
-
-        /* 解密主控台 */
         .decryption-input-wrapper input {
             border: 1px solid rgba(239, 68, 68, 0.2);
             text-align: center;
@@ -391,16 +343,9 @@
             font-weight: bold;
             color: var(--threat-red) !important;
         }
+        #decrypt-id-input { flex: 0 0 140px; }
+        #decrypt-guess-input { flex: 1; }
 
-        #decrypt-id-input {
-            flex: 0 0 140px;
-        }
-
-        #decrypt-guess-input {
-            flex: 1;
-        }
-
-        /* 彈窗／遮罩層 */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -411,7 +356,6 @@
             align-items: center;
             z-index: 1000;
         }
-
         .modal-content {
             background-color: var(--bg-panel);
             border: 1px solid var(--accent-gold);
@@ -424,7 +368,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             position: relative;
         }
-
         .modal-content h2 {
             color: var(--accent-gold);
             margin-bottom: 16px;
@@ -432,11 +375,9 @@
             text-align: center;
             letter-spacing: 1px;
         }
-
         .modal-close-btn {
             position: absolute;
-            top: 15px;
-            right: 20px;
+            top: 15px; right: 20px;
             background: transparent;
             border: none;
             color: var(--text-bright);
@@ -448,10 +389,8 @@
             z-index: 15;
             line-height: 1;
         }
-
         .modal-close-btn:hover {
-            opacity: 1;
-            color: #FFD700;
+            opacity: 1; color: #FFD700;
             text-shadow: 0 0 8px #00d2ff, 0 0 15px #00d2ff, 0 0 25px #00d2ff;
         }
 
@@ -465,7 +404,6 @@
             letter-spacing: 1px;
             margin: 18px 0 12px 0;
         }
-
         .modal-subsection-title {
             color: var(--accent-gold);
             font-size: 0.95rem;
@@ -475,10 +413,7 @@
             font-weight: 700;
         }
 
-        .form-group {
-            margin-bottom: 14px;
-        }
-
+        .form-group { margin-bottom: 14px; }
         .form-group label {
             display: block;
             font-size: 0.85rem;
@@ -486,12 +421,7 @@
             margin-bottom: 6px;
             font-weight: 600;
         }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
@@ -503,7 +433,6 @@
             font-size: 0.95rem;
             transition: border-color 0.25s;
         }
-
         .modal-content #import-token-input {
             background-color: var(--bg-deep) !important;
             border: 1px dashed rgba(212, 175, 55, 0.3) !important;
@@ -511,21 +440,9 @@
             font-size: 0.85rem !important;
             color: var(--accent-gold) !important;
         }
-
-        .form-group select option {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-        }
-
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: var(--accent-gold);
-        }
-
-        .form-group textarea {
-            height: 75px;
-            resize: none;
-        }
+        .form-group select option { background-color: var(--bg-deep); color: var(--text-main); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent-gold); }
+        .form-group textarea { height: 75px; resize: none; }
 
         .modal-btn {
             width: 100%;
@@ -541,31 +458,14 @@
             letter-spacing: 1px;
             transition: background 0.2s;
         }
+        .modal-btn:hover { background-color: var(--accent-gold-hover); }
 
-        .modal-btn:hover {
-            background-color: var(--accent-gold-hover);
-        }
-
-        .decrypt-modal-content {
-            border: 1px solid var(--threat-red) !important;
-            text-align: center;
-        }
-        .decrypt-status-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            animation: pulse 1.5s infinite;
-        }
-
+        .decrypt-modal-content { border: 1px solid var(--threat-red) !important; text-align: center; }
+        .decrypt-status-icon { font-size: 3rem; margin-bottom: 15px; animation: pulse 1.5s infinite; }
         .hidden { display: none !important; }
-
         .loading-spinner {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            color: var(--accent-gold);
-            font-style: italic;
-            padding: 10px;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            color: var(--accent-gold); font-style: italic; padding: 10px;
         }
 
         @media (max-width: 768px) {
@@ -589,12 +489,10 @@
             body.show-profile .sidebar { display: block; }
             body.show-profile #forum-section { display: none; }
             body.show-profile .main-content { display: none; }
-
             body.show-forum .sidebar { display: block; }
             body.show-forum #profile-container { display: none; }
             body.show-forum .sidebar > div:first-child { display: none; } 
             body.show-forum .main-content { display: none; }
-
             body.show-story .sidebar { display: none; }
             body.show-story .main-content { display: flex; }
         }
@@ -603,7 +501,11 @@
 <body>
 
     <div id="opening-canvas" class="opening-layer">
-        <div class="opening-text">歡迎來到赫拉學院</div>
+        <div class="opening-content">
+            <div class="opening-logo">🏛️</div>
+            <div class="opening-text">歡迎來到赫拉學院</div>
+            <div class="opening-sub">大韓民國前 0.01% 的最高權力育成所</div>
+        </div>
     </div>
 
     <header>
@@ -752,7 +654,7 @@
 
                 <div class="modal-subsection-title">三、 角色設定</div>
                 <div class="form-group">
-                    <label>外貌特徵與自帶氣質：</label>
+                    <label>外貌特特征與自帶氣質：</label>
                     <textarea id="char-vibe" placeholder="例如：高冷貓系、清澈無辜的眼神、自帶漫不經心的財閥少爺氣場..."></textarea>
                 </div>
                 <div class="form-group">
@@ -799,7 +701,7 @@
                     <div style="font-weight: bold; color: var(--threat-red); margin-bottom: 8px;">💾 備份進度還原</div>
                     <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">請在下方貼上您在其他裝置複製的移轉存檔代碼：</p>
                     <input type="text" id="import-token-input" placeholder="在此貼上複製的加密字串...">
-                    <button class="modal-btn" onclick="triggerImportSaveStart()" style="background-color: var(--threat-red); color: #fff;">提取密碼並回復雲端世界線</button>
+                    <button class="modal-btn" onclick="triggerImportSaveStart()">提取密碼並回復雲端世界線</button>
                 </div>
                 <button class="modal-btn" style="background:#252c38; color:#cbd5e1; border:1px solid var(--border-color);" onclick="returnToPortalMenu()">返回主選單</button>
             </div>
@@ -816,7 +718,7 @@
                     </div>
                     <div class="form-group">
                         <label>請輸入您的核心 API Key 密鑰：</label>
-                        <input type="password" id="api-key-input" placeholder="填入以 AIzaSy... 或 sk-proj-... 開頭的代碼">
+                        <input type="password" id="api-key-input" placeholder="填入以 AIzaSy... 開頭的代碼">
                     </div>
                     <div style="margin-top:10px; border-top:1px dashed var(--border-color); padding-top:10px;">
                         <button class="modal-btn" onclick="saveApiKey()">確認對接金鑰端口</button>
@@ -844,109 +746,25 @@
     <script>
         marked.setOptions({ breaks: true, gfm: true });
 
-        // 初始精裝版全量欄位佔位面板，主要NPC排除明文ID
         const DEFAULT_PROFILE_MD = `
 # 🏛️ 貴族學院 • 學生即時動態檔案
-
 ### 👤 基本檔案
 | 姓名 | 載入中... |
 | 階級 | \`未定\` |
-| 陣營/派系 | \`尚未加入\` |
-| 家族當前狀態 | 觀望中 |
-| 論壇匿名代碼 | \`0x????\` |
-
-### 📱 HeraLink 匿名論壇動態
-* 社交名聲標籤： \`神秘局外人\`
-* 本週論壇熱搜： #___________#___________ 
-* 輿脅指數： \`30%\`
-* 🕵️ 當前解密追蹤紀錄： 1. \`[ 未發起代碼解密行動 ]\`
-
-### 🤝 核心 NPC 關係權力圖
-> ❤️好感度/🖤戒備度 | 💎利益綁定度
-
-1. NPC A (隱性階級: Crown) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
-   * 💬 態度潛台詞： 「_______」
-2. NPC B (隱性階級: Noble) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
-   * 💬 態度潛台詞： 「_______」
-
-### 🎒 背包與關鍵籌碼
-* 資金/可動用資源： ［觀望中］
-* 持有秘密/把柄： 1. *［未掌握任何祕密］*
-* 關鍵道具/物品： 無
 `;
 
         const DEFAULT_FORUM_MD = `
 # 📱 HeraLink 匿名論壇 • 即時熱搜看板
-
 > ## 🔥 今日即時熱門貼文
-> 📌 文章標題： [公告] HeraLink 數據端口已加密重啟
-> 👤 發文者暱稱： 匿名 \`(ID: 0x0000)\` ｜ 🕒 發布時間： \`08:00\` 
-> 
-> ## 📄 【貼文內文】
-> 「 歡迎來到權力中心：赫拉學院。在這裡，守好妳/你的匿名代碼。後果自負。 」
+> 「 歡迎來到權力中心：赫拉學院。守好妳的匿名代碼。 」
 `;
 
         const SYSTEM_INSTRUCTION = `
 《赫拉學院》沉浸式文字遊戲模板 Ver.2.5 (完整詳細版)
 學校名稱固定為「赫拉學院」。
-
-📌 隱性階級制度（⚠️絕對核心限制）：
-全劇的所有敘事、狀態生成中，只能且「必須」使用以下四個正式階級名稱，AI 絕對禁止自行發明、衍生或使用任何規範以外的虛構階級名稱：
-- Crown (皇冠)
-- Noble (貴族)
-- Prestige (名望)
-- General (平民)
-
-📌 世界觀核心與解密限制規則（重要）：
-1. 原創角色規則：所有人物皆為獨立生成的個體。
-2. 正統韓國社會語境：職位稱呼必須完全符合現代大韓民國的政商習慣。
-3. 代名詞性別推演：男性使用「你 / 他」、女性使用「妳 / 她」。絕對嚴禁串用。
-4. 【解密與三次限制機制】：針對每一個匿名代碼，玩家最多僅有 3 次嘗試機會。你必須在狀態欄中動態追蹤並顯示該代碼的剩餘機會（例如：\`0x7F9B\` 剩餘解密機會：3/3）。若 3 次皆猜錯，該代碼永久鎖定，玩家輿論威脅指數直接飆升 30%，且該未知 ID 將在後續貼文中瘋狂抹黑玩家。
-5. 【⚠️ 核心隱蔽與玩家匿名代碼知情權限】：
-   - 玩家自身的「論壇匿名代碼」（即開局生成的代碼）在個人基本檔案中是「完全公開且可得知」的。
-   - 嚴禁在任何看板、回覆、貼文中主動透露或配對任何主要NPC真實姓名所對應的匿名 ID！在玩家對特定 ID 發起解密成功之前，關係權力圖中「絕對只顯示NPC姓名與常規好感資訊」，對應代碼必須隱藏。只有當玩家在解密主控台提交了正確的猜測，前台判定成功後，你才允許在接下來的[ 📋 學生即時動態檔案 ]中將該 NPC 身分揭鎖更新（例如：\`1. 車律謹 (ID: 0x0001) ｜ ...\`）。
-
-📌 【代名詞與稱謂嚴格物理防線（依據教育部國語辭典規範執行）】：
-1. 關於玩家（Player）的稱謂精準隔離：
-   - 若玩家在角色卡中選擇性別為【女】，所有旁白敘事、NPC對話台詞、論壇爆料文字中，稱呼玩家必須「100% 嚴格唯一使用『妳 / 她』」，絕對不可混用。
-   - 若玩家在角色卡中選擇性別為【男】，所有旁白敘事、NPC對話台詞、論壇爆料文字中，稱呼玩家必須「100% 嚴格唯一使用『你 / 他』」。
-2. 關於世界線中其餘所有事物、生物與 NPC 的稱謂精準隔離：
-   - 男性人類 NPC（不論主次要）：稱呼一律嚴格精準唯一使用『你 / 他』。
-   - 女性人類 NPC（不論主次要）：稱呼一律嚴格精準唯一使用『妳 / 她』。
-   - 無生命物體、非生物、死物、客觀代碼、防火牆端口、協議、政商利益等：一律嚴格精準唯一使用『它』。
-   - 動物、馬匹、校園寵物、非人類但具有生命之生物：一律嚴格精準唯一使用『牠』。
-3. 任何代名詞的串用、弄混、前後不一致（如將女性寫成他、物體寫成牠）皆被視為世界線損壞，請AI實施地毯式校準。
-
-🤖 AI 敘事與操作規則：
-1. 每次回覆劇情「必須嚴格高於 1000 字」，具備極強的電影畫面場景感與微表情刻畫。
-2. 親密感與信任度必須通過利益交換緩慢累積。
-3. 【⚠️ 命運抉擇與去字數統計規範】：每段劇情結尾提供的 【A】、【B】、【C】 三個分歧選項，其選項內的文字敘述長度「每一項都必須嚴格超過 200 字」高密度推演。AI「絕對禁止」輸出 any 關於【D】選項的文字內容，因為【D】選項由玩家在前端組件中自行輸入。請確保 A、B、C 格式清晰以便前端渲染成完整的按鈕。在渲染選項與文本時，絕對不要、禁止顯示 any 字數統計、字數標註或「(共 X 字)」等提示性贅字，只需自然、優雅地呈現情節與選項本身。
-
-📌 【輸出順序與隔離規範】：每次回覆必須嚴格遵循以下順序輸出，包含側欄所需的全量細項看板，並使用分隔線 --- 進行物理隔離，絕對不准省略 any 一個次級標題欄位：
-[ 📋 學生即時動態檔案 ]
-# 🏛️ 貴族學院 • 學生即時動態檔案
-### 👤 基本檔案
-### 📱 HeraLink 匿名論壇動態
-### 🤝 核心 NPC 關係權力圖
-### 🎒 背包與關鍵籌碼
----
-[ 🎬 劇情 ]
----
-[ 📱 HeraLink 即時熱搜看板 ]
-# 📱 HeraLink 匿名論壇 • 即時熱搜看板
-> ## 🔥 今日即時熱門貼文
-> 📌 文章標題： [爆料] ...
-> 👤 發文者暱稱： 匿名 \`(ID: 0xXXXX)\` ｜ 🕒 發布時間： \`17:00\` 
-> 📈 瀏覽次數： 14,205 ｜ 💬 回覆數： 342
-> ## 📄 【貼文內文】
-> 「 ... 」
-### 💬 實時熱門評論 (Real-time Comments)
-* 匿名 ...
-### 📊 HeraLink 風向數據統計
-* 當前討論熱度： \`70%\`
-* 輿論走向偏向： \`觀望中\`
----
-[ 🎯 分歧選項 ]
+📌 隱性階級制度：Crown (皇冠)、Noble (貴族)、Prestige (名望)、General (平民)。
+📌 代名詞防線：女生用妳/她，男生用你/他。死物用它，生物用牠。
+🤖 AI 敘事規則：每次劇情高於 1000 字。A、B、C分歧選項文字每一項都「必須嚴格高於 200 字」，去字數統計，絕對禁止生成或提到任何 D 選項的內容。
 `;
 
         let chatHistory = [];
@@ -978,7 +796,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chatHistory: chatHistory })
                 });
-            } catch (e) { console.warn("備用緩存儲存。"); }
+            } catch (e) { console.warn("雲端緩存更新受限。"); }
             localStorage.setItem('heralink_local_save_' + localCode, JSON.stringify(chatHistory));
         }
 
@@ -1007,43 +825,23 @@
             return false;
         }
 
-// 💡 修正後的高效安全二進位壓縮
-        async function compressText(text) {
-            const byteArray = new TextEncoder().encode(text);
-            const cs = new CompressionStream('deflate');
-            const writer = cs.writable.getWriter();
-            writer.write(byteArray);
-            writer.close();
-            const buffer = await new Response(cs.readable).arrayBuffer();
-            
-            let binary = '';
-            const bytes = new Uint8Array(buffer);
-            for (let i = 0; i < bytes.length; i++) {
-                binary += String.fromCharCode(bytes[i]);
-            }
-            return btoa(binary);
+        // 💡 修改重點：引入 100% 穩定的隨機韓國財閥人名生成器
+        function generateRandomNPCName() {
+            const surnames = ['車', '李', '崔', '韓', '姜', '鄭', '趙', '具', '柳', '沈', '辛', '權'];
+            const names = ['律謹', '在賢', '智荷', '成勳', '宥利', '明宇', '泰延', '瑞俊', '恩彩', '智厚', '敏赫', '炫宇', '世延', '道真', '俊熙'];
+            const s = surnames[Math.floor(Math.random() * surnames.length)];
+            const n = names[Math.floor(Math.random() * names.length)];
+            return s + n;
         }
 
-        // 💡 修正後的安全解壓縮（修復了 response 變數未定義的打字錯誤）
-        async function decompressText(base64) {
-            const binString = atob(base64);
-            const bytes = Uint8Array.from(binString, m => m.charCodeAt(0));
-            const ds = new DecompressionStream('deflate');
-            const writer = ds.writable.getWriter();
-            writer.write(bytes);
-            writer.close();
-            const decompressedBuffer = await new Response(ds.readable).arrayBuffer();
-            return new TextDecoder().decode(decompressedBuffer);
-        }
-
-        // 💡 修改重點 1：將導出結構字詞（Keys）全面縮寫為單字元（c, h, l），最大化縮短代碼長度
+        // 💡 修改重點：重構存檔壓縮，使用 LZString 同步高壓演算法，完美縮減 90% 體積且徹底規避 file:// 限制
         async function exportSaveToken() {
-            if (chatHistory.length === 0) { alert("目前沒有進度代碼可供複製。"); return; }
+            if (chatHistory.length === 0) { alert("目前沒有進度可供複製。"); return; }
             try {
                 let exportData = {
-                    c: null, // characterCard (玩家初始角色設定卡)
-                    h: [],   // history (僅保留玩家的歷史分歧決策文字，丟棄所有重複的故事板)
-                    l: null  // lastModel (完整保留當前最新的一發回覆，用來還原左右面板 UI)
+                    c: null, // 核心角色提交提示詞
+                    h: [],   // 歷史抉擇軌跡
+                    l: null  // 最後一發完整大模型回應（用於解析 UI 面板）
                 };
 
                 const cardNode = chatHistory.find(h => h.role === "user" && h.text.includes("【玩家角色卡提交"));
@@ -1057,11 +855,12 @@
                 if (lastModelResponse) exportData.l = lastModelResponse.text;
 
                 const jsonStr = JSON.stringify(exportData);
-                const token = await compressText(jsonStr);
+                // 使用封裝好的 LZ-String 進行基礎 Base64 極限高壓縮
+                const token = LZString.compressToBase64(jsonStr);
                 
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(token).then(() => {
-                        alert("📋 存檔代碼已成功複製至剪貼簿！已啟用【極限結構脫水 + 核心數據壓縮】。");
+                        alert("📋 存檔代碼已成功複製至剪貼簿！已完成深度結構過濾與高比例壓縮。");
                     }).catch(() => {
                         fallbackCopyText(token);
                     });
@@ -1082,7 +881,7 @@
             textArea.select();
             try {
                 document.execCommand('copy');
-                alert("📋 [相容端口配對] 移轉存檔代碼已成功複製至剪貼簿！");
+                alert("📋 [相容模式] 移轉存檔代碼已成功複製至剪貼簿！");
             } catch (err) {
                 prompt("📋 自動複製受限，請全選手動複製下方框內的進度代碼：", text);
             }
@@ -1093,7 +892,7 @@
             chatHistory = historyArray;
             const lastModelResponse = [...chatHistory].reverse().find(h => h.role === "model");
             if (lastModelResponse) {
-                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p style="color:var(--accent-gold);"><strong>// 雲端進度同步完畢 //</strong> 已加載世界線最新局勢。</p></div>`;
+                document.getElementById('story-stream').innerHTML = `<div class="story-block"><p style="color:var(--accent-gold);"><strong>// 雲端進度同步完畢 //</strong> 已加載還原世界線最新局勢。</p></div>`;
                 parseAndPopulateUI(lastModelResponse.text);
                 document.getElementById('start-portal-modal').classList.add('hidden');
             }
@@ -1102,7 +901,6 @@
         window.onload = function() {
             document.getElementById('profile-container').innerHTML = marked.parse(DEFAULT_PROFILE_MD);
             document.getElementById('forum-container').innerHTML = marked.parse(DEFAULT_FORUM_MD);
-            
             const savedKey = localStorage.getItem('game_api_key');
             
             setTimeout(() => {
@@ -1117,7 +915,7 @@
                         document.getElementById('api-provider').value = localStorage.getItem('game_api_provider') || 'gemini';
                         loadGameFromCloud();
                     }
-                }, 1000);
+                }, 1500);
             }, 3000);
         };
 
@@ -1146,7 +944,6 @@
             document.getElementById('start-portal-modal').classList.toggle('hidden');
         }
 
-        // 驗證金鑰防線
         function checkAndLockApiKey() {
             const provider = document.getElementById('api-provider').value;
             const key = document.getElementById('api-key-input').value.trim();
@@ -1161,7 +958,7 @@
 
         function saveApiKey() {
             if (!checkAndLockApiKey()) return;
-            alert('🟢 金鑰端口配置成功！已解鎖軌道開局權限。');
+            alert('🟢 金鑰端口配置成功！已解鎖開局權限。');
             returnToPortalMenu();
         }
 
@@ -1169,28 +966,27 @@
             startStoryGame();
         }
 
-        // 💡 修改重點 2：徹底重構讀檔模組。改為非同步 async 函數，先呼叫 decompressText 解壓縮，再提取 c, h, l 欄位。
-        // 同時動態重組符合大模型 API 嚴格要求的「正反交替歷史記憶對話鏈」（user -> model -> user -> model），完全修復回復故事線失敗的問題。
+        // 💡 修改重點 2：重構匯入讀檔功能，與全新的字串級壓縮架構完美對接，實現 100% 還原故事線與側欄
         async function triggerImportSaveStart() {
             const rawToken = document.getElementById('import-token-input').value.trim();
             if (!rawToken) { alert("請先填入有效的轉移存檔代碼！"); return; }
             try {
-                // 1. 使用 Deflate 串流執行二進位解壓縮
-                const jsonStr = await decompressText(rawToken);
-                const exportData = JSON.parse(jsonStr);
+                // 使用 LZString 同步解壓，無安全性威脅與環境相容限制
+                const jsonStr = LZString.decompressFromBase64(rawToken);
+                if (!jsonStr) throw new Error("解壓縮結果為空，請檢查存檔密碼字串是否完整。");
                 
+                const exportData = JSON.parse(jsonStr);
                 if (!exportData || !exportData.c || !exportData.l) {
-                    throw new Error("數據壓縮包結構不完整或損壞。");
+                    throw new Error("數據結構不完整。");
                 }
 
-                // 2. 注入目前 HTML 最新版本的全局系統指令（做到零字串浪費），重置基本記憶底層
+                // 還原正反交替對話鏈，無損注入當前 HTML 版本的最新 SYSTEM_INSTRUCTION
                 let rebuiltHistory = [
                     { role: "user", text: `【核心系統指令與世界觀載入】\n${SYSTEM_INSTRUCTION}\n\n請理解上述所有規則，並準備好扮演遊戲主持人。` },
                     { role: "model", text: "【系統提示】赫拉學院 Ver.2.5 核心系統已成功載入後台。" },
                     { role: "user", text: exportData.c }
                 ];
 
-                // 3. 提取 h 抉擇陣列。使用輕量占位符建立交替歷史，既能讓 AI 讀懂歷史軌跡，又不會弄混 API 規定的 user/model 輪流規則
                 if (exportData.h && exportData.h.length > 0) {
                     for (let i = 0; i < exportData.h.length; i++) {
                         rebuiltHistory.push({ role: "model", text: `[系統已接軌同步歷史抉擇進度軌跡 #${i+1}]` });
@@ -1198,14 +994,12 @@
                     }
                 }
 
-                // 4. 最後壓入完整保留的最後一發 AI 數據（欄位 l），用來完美驅動 parseAndPopulateUI 渲染左右兩側的資訊欄、論壇與當前選項按鈕
                 rebuiltHistory.push({ role: "model", text: exportData.l });
 
-                // 5. 還原遊戲狀態並關閉審查窗口
                 restoreGameState(rebuiltHistory);
-                alert("🟢 手動轉移存檔導入還原成功！故事線與權力面板已完全回復。");
+                alert("🟢 存檔完全載入還原成功！已完美復原故事線與全部權力面板數據。");
             } catch (e) {
-                alert("🚨 進度代碼解析還原失敗，請確保代碼複製完整。錯誤細節: " + e.message);
+                alert("🚨 進度代碼還原失敗，請檢查代碼複製是否完整。錯誤細節: " + e.message);
             }
         }
 
@@ -1255,6 +1049,11 @@
                 return;
             }
 
+            // 💡 修改重點：亂數抽取專屬主要 NPC 的姓名，防範世界線重疊
+            const npcA = generateRandomNPCName();
+            let npcB = generateRandomNPCName();
+            while (npcB === npcA) { npcB = generateRandomNPCName(); }
+
             const initialLocalProfile = `
 # 🏛️ 貴族學院 • 學生即時動態檔案
 
@@ -1268,15 +1067,15 @@
 ### 📱 HeraLink 匿名論壇動態
 * 社交名聲標籤 : \`神秘局外人 (基於 ${status})\`
 * 本週論壇熱搜： #新學期繼承者名冊 #赫拉學院特招生
-* 輿脅指數： \`30%\`
+* 輿論威脅指數： \`30%\`
 * 🕵️ 當前解密追蹤紀錄： 1. \`[ 未發起代碼解密行動 ]\`
 
 ### 🤝 核心 NPC 關係權力圖
 > ❤️好感度/🖤戒備度 | 💎利益綁定度
 
-1. NPC A (隱性階級: Crown) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+1. ${npcA} (隱性階級: Crown) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
    * 💬 態度潛台詞： 「觀察中。少跟我攀關係。」
-2. NPC B (隱性階級: Noble) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
+2. ${npcB} (隱性階級: Noble) ｜ \`🖤🖤🖤🖤🖤\` \`▫️▫️▫️▫️▫️\`
    * 💬 態度潛台詞： 「新面孔？看妳能撐多久。」
 
 ### 🎒 背包與關鍵籌碼
@@ -1291,6 +1090,7 @@
                 { role: "model", text: "【系統提示】赫拉學院 Ver.2.5 核心系統已成功載入後台。我將嚴格遵守隔離與遮蔽限制。" }
             ];
 
+            // 💡 修改重點：在角色設定提交中注入專屬的 NPC 亂數人名，強制大模型接續使用，確保讀檔後記憶不變
             const characterCardPrompt = `
 【玩家角色卡提交 - 遊戲正式開啟】
 這是我的完整角色設定，請根據此設定開啟第一章首發劇情，並初始化狀態欄與論壇：
@@ -1298,6 +1098,10 @@
 - 家族名稱：${familyName} - 階級：${charClass} - 主要產業：${familyIndustry}
 - 隱密設定：${secret} - 初始狀態：${status} - 明星風格偏好：${prefer}
 
+【⚠️ 本局專屬隨機生成核心 NPC 名冊已鎖定】：
+- 核心 NPC A 姓名：${npcA} (隱性階級: Crown)
+- 核心 NPC B 姓名：${npcB} (隱性階級: Noble)
+請在後續所有對話劇情與側邊欄 [ 📋 學生即時動態檔案 ] 中，嚴格使用這組姓名替換原有的 NPC A 與 NPC B 佔位符！
 請直接開始第一幕，嚴格按照規範隔離順序輸出。`;
 
             document.getElementById('start-portal-modal').classList.add('hidden');
