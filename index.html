@@ -1066,53 +1066,54 @@ let chatHistory = [];
             return false;
         }
 
-        // 💡 存檔極限縮短優化：現代瀏覽器原生 Deflate 壓縮演算法
+// 💡 修正後的高效安全二進位壓縮
         async function compressText(text) {
-            const stream = new Response(text).body.pipeThrough(new CompressionStream('deflate'));
-            const buffer = await new Response(stream).arrayBuffer();
+            const byteArray = new TextEncoder().encode(text);
+            const cs = new CompressionStream('deflate');
+            const writer = cs.writable.getWriter();
+            writer.write(byteArray);
+            writer.close();
+            const buffer = await new Response(cs.readable).arrayBuffer();
+            
             let binary = '';
             const bytes = new Uint8Array(buffer);
-            for (let i = 0; i < bytes.byteLength; i++) {
+            for (let i = 0; i < bytes.length; i++) {
                 binary += String.fromCharCode(bytes[i]);
             }
             return btoa(binary);
         }
 
-        // 💡 存檔極限縮短優化：現代瀏覽器原生 Deflate 解壓縮演算法
+        // 💡 修正後的安全解壓縮（修復了 response 變數未定義的打字錯誤）
         async function decompressText(base64) {
-            const binary = atob(base64);
-            const bytes = new Uint8Array(binary.length);
-            for (let i = 0; i < binary.length; i++) {
-                bytes[i] = binary.charCodeAt(i);
-            }
-            const stream = new Response(bytes).body.pipeThrough(new DecompressionStream('deflate'));
-            return await new Response(stream).text();
+            const binString = atob(base64);
+            const bytes = Uint8Array.from(binString, m => m.charCodeAt(0));
+            const ds = new DecompressionStream('deflate');
+            const writer = ds.writable.getWriter();
+            writer.write(bytes);
+            writer.close();
+            const decompressedBuffer = await new Response(ds.readable).arrayBuffer();
+            return new TextDecoder().decode(decompressedBuffer);
         }
 
-        // 💡 存檔極限縮短優化：重構存檔導出，結構脫水 + 高密度壓縮
         async function exportSaveToken() {
             if (chatHistory.length === 0) { alert("目前沒有進度代碼可供複製。"); return; }
             try {
                 let exportData = {
-                    playerCard: null, // 只存核心角色配置提示詞
-                    history: [],      // 只存玩家抉擇歷史線，拋棄所有舊 AI 文字
-                    lastModel: null   // 只存最後一次回覆用來還原 UI
+                    playerCard: null,
+                    history: [],
+                    lastModel: null
                 };
 
-                // 1. 抓取最初提交的角色卡
                 const cardNode = chatHistory.find(h => h.role === "user" && h.text.includes("【玩家角色卡提交"));
                 if (cardNode) exportData.playerCard = cardNode.text;
 
-                // 2. 篩選所有玩家抉擇歷史，排除系统提示詞與最初的角色卡
                 exportData.history = chatHistory
                     .filter(h => h.role === "user" && !h.text.includes("【核心系統指令") && !h.text.includes("【玩家角色卡提交"))
                     .map(h => h.text);
 
-                // 3. 保留最後一次 AI 回覆
                 const lastModelResponse = [...chatHistory].reverse().find(h => h.role === "model");
                 if (lastModelResponse) exportData.lastModel = lastModelResponse.text;
 
-                // 4. JSON 字串二進位化壓縮
                 const jsonStr = JSON.stringify(exportData);
                 const token = await compressText(jsonStr);
                 
